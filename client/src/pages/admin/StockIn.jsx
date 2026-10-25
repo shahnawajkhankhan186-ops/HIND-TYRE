@@ -1,0 +1,260 @@
+import React, { useState, useEffect } from 'react';
+import { ArrowDownToLine, Package, Check, Disc3, Layers, Truck } from 'lucide-react';
+import toast from 'react-hot-toast';
+import api from '../../lib/api';
+import { formatRupees, rupeesToPaise } from '../../lib/currency';
+
+export default function StockIn() {
+  const [itemType, setItemType] = useState('Tyre');
+  const [tyres, setTyres] = useState([]);
+  const [accessories, setAccessories] = useState([]);
+  const [selectedItemId, setSelectedItemId] = useState('');
+  const [quantity, setQuantity] = useState('');
+  const [purchasePriceRupees, setPurchasePriceRupees] = useState('');
+  const [supplier, setSupplier] = useState('');
+  const [note, setNote] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    fetchItems();
+  }, []);
+
+  const fetchItems = async () => {
+    try {
+      setLoading(true);
+      const [tyresRes, accRes] = await Promise.all([
+        api.get('/admin/tyres', { params: { limit: 200 } }),
+        api.get('/admin/accessories', { params: { limit: 200 } }),
+      ]);
+      if (tyresRes.data.success) {
+        setTyres(tyresRes.data.data.tyres);
+      }
+      if (accRes.data.success) {
+        setAccessories(accRes.data.data.accessories);
+      }
+    } catch (err) {
+      toast.error('Failed to load item lists');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const selectedItem =
+    itemType === 'Tyre'
+      ? tyres.find((t) => t._id === selectedItemId)
+      : accessories.find((a) => a._id === selectedItemId);
+
+  // When item selected, pre-fill current purchase price
+  const handleItemSelect = (id) => {
+    setSelectedItemId(id);
+    const item =
+      itemType === 'Tyre'
+        ? tyres.find((t) => t._id === id)
+        : accessories.find((a) => a._id === id);
+
+    if (item && item.purchasePricePaise) {
+      setPurchasePriceRupees((item.purchasePricePaise / 100).toString());
+    } else {
+      setPurchasePriceRupees('');
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!selectedItemId) {
+      return toast.error('Please select an item to stock in');
+    }
+    const qty = parseInt(quantity, 10);
+    if (isNaN(qty) || qty <= 0) {
+      return toast.error('Quantity must be greater than zero');
+    }
+
+    try {
+      setSubmitting(true);
+      const payload = {
+        itemType,
+        itemId: selectedItemId,
+        quantity: qty,
+        purchasePricePaise: purchasePriceRupees ? rupeesToPaise(purchasePriceRupees) : undefined,
+        supplier: supplier.trim(),
+        note: note.trim(),
+      };
+
+      const res = await api.post('/admin/stock-in', payload);
+      if (res.data.success) {
+        toast.success(`Successfully added ${qty} units into stock! New stock: ${res.data.data.qtyAfter}`);
+        setQuantity('');
+        setNote('');
+        fetchItems(); // refresh current stock quantities
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.error || 'Failed to complete stock-in');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="container-fluid p-3 p-md-4">
+      <div className="glass-panel p-4 mb-4">
+        <h3 className="text-white fw-bold m-0 brand-font">Stock In (Purchase Entry)</h3>
+        <p className="text-secondary small m-0 mt-0.5">
+          Record received tyre shipments & supplier purchases with ledger updates
+        </p>
+      </div>
+
+      <div className="row justify-content-center">
+        <div className="col-12 col-lg-8">
+          <div className="glass-panel p-4 p-md-5">
+            <form onSubmit={handleSubmit}>
+              {/* Item Type Switcher */}
+              <div className="mb-4">
+                <label className="form-label text-light small fw-semibold">Item Category *</label>
+                <div className="btn-group w-100 p-1 rounded-pill bg-slate-900 border border-secondary border-opacity-25">
+                  <button
+                    type="button"
+                    className={`btn btn-sm rounded-pill py-2 ${itemType === 'Tyre' ? 'btn-primary-glass' : 'btn-link text-secondary text-decoration-none'}`}
+                    onClick={() => {
+                      setItemType('Tyre');
+                      setSelectedItemId('');
+                      setPurchasePriceRupees('');
+                    }}
+                  >
+                    <Disc3 size={16} className="me-1.5" /> Tyre Shipment
+                  </button>
+                  <button
+                    type="button"
+                    className={`btn btn-sm rounded-pill py-2 ${itemType === 'Accessory' ? 'btn-primary-glass' : 'btn-link text-secondary text-decoration-none'}`}
+                    onClick={() => {
+                      setItemType('Accessory');
+                      setSelectedItemId('');
+                      setPurchasePriceRupees('');
+                    }}
+                  >
+                    <Layers size={16} className="me-1.5" /> Accessories / Tubes / Parts
+                  </button>
+                </div>
+              </div>
+
+              {/* Select Item */}
+              <div className="mb-3">
+                <label className="form-label text-light small fw-semibold">
+                  Select {itemType === 'Tyre' ? 'Tyre Specification' : 'Accessory'} *
+                </label>
+                <select
+                  className="form-select form-select-lg fs-6"
+                  value={selectedItemId}
+                  onChange={(e) => handleItemSelect(e.target.value)}
+                  required
+                >
+                  <option value="">-- Choose {itemType} from catalog --</option>
+                  {itemType === 'Tyre'
+                    ? tyres.map((t) => (
+                        <option key={t._id} value={t._id}>
+                          {t.companyId?.name} {t.modelName} ({t.size}) – Current Stock: {t.quantity}
+                        </option>
+                      ))
+                    : accessories.map((a) => (
+                        <option key={a._id} value={a._id}>
+                          {a.name} ({a.category}) – Current Stock: {a.quantity}
+                        </option>
+                      ))}
+                </select>
+              </div>
+
+              {/* Current Item Live Info Badge */}
+              {selectedItem && (
+                <div className="p-3 mb-4 rounded-3 bg-slate-900 border border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
+                  <div>
+                    <span className="text-secondary extra-small text-uppercase">Current On-Hand Stock:</span>
+                    <div className="text-white fw-bold fs-6">{selectedItem.quantity} units</div>
+                  </div>
+                  <div className="text-end">
+                    <span className="text-secondary extra-small text-uppercase">Standard Cost Price:</span>
+                    <div className="text-info font-monospace fw-bold fs-6">
+                      {formatRupees(selectedItem.purchasePricePaise)}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="row g-3 mb-3">
+                {/* Quantity Received */}
+                <div className="col-12 col-md-6">
+                  <label className="form-label text-white small fw-bold">Quantity Received *</label>
+                  <input
+                    type="number"
+                    min="1"
+                    className="form-control form-control-lg fs-6 border-info"
+                    placeholder="e.g. 10"
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                    required
+                  />
+                </div>
+
+                {/* Purchase Cost per unit */}
+                <div className="col-12 col-md-6">
+                  <label className="form-label text-light small fw-semibold">
+                    Purchase Price per Unit (₹)
+                  </label>
+                  <div className="input-group input-group-lg">
+                    <span className="input-group-text fs-6">₹</span>
+                    <input
+                      type="number"
+                      step="0.01"
+                      className="form-control fs-6"
+                      placeholder="0.00"
+                      value={purchasePriceRupees}
+                      onChange={(e) => setPurchasePriceRupees(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                {/* Supplier */}
+                <div className="col-12 col-md-6">
+                  <label className="form-label text-light small fw-semibold">Supplier / Distributor Name</label>
+                  <div className="input-group">
+                    <span className="input-group-text"><Truck size={16} /></span>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="e.g. MRF Regional Depot, Apollo Central"
+                      value={supplier}
+                      onChange={(e) => setSupplier(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                {/* PO / Invoice Reference / Note */}
+                <div className="col-12 col-md-6">
+                  <label className="form-label text-light small fw-semibold">PO / Invoice / Batch Note</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="e.g. Batch #2026-OCT-12"
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {/* Submit */}
+              <div className="pt-3 border-top border-secondary border-opacity-20 d-flex justify-content-end">
+                <button
+                  type="submit"
+                  className="btn btn-primary-glass px-4 py-2.5 d-flex align-items-center gap-2"
+                  disabled={submitting || !selectedItemId || !quantity}
+                >
+                  <ArrowDownToLine size={18} />
+                  {submitting ? 'Recording Stock-In...' : 'Record Purchase & Increase Stock'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,48 @@
+/**
+ * Design Tokens for HIND TYRES AND ACCESSORIES
+ * Premium Dark Glassmorphic Aesthetic
+ */
+
+:root {
+  /* Surface & Background */
+  --bg-dark-base: #080c14;
+  --bg-dark-subtle: #0f172a;
+  --bg-dark-elevated: #151f32;
+  
+  /* Glassmorphism */
+  --glass-bg: rgba(21, 31, 50, 0.65);
+  --glass-bg-hover: rgba(30, 45, 74, 0.75);
+  --glass-bg-active: rgba(37, 56, 92, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.09);
+  --glass-border-highlight: rgba(56, 189, 248, 0.35);
+  --glass-blur: blur(16px);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
+  --glass-glow-cyan: 0 0 25px rgba(56, 189, 248, 0.15);
+  
+  /* Brand Accents */
+  --brand-primary: #38bdf8;
+  --brand-primary-hover: #0ea5e9;
+  --brand-accent: #6366f1;
+  --brand-amber: #f59e0b;
+  --brand-emerald: #10b981;
+  --brand-rose: #f43f5e;
+  
+  /* Text & Foreground */
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  --text-inverse: #090d16;
+
+  /* Typography */
+  --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', Menlo, monospace;
+
+  /* Layout & Spacing */
+  --sidebar-width: 260px;
+  --topbar-height: 68px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+}

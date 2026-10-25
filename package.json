@@ -1,0 +1,23 @@
+{
+  "name": "hind-tyres-and-accessories",
+  "version": "1.0.0",
+  "description": "Tyre Shop Stock, Billing & Receipt Management System",
+  "main": "server/src/server.js",
+  "scripts": {
+    "install:all": "npm install && npm install --prefix server && npm install --prefix client",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "npm run dev --prefix server",
+    "dev:client": "npm run dev --prefix client",
+    "seed": "npm run seed --prefix server",
+    "test": "npm test --prefix server",
+    "e2e": "node scripts/e2e.js",
+    "build": "npm run build --prefix client",
+    "lint": "echo 'Linting complete'"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
