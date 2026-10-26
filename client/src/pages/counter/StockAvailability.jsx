@@ -57,16 +57,16 @@ export default function StockAvailability() {
   };
 
   return (
-    <div className="container-fluid p-3 p-md-4">
-      <div className="glass-panel p-4 mb-4">
-        <h4 className="text-white fw-bold m-0 brand-font">Live Inventory & Stock Lookup</h4>
-        <p className="text-secondary small m-0 mt-1">
+    <div className="container-fluid p-3 p-md-4" style={{ minHeight: 'calc(100vh - 120px)', background: 'var(--bg-light)' }}>
+      <div className="card-clean p-4 mb-4 bg-white">
+        <h4 className="fw-bold m-0" style={{ color: 'var(--text-on-light)', fontFamily: 'Montserrat, sans-serif' }}>Live Inventory & Stock Lookup</h4>
+        <p className="text-muted small m-0 mt-1">
           Instant stock check for customer queries on size, brand, price & quantity
         </p>
       </div>
 
       {/* Filters */}
-      <div className="glass-panel p-3 mb-3">
+      <div className="card-clean p-3 mb-3 bg-white">
         <form onSubmit={handleSearch} className="row g-2 align-items-center">
           <div className="col-12 col-md-5">
             <div className="input-group input-group-sm">
@@ -105,22 +105,22 @@ export default function StockAvailability() {
             </select>
           </div>
           <div className="col-12 col-md-1">
-            <button type="submit" className="btn btn-primary-glass btn-sm w-100">Find</button>
+            <button type="submit" className="btn btn-accent btn-sm w-100 fw-bold">Find</button>
           </div>
         </form>
       </div>
 
       {/* Grid of Results */}
-      <div className="glass-panel overflow-hidden">
+      <div className="card-clean overflow-hidden bg-white">
         {loading ? (
           <TableSkeleton rows={8} cols={6} />
         ) : tyres.length === 0 ? (
-          <div className="p-5 text-center text-secondary">
+          <div className="p-5 text-center text-muted">
             No tyres matching the search criteria.
           </div>
         ) : (
           <div className="table-responsive">
-            <table className="table table-glass mb-0">
+            <table className="table table-custom mb-0">
               <thead>
                 <tr>
                   <th>Brand</th>
@@ -138,29 +138,29 @@ export default function StockAvailability() {
                   const isOut = t.quantity <= 0;
                   return (
                     <tr key={t._id}>
-                      <td className="text-white fw-bold">{t.companyId?.name || 'Tyre'}</td>
-                      <td className="text-light">{t.modelName}</td>
-                      <td className="text-info font-monospace fw-semibold">{t.size}</td>
+                      <td className="fw-bold text-dark">{t.companyId?.name || 'Tyre'}</td>
+                      <td className="text-dark fw-medium">{t.modelName}</td>
+                      <td className="font-monospace fw-bold text-dark">{t.size}</td>
                       <td>
-                        <span className="badge bg-secondary bg-opacity-30 text-white extra-small">
+                        <span className="badge bg-light text-muted border extra-small">
                           {t.vehicleType}
                         </span>
                       </td>
-                      <td className="text-secondary small">{t.tubeType}</td>
-                      <td className="text-end text-white font-monospace fw-bold">
+                      <td className="text-muted small">{t.tubeType}</td>
+                      <td className="text-end text-dark font-monospace fw-bold">
                         {formatRupees(t.sellingPricePaise)}
                       </td>
                       <td className="text-center">
                         {isOut ? (
-                          <span className="badge bg-danger bg-opacity-25 text-danger border border-danger border-opacity-30 px-2 py-1">
+                          <span className="badge-pill-danger">
                             <XCircle size={13} className="me-1 inline" /> Out of Stock
                           </span>
                         ) : isLow ? (
-                          <span className="badge bg-warning bg-opacity-25 text-warning border border-warning border-opacity-30 px-2 py-1">
+                          <span className="badge-pill-warning">
                             <AlertTriangle size={13} className="me-1 inline" /> {t.quantity} Left (Low)
                           </span>
                         ) : (
-                          <span className="badge bg-success bg-opacity-25 text-success border border-success border-opacity-30 px-2.5 py-1 fw-bold">
+                          <span className="badge-pill-success">
                             <CheckCircle2 size={13} className="me-1 inline" /> {t.quantity} Available
                           </span>
                         )}

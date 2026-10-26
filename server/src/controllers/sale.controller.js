@@ -466,7 +466,11 @@ async function cancelSale(req, res, next) {
       data: sale,
     });
   } catch (err) {
-    await session.abortTransaction();
+    try {
+      if (session.inTransaction()) {
+        await session.abortTransaction();
+      }
+    } catch (_) {}
     session.endSession();
     next(err);
   }

@@ -44,13 +44,13 @@ export default function StockLedger() {
   const getBadgeForType = (movementType) => {
     switch (movementType) {
       case 'STOCK_IN':
-        return <span className="badge badge-glass-emerald">STOCK IN</span>;
+        return <span className="badge badge-pill-success">STOCK IN</span>;
       case 'SALE':
-        return <span className="badge badge-glass-cyan">SALE</span>;
+        return <span className="badge badge-pill-info">SALE</span>;
       case 'SALE_CANCEL':
-        return <span className="badge badge-glass-purple">CANCEL RESTORE</span>;
+        return <span className="badge badge-pill-yellow">CANCEL RESTORE</span>;
       case 'ADJUSTMENT':
-        return <span className="badge badge-glass-amber">MANUAL ADJUST</span>;
+        return <span className="badge badge-pill-warning">MANUAL ADJUST</span>;
       default:
         return <span className="badge bg-secondary">{movementType}</span>;
     }
@@ -59,22 +59,22 @@ export default function StockLedger() {
   return (
     <div className="container-fluid p-3 p-md-4">
       {/* Header */}
-      <div className="glass-panel p-4 mb-4">
+      <div className="card-clean bg-white p-4 mb-4">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <div>
-            <h3 className="text-white fw-bold m-0 brand-font">Inventory Stock Movement Ledger</h3>
-            <p className="text-secondary small m-0 mt-0.5">
+            <h3 className="text-dark fw-bold m-0 brand-font">Inventory Stock Movement Ledger</h3>
+            <p className="text-muted small m-0 mt-0.5">
               Immutable audit ledger of all stock additions, sales deductions, returns & adjustments
             </p>
           </div>
-          <button className="btn btn-secondary-glass btn-sm d-flex align-items-center gap-1.5" onClick={fetchLedger}>
+          <button className="btn btn-outline-dark-custom btn-sm d-flex align-items-center gap-1.5" onClick={fetchLedger}>
             <RefreshCw size={14} /> Refresh Ledger
           </button>
         </div>
       </div>
 
       {/* Filters Bar */}
-      <div className="glass-panel p-3 mb-3">
+      <div className="card-clean bg-white p-3 mb-3">
         <div className="row g-2 align-items-center">
           <div className="col-12 col-md-4">
             <select
@@ -111,14 +111,14 @@ export default function StockLedger() {
       </div>
 
       {/* Ledger Table */}
-      <div className="glass-panel overflow-hidden mb-3">
+      <div className="card-clean bg-white overflow-hidden mb-3">
         {loading ? (
           <TableSkeleton rows={8} cols={7} />
         ) : movements.length === 0 ? (
-          <div className="p-5 text-center text-secondary">No stock movement records found.</div>
+          <div className="p-5 text-center text-muted">No stock movement records found.</div>
         ) : (
           <div className="table-responsive">
-            <table className="table table-glass mb-0">
+            <table className="table table-custom mb-0">
               <thead>
                 <tr>
                   <th>Timestamp (IST)</th>
@@ -135,13 +135,13 @@ export default function StockLedger() {
                   const isPositive = m.qty > 0;
                   return (
                     <tr key={m._id}>
-                      <td className="text-secondary small font-monospace">{formatIST(m.createdAt)}</td>
+                      <td className="text-muted small font-monospace">{formatIST(m.createdAt)}</td>
                       <td>{getBadgeForType(m.type)}</td>
                       <td>
-                        <div className="text-white fw-semibold small">
+                        <div className="text-dark fw-semibold small">
                           {m.itemId?.modelName ? `${m.itemId?.modelName} (${m.itemId?.size})` : m.itemId?.name || 'Item'}
                         </div>
-                        <div className="text-secondary extra-small font-monospace">Type: {m.itemType}</div>
+                        <div className="text-muted extra-small font-monospace">Type: {m.itemType}</div>
                       </td>
                       <td className="text-center">
                         <span className={`fw-bold font-monospace ${isPositive ? 'text-success' : 'text-danger'}`}>
@@ -149,15 +149,15 @@ export default function StockLedger() {
                         </span>
                       </td>
                       <td className="text-center font-monospace small">
-                        <span className="text-secondary">{m.quantityBefore}</span>
-                        <span className="text-secondary mx-1">→</span>
-                        <span className="text-white fw-bold">{m.quantityAfter}</span>
+                        <span className="text-muted">{m.quantityBefore}</span>
+                        <span className="text-muted mx-1">→</span>
+                        <span className="text-dark fw-bold">{m.quantityAfter}</span>
                       </td>
                       <td>
-                        <div className="text-light small">{m.reference || '-'}</div>
-                        {m.note && <div className="text-secondary extra-small">{m.note}</div>}
+                        <div className="text-dark small">{m.reference || '-'}</div>
+                        {m.note && <div className="text-muted extra-small">{m.note}</div>}
                       </td>
-                      <td className="text-end text-secondary small">
+                      <td className="text-end text-muted small">
                         {m.createdBy?.name || 'System / Staff'}
                       </td>
                     </tr>
@@ -171,20 +171,20 @@ export default function StockLedger() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="d-flex justify-content-between align-items-center glass-panel p-2 px-3">
-          <small className="text-secondary">
-            Page <strong className="text-white">{page}</strong> of <strong className="text-white">{totalPages}</strong> ({totalCount} total entries)
+        <div className="d-flex justify-content-between align-items-center card-clean bg-white p-2 px-3">
+          <small className="text-muted">
+            Page <strong className="text-dark">{page}</strong> of <strong className="text-dark">{totalPages}</strong> ({totalCount} total entries)
           </small>
           <div className="btn-group btn-group-sm">
             <button
-              className="btn btn-secondary-glass"
+              className="btn btn-outline-dark-custom"
               disabled={page <= 1}
               onClick={() => setPage((p) => p - 1)}
             >
               Previous
             </button>
             <button
-              className="btn btn-secondary-glass"
+              className="btn btn-outline-dark-custom"
               disabled={page >= totalPages}
               onClick={() => setPage((p) => p + 1)}
             >

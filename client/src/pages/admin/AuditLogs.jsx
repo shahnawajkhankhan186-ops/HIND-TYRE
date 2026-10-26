@@ -46,22 +46,22 @@ export default function AuditLogs() {
 
   return (
     <div className="container-fluid p-3 p-md-4">
-      <div className="glass-panel p-4 mb-4">
+      <div className="card-clean bg-white p-4 mb-4">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <div>
-            <h3 className="text-white fw-bold m-0 brand-font">System Audit Logs & Compliance Ledger</h3>
-            <p className="text-secondary small m-0 mt-0.5">
+            <h3 className="text-dark fw-bold m-0 brand-font">System Audit Logs & Compliance Ledger</h3>
+            <p className="text-muted small m-0 mt-0.5">
               Rule 8: Immutable trace of every user action, state mutations & IP address logs
             </p>
           </div>
-          <button className="btn btn-secondary-glass btn-sm d-flex align-items-center gap-1.5" onClick={fetchLogs}>
+          <button className="btn btn-outline-dark-custom btn-sm d-flex align-items-center gap-1.5" onClick={fetchLogs}>
             <RefreshCw size={14} /> Refresh
           </button>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="glass-panel p-3 mb-3">
+      <div className="card-clean bg-white p-3 mb-3">
         <div className="row g-2 align-items-center">
           <div className="col-12 col-md-4">
             <select
@@ -107,14 +107,14 @@ export default function AuditLogs() {
       </div>
 
       {/* Table */}
-      <div className="glass-panel overflow-hidden mb-3">
+      <div className="card-clean bg-white overflow-hidden mb-3">
         {loading ? (
           <TableSkeleton rows={8} cols={6} />
         ) : logs.length === 0 ? (
-          <div className="p-5 text-center text-secondary">No audit logs found.</div>
+          <div className="p-5 text-center text-muted">No audit logs found.</div>
         ) : (
           <div className="table-responsive">
-            <table className="table table-glass mb-0">
+            <table className="table table-custom mb-0">
               <thead>
                 <tr>
                   <th>Timestamp (IST)</th>
@@ -128,23 +128,23 @@ export default function AuditLogs() {
               <tbody>
                 {logs.map((log) => (
                   <tr key={log._id}>
-                    <td className="text-secondary small font-monospace">{formatIST(log.createdAt)}</td>
+                    <td className="text-muted small font-monospace">{formatIST(log.createdAt)}</td>
                     <td>
-                      <span className="badge badge-glass-cyan extra-small">{log.action}</span>
+                      <span className="badge badge-pill-info extra-small">{log.action}</span>
                     </td>
                     <td>
-                      <span className="badge bg-slate-800 text-light border border-secondary border-opacity-25 extra-small">
+                      <span className="badge bg-light text-dark border extra-small">
                         {log.entity}
                       </span>
                     </td>
                     <td>
-                      <span className="text-white small fw-semibold">{log.userName}</span>
+                      <span className="text-dark small fw-semibold">{log.userName}</span>
                     </td>
-                    <td className="text-secondary font-monospace extra-small">{log.ipAddress || '127.0.0.1'}</td>
+                    <td className="text-muted font-monospace extra-small">{log.ipAddress || '127.0.0.1'}</td>
                     <td className="text-end">
                       {(log.beforeSnapshot || log.afterSnapshot) && (
                         <button
-                          className="btn btn-sm btn-secondary-glass p-1 px-2 extra-small d-inline-flex align-items-center gap-1"
+                          className="btn btn-sm btn-outline-dark-custom p-1 px-2 extra-small d-inline-flex align-items-center gap-1"
                           onClick={() => setSelectedLog(log)}
                         >
                           <Eye size={12} /> View Diff
@@ -161,15 +161,15 @@ export default function AuditLogs() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="d-flex justify-content-between align-items-center glass-panel p-2 px-3">
-          <small className="text-secondary">
-            Page <strong className="text-white">{page}</strong> of <strong className="text-white">{totalPages}</strong> ({totalCount} total events)
+        <div className="d-flex justify-content-between align-items-center card-clean bg-white p-2 px-3">
+          <small className="text-muted">
+            Page <strong className="text-dark">{page}</strong> of <strong className="text-dark">{totalPages}</strong> ({totalCount} total events)
           </small>
           <div className="btn-group btn-group-sm">
-            <button className="btn btn-secondary-glass" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+            <button className="btn btn-outline-dark-custom" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
               Previous
             </button>
-            <button className="btn btn-secondary-glass" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>
+            <button className="btn btn-outline-dark-custom" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>
               Next
             </button>
           </div>
@@ -178,35 +178,35 @@ export default function AuditLogs() {
 
       {/* Snapshot Diff Modal */}
       {selectedLog && (
-        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(5, 8, 15, 0.85)', backdropFilter: 'blur(8px)', zIndex: 1055 }}>
+        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0, 0, 0, 0.65)', zIndex: 1055 }}>
           <div className="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-            <div className="modal-content glass-modal border-0 shadow-2xl">
-              <div className="modal-header border-bottom border-secondary border-opacity-25 py-3">
-                <h5 className="modal-title text-white fw-bold m-0">
+            <div className="modal-content border-0 shadow-lg" style={{ borderRadius: 'var(--radius-md)', background: '#FFFFFF' }}>
+              <div className="modal-header border-bottom py-3">
+                <h5 className="modal-title text-dark fw-bold m-0">
                   Audit Snapshot: {selectedLog.action} on {selectedLog.entity}
                 </h5>
-                <button type="button" className="btn btn-sm text-secondary" onClick={() => setSelectedLog(null)}>✕</button>
+                <button type="button" className="btn btn-sm text-muted" onClick={() => setSelectedLog(null)}>✕</button>
               </div>
 
               <div className="modal-body py-3">
                 <div className="row g-3">
                   <div className="col-12 col-md-6">
-                    <label className="text-secondary small fw-bold mb-1">State Before</label>
-                    <pre className="p-3 rounded-2 bg-dark border border-secondary border-opacity-25 text-info font-monospace extra-small overflow-auto" style={{ maxHeight: '300px' }}>
+                    <label className="text-dark small fw-bold mb-1">State Before</label>
+                    <pre className="p-3 rounded-2 bg-light border text-dark font-monospace extra-small overflow-auto" style={{ maxHeight: '300px' }}>
                       {selectedLog.beforeSnapshot ? JSON.stringify(selectedLog.beforeSnapshot, null, 2) : 'None (New Record)'}
                     </pre>
                   </div>
                   <div className="col-12 col-md-6">
-                    <label className="text-success small fw-bold mb-1">State After</label>
-                    <pre className="p-3 rounded-2 bg-dark border border-secondary border-opacity-25 text-success font-monospace extra-small overflow-auto" style={{ maxHeight: '300px' }}>
+                    <label className="text-dark small fw-bold mb-1">State After</label>
+                    <pre className="p-3 rounded-2 bg-light border text-dark font-monospace extra-small overflow-auto" style={{ maxHeight: '300px' }}>
                       {selectedLog.afterSnapshot ? JSON.stringify(selectedLog.afterSnapshot, null, 2) : 'None'}
                     </pre>
                   </div>
                 </div>
               </div>
 
-              <div className="modal-footer border-top border-secondary border-opacity-25 py-2">
-                <button className="btn btn-secondary-glass btn-sm" onClick={() => setSelectedLog(null)}>Close</button>
+              <div className="modal-footer border-top py-2">
+                <button className="btn btn-outline-dark-custom btn-sm" onClick={() => setSelectedLog(null)}>Close</button>
               </div>
             </div>
           </div>

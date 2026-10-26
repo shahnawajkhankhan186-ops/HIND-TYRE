@@ -55,25 +55,25 @@ export default function TodaySales() {
   const completedCount = sales.filter((s) => s.status === 'COMPLETED').length;
 
   return (
-    <div className="container-fluid p-3 p-md-4">
+    <div className="container-fluid p-3 p-md-4" style={{ minHeight: 'calc(100vh - 120px)', background: 'var(--bg-light)' }}>
       {/* Header & Metrics */}
-      <div className="glass-panel p-4 mb-4">
+      <div className="card-clean p-4 mb-4 bg-white">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <div>
-            <h4 className="text-white fw-bold m-0 brand-font">Today's Counter Invoices</h4>
-            <p className="text-secondary small m-0 mt-0.5">Live transactions recorded during the current shift</p>
+            <h4 className="fw-bold m-0" style={{ color: 'var(--text-on-light)', fontFamily: 'Montserrat, sans-serif' }}>Today's Counter Invoices</h4>
+            <p className="text-muted small m-0 mt-0.5">Live transactions recorded during the current shift</p>
           </div>
 
           <div className="d-flex align-items-center gap-3">
-            <div className="p-2.5 px-3 rounded-3 bg-slate-900 border border-secondary border-opacity-25 text-end">
-              <div className="text-secondary extra-small text-uppercase">Today's Revenue</div>
-              <div className="text-info fw-bold font-monospace fs-5">{formatRupees(totalTodayPaise)}</div>
+            <div className="p-2.5 px-3 rounded-3 text-end" style={{ background: 'var(--bg-light)', border: '1px solid var(--border-light)' }}>
+              <div className="text-muted extra-small text-uppercase fw-semibold">Today's Revenue</div>
+              <div className="fw-bold font-monospace fs-5" style={{ color: 'var(--text-on-light)' }}>{formatRupees(totalTodayPaise)}</div>
             </div>
-            <div className="p-2.5 px-3 rounded-3 bg-slate-900 border border-secondary border-opacity-25 text-end">
-              <div className="text-secondary extra-small text-uppercase">Invoices</div>
-              <div className="text-white fw-bold fs-5">{completedCount}</div>
+            <div className="p-2.5 px-3 rounded-3 text-end" style={{ background: 'var(--bg-light)', border: '1px solid var(--border-light)' }}>
+              <div className="text-muted extra-small text-uppercase fw-semibold">Invoices</div>
+              <div className="fw-bold fs-5 text-dark">{completedCount}</div>
             </div>
-            <button className="btn btn-secondary-glass btn-sm p-2" onClick={fetchTodaySales} title="Refresh">
+            <button className="btn btn-outline-dark-custom btn-sm p-2" onClick={fetchTodaySales} title="Refresh">
               <RefreshCw size={16} />
             </button>
           </div>
@@ -81,7 +81,7 @@ export default function TodaySales() {
       </div>
 
       {/* Search Bar */}
-      <div className="glass-panel p-3 mb-3">
+      <div className="card-clean p-3 mb-3 bg-white">
         <form onSubmit={handleSearchSubmit} className="row g-2 align-items-center">
           <div className="col-12 col-md-6 col-lg-4">
             <div className="input-group input-group-sm">
@@ -96,13 +96,13 @@ export default function TodaySales() {
             </div>
           </div>
           <div className="col-auto">
-            <button type="submit" className="btn btn-primary-glass btn-sm">Search</button>
+            <button type="submit" className="btn btn-accent btn-sm fw-bold">Search</button>
           </div>
         </form>
       </div>
 
       {/* Table */}
-      <div className="glass-panel overflow-hidden">
+      <div className="card-clean overflow-hidden bg-white">
         {loading ? (
           <TableSkeleton rows={5} cols={7} />
         ) : sales.length === 0 ? (
@@ -114,7 +114,7 @@ export default function TodaySales() {
           />
         ) : (
           <div className="table-responsive">
-            <table className="table table-glass mb-0">
+            <table className="table table-custom mb-0">
               <thead>
                 <tr>
                   <th>Invoice No</th>
@@ -130,33 +130,33 @@ export default function TodaySales() {
                 {sales.map((sale) => (
                   <tr key={sale._id}>
                     <td>
-                      <span className="text-info fw-bold font-monospace">{sale.invoiceNo}</span>
+                      <span className="fw-bold font-monospace text-dark">{sale.invoiceNo}</span>
                       {sale.status === 'CANCELLED' && (
-                        <span className="badge bg-danger ms-2 extra-small">Cancelled</span>
+                        <span className="badge-pill-danger ms-2 extra-small">Cancelled</span>
                       )}
                     </td>
                     <td>
-                      <div className="text-white fw-semibold small">{sale.customerSnapshot.name}</div>
-                      <div className="text-secondary extra-small font-monospace">{sale.customerSnapshot.phone}</div>
+                      <div className="text-dark fw-semibold small">{sale.customerSnapshot.name}</div>
+                      <div className="text-muted extra-small font-monospace">{sale.customerSnapshot.phone}</div>
                     </td>
                     <td>
-                      <span className="badge bg-slate-800 text-light border border-secondary border-opacity-25 small">
+                      <span className="badge bg-light text-dark border small">
                         {sale.items.reduce((acc, i) => acc + i.qty, 0)} units ({sale.items.length} items)
                       </span>
                     </td>
-                    <td className="text-secondary small">{formatIST(sale.createdAt)}</td>
+                    <td className="text-muted small">{formatIST(sale.createdAt)}</td>
                     <td>
-                      <span className="badge bg-success bg-opacity-10 text-success small">
+                      <span className="badge-pill-yellow">
                         {sale.paymentMode}
                       </span>
                     </td>
-                    <td className="text-end text-white fw-bold font-monospace">
+                    <td className="text-end text-dark fw-bold font-monospace">
                       {formatRupees(sale.totalPaise)}
                     </td>
                     <td className="text-center">
                       <div className="d-flex align-items-center justify-content-center gap-1.5">
                         <button
-                          className="btn btn-sm btn-secondary-glass p-1.5"
+                          className="btn btn-sm btn-outline-dark-custom p-1.5"
                           title="View Receipt"
                           onClick={() => {
                             setSelectedSale(sale);
@@ -168,7 +168,7 @@ export default function TodaySales() {
                         <a
                           href={`/api/sales/${sale._id}/receipt.pdf`}
                           download={`Invoice_${sale.invoiceNo}.pdf`}
-                          className="btn btn-sm btn-primary-glass p-1.5"
+                          className="btn btn-sm btn-accent p-1.5"
                           title="Download PDF"
                         >
                           <Download size={15} />

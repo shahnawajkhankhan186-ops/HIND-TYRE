@@ -8,13 +8,11 @@ import ProtectedRoute from './components/routes/ProtectedRoute';
 import AdminLayout from './components/layout/AdminLayout';
 import CounterLayout from './components/layout/CounterLayout';
 
-// Public & Customer Pages
+// Public & Landing Page
 import Landing from './pages/public/Landing';
-import CustomerPortal from './pages/customer/CustomerPortal';
 
 // Auth Pages
 import Login from './pages/auth/Login';
-import Register from './pages/auth/Register';
 import ForgotPassword from './pages/auth/ForgotPassword';
 
 // Counter Portal Pages
@@ -69,8 +67,8 @@ export default function App() {
         {/* Public Showcase & Landing */}
         <Route path="/" element={<Landing />} />
 
-        {/* Customer Portal (Quality, Durability & Longevity Showcase) */}
-        <Route path="/portal" element={<CustomerPortal />} />
+        {/* Customer Portal removed - Redirect to Landing */}
+        <Route path="/portal" element={<Navigate to="/" replace />} />
 
         {/* Public Auth Routes */}
         <Route
@@ -80,7 +78,7 @@ export default function App() {
               <Login />
             ) : (
               <Navigate
-                to={user.role === 'ADMIN' ? '/admin/dashboard' : user.role === 'COUNTER' ? '/counter/new-sale' : '/portal'}
+                to={user.role === 'ADMIN' ? '/admin/dashboard' : '/counter/new-sale'}
                 replace
               />
             )
@@ -88,7 +86,7 @@ export default function App() {
         />
         <Route
           path="/register"
-          element={!user ? <Register /> : <Navigate to="/portal" replace />}
+          element={<Navigate to="/login" replace />}
         />
         <Route path="/forgot-password" element={<ForgotPassword />} />
 

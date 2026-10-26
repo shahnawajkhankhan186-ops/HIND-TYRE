@@ -53,6 +53,14 @@ async function login(req, res, next) {
       });
     }
 
+    // Only accounts with role ADMIN or COUNTER can log in
+    if (user.role !== 'ADMIN' && user.role !== 'COUNTER') {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied. Only registered staff and administrators can access the system.',
+      });
+    }
+
     const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
       return res.status(401).json({
@@ -315,18 +323,32 @@ async function googleLogin(req, res, next) {
         user.role = 'ADMIN';
         await user.save();
       }
+
+      // Only ADMIN or COUNTER accounts can log in
+      if (user.role !== 'ADMIN' && user.role !== 'COUNTER') {
+        return res.status(403).json({
+          success: false,
+          error: 'Access denied. Only registered staff and administrators can access the system.',
+        });
+      }
     } else {
-      // First-time Google user: create user account
-      // prolemda@gmail.com gets ADMIN, anyone else gets USER (Customer)
+      // Unregistered Google user: only master owner prolemda@gmail.com is allowed to bootstrap
+      if (!isAdminEmail) {
+        return res.status(403).json({
+          success: false,
+          error: 'Access denied. This Gmail account has not been added by the Administrator. Please contact your shop admin.',
+        });
+      }
+
       const randomPassword = Math.random().toString(36).slice(-10) + Date.now();
       const salt = await bcrypt.genSalt(10);
       const passwordHash = await bcrypt.hash(randomPassword, salt);
 
       user = new User({
-        name: name || (isAdminEmail ? 'Admin' : 'Customer'),
+        name: name || 'Super Admin (Owner)',
         email: normalizedEmail,
         passwordHash,
-        role: isAdminEmail ? 'ADMIN' : 'USER',
+        role: 'ADMIN',
         isActive: true,
       });
       await user.save();
@@ -378,83 +400,14 @@ async function googleLogin(req, res, next) {
   }
 }
 
-const registerSchema = z.object({
-  name: z.string().min(2, 'Name is required'),
-  email: z.string().email('Valid email is required'),
-  phone: z.string().optional().default(''),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-  vehicleModel: z.string().optional().default(''),
-});
-
 /**
- * Public User Registration
+ * Public User Registration - Disabled per shop policy
  */
 async function register(req, res, next) {
-  try {
-    const data = registerSchema.parse(req.body);
-    const normalizedEmail = data.email.toLowerCase().trim();
-
-    const existing = await User.findOne({ email: normalizedEmail });
-    if (existing) {
-      return res.status(400).json({
-        success: false,
-        error: 'An account with this email already exists. Please log in.',
-      });
-    }
-
-    const isAdminEmail =
-      normalizedEmail === 'prolemda@gmail.com' ||
-      normalizedEmail === 'test_admin@hindtyres.com';
-
-    const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(data.password, salt);
-
-    const user = new User({
-      name: data.name.trim(),
-      email: normalizedEmail,
-      phone: (data.phone || '').trim(),
-      passwordHash,
-      role: isAdminEmail ? 'ADMIN' : 'USER',
-      isActive: true,
-    });
-    await user.save();
-
-    const token = jwt.sign(
-      { id: user._id, role: user.role, email: user.email },
-      config.JWT_SECRET,
-      { expiresIn: config.JWT_EXPIRES_IN }
-    );
-
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: config.NODE_ENV === 'production',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
-
-    await auditService.log({
-      action: 'REGISTER',
-      entity: 'User',
-      entityId: user._id,
-      req,
-      user,
-    });
-
-    res.status(201).json({
-      success: true,
-      message: 'Account created successfully! Welcome to HIND TYRES.',
-      data: {
-        token,
-        user: {
-          _id: user._id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-        },
-      },
-    });
-  } catch (err) {
-    next(err);
-  }
+  return res.status(403).json({
+    success: false,
+    error: 'Public registration is disabled. Staff and Admin accounts must be created inside the Admin Portal.',
+  });
 }
 
 module.exports = {

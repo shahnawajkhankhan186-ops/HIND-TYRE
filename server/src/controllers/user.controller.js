@@ -7,13 +7,15 @@ const createUserSchema = z.object({
   name: z.string().min(2, 'Name is required'),
   email: z.string().email('Valid email is required'),
   phone: z.string().optional().default(''),
-  password: z.string().min(6, 'Password must be at least 6 characters').optional(),
-  role: z.enum(['ADMIN', 'COUNTER']).default('ADMIN'),
+  password: z.string().min(6, 'Password is required and must be at least 6 characters'),
+  role: z.enum(['ADMIN', 'COUNTER']).default('COUNTER'),
 });
 
 async function getUsers(req, res, next) {
   try {
-    const users = await User.find().select('-passwordHash').sort({ createdAt: -1 });
+    const users = await User.find({ role: { $in: ['ADMIN', 'COUNTER'] } })
+      .select('-passwordHash')
+      .sort({ createdAt: -1 });
     res.json({ success: true, data: users });
   } catch (err) {
     next(err);
@@ -31,13 +33,8 @@ async function createUser(req, res, next) {
       });
     }
 
-    // If password provided use it, otherwise generate random password for Google/OAuth user
-    const rawPassword = data.password && data.password.trim()
-      ? data.password.trim()
-      : Math.random().toString(36).slice(-10) + Date.now();
-
     const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(rawPassword, salt);
+    const passwordHash = await bcrypt.hash(data.password.trim(), salt);
 
     const user = new User({
       name: data.name.trim(),

@@ -53,10 +53,10 @@ async function sendInvoiceEmail({ recipientEmail, sale, pdfBuffer, recipientType
       .join('');
 
     const html = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #1e293b; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
-        <div style="background-color: #0f172a; padding: 24px; color: #ffffff;">
-          <h1 style="margin: 0; font-size: 20px; font-weight: bold; color: #38bdf8;">${shopName}</h1>
-          <p style="margin: 6px 0 0; font-size: 13px; color: #94a3b8;">Tax Invoice & Warranty Receipt</p>
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #111318; background: #ffffff; border: 1px solid #e3e5e9; border-radius: 8px; overflow: hidden;">
+        <div style="background-color: #0A0A0C; padding: 24px; color: #ffffff;">
+          <h1 style="margin: 0; font-size: 20px; font-weight: bold; color: #FFC107;">${shopName}</h1>
+          <p style="margin: 6px 0 0; font-size: 13px; color: #A9AEB8;">Tax Invoice & Warranty Receipt</p>
         </div>
         <div style="padding: 24px;">
           <p style="font-size: 15px; margin-top: 0;">
@@ -66,17 +66,17 @@ async function sendInvoiceEmail({ recipientEmail, sale, pdfBuffer, recipientType
             Thank you for purchasing with <strong>${shopName}</strong>. Please find attached your official GST Tax Invoice and tyre warranty document for invoice <strong>#${sale.invoiceNo}</strong>.
           </p>
           
-          <div style="background: #f8fafc; padding: 16px; border-radius: 6px; margin: 20px 0; border: 1px solid #e2e8f0;">
+          <div style="background: #F4F5F7; padding: 16px; border-radius: 6px; margin: 20px 0; border: 1px solid #e3e5e9;">
             <p style="margin: 0 0 8px; font-size: 13px;"><strong>Invoice No:</strong> ${sale.invoiceNo}</p>
             <p style="margin: 0 0 8px; font-size: 13px;"><strong>Date & Time:</strong> ${invoiceDateIST}</p>
             <p style="margin: 0 0 8px; font-size: 13px;"><strong>Payment Mode:</strong> ${sale.paymentMode} (${sale.paymentStatus})</p>
-            <p style="margin: 0; font-size: 14px; color: #0f172a;"><strong>Grand Total:</strong> <span style="color: #2563eb; font-weight: bold; font-size: 16px;">${grandTotal}</span></p>
+            <p style="margin: 0; font-size: 14px; color: #111318;"><strong>Grand Total:</strong> <span style="background: #FFC107; color: #0A0A0C; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 16px;">${grandTotal}</span></p>
           </div>
 
-          <h3 style="font-size: 14px; margin-bottom: 8px; color: #0f172a;">Purchased Items</h3>
+          <h3 style="font-size: 14px; margin-bottom: 8px; color: #111318;">Purchased Items</h3>
           <table style="width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 20px;">
             <thead>
-              <tr style="background: #f1f5f9; text-align: left;">
+              <tr style="background: #131418; color: #ffffff; text-align: left;">
                 <th style="padding: 8px;">Item</th>
                 <th style="padding: 8px; text-align: center;">Qty</th>
                 <th style="padding: 8px; text-align: right;">Amount</th>
@@ -87,7 +87,7 @@ async function sendInvoiceEmail({ recipientEmail, sale, pdfBuffer, recipientType
             </tbody>
           </table>
 
-          <p style="font-size: 12px; color: #64748b; margin-top: 24px; border-top: 1px solid #e2e8f0; padding-top: 12px;">
+          <p style="font-size: 12px; color: #64748b; margin-top: 24px; border-top: 1px solid #e3e5e9; padding-top: 12px;">
             Please retain the attached PDF invoice for any future tyre warranty claims. For queries, contact us at ${shopSettings?.phone || '+91 98765 43210'}.
           </p>
         </div>

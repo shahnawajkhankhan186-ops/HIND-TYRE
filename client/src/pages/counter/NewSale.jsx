@@ -318,33 +318,67 @@ export default function NewSale() {
   });
 
   return (
-    <div className="container-fluid p-3 p-md-4">
-      {/* Top Breadcrumb Steps */}
-      <div className="glass-panel p-3 mb-4">
+    <div className="container-fluid p-3 p-md-4" style={{ minHeight: 'calc(100vh - 120px)', background: 'var(--bg-light)' }}>
+      {/* Top Breadcrumb Steps Header */}
+      <div className="card-clean p-3 mb-4 bg-white">
         <div className="d-flex flex-wrap align-items-center justify-content-between gap-3">
           <div className="d-flex align-items-center gap-2">
-            <div className="p-2 bg-info bg-opacity-20 text-info rounded-3">
+            <div className="p-2 rounded-3" style={{ background: 'var(--accent-soft)', color: '#B45309' }}>
               <ShoppingCart size={22} />
             </div>
             <div>
-              <h4 className="text-white fw-bold m-0 brand-font">Counter POS Billing</h4>
-              <p className="text-secondary extra-small m-0">Walk-in customer checkout & live stock deduction</p>
+              <h4 className="fw-bold m-0" style={{ color: 'var(--text-on-light)', fontFamily: 'Montserrat, sans-serif' }}>Counter POS Billing</h4>
+              <p className="text-muted extra-small m-0">Walk-in customer checkout & live inventory deduction</p>
             </div>
           </div>
 
-          {/* Stepper Progress */}
-          <div className="d-flex align-items-center gap-2 small">
-            <span className={`badge px-3 py-2 rounded-pill ${step === 1 ? 'bg-info text-dark fw-bold' : step > 1 ? 'bg-success text-white' : 'bg-secondary text-secondary bg-opacity-20'}`}>
+          {/* Stepper Progress (4 states) */}
+          <div className="d-flex align-items-center gap-2 flex-wrap">
+            <div
+              className="d-flex align-items-center px-3 py-1.5 rounded-pill small"
+              style={
+                step > 1
+                  ? { background: 'var(--accent)', color: '#000', fontWeight: '700' }
+                  : step === 1
+                  ? { border: '2px solid var(--accent)', background: 'var(--accent-soft)', color: '#000', fontWeight: '700' }
+                  : { border: '1px solid var(--border-light)', background: '#F1F3F5', color: 'var(--text-muted)' }
+              }
+            >
+              {step > 1 ? <CheckCircle2 size={14} className="me-1.5" /> : null}
               1. Customer
-            </span>
-            <span className="text-secondary">→</span>
-            <span className={`badge px-3 py-2 rounded-pill ${step === 2 ? 'bg-info text-dark fw-bold' : step > 2 ? 'bg-success text-white' : 'bg-secondary text-secondary bg-opacity-20'}`}>
+            </div>
+
+            <span className="text-muted">→</span>
+
+            <div
+              className="d-flex align-items-center px-3 py-1.5 rounded-pill small"
+              style={
+                step > 2
+                  ? { background: 'var(--accent)', color: '#000', fontWeight: '700' }
+                  : step === 2
+                  ? { border: '2px solid var(--accent)', background: 'var(--accent-soft)', color: '#000', fontWeight: '700' }
+                  : { border: '1px solid var(--border-light)', background: '#F1F3F5', color: 'var(--text-muted)' }
+              }
+            >
+              {step > 2 ? <CheckCircle2 size={14} className="me-1.5" /> : null}
               2. Tyres & Cart ({cart.length})
-            </span>
-            <span className="text-secondary">→</span>
-            <span className={`badge px-3 py-2 rounded-pill ${step === 3 ? 'bg-info text-dark fw-bold' : step > 3 ? 'bg-success text-white' : 'bg-secondary text-secondary bg-opacity-20'}`}>
+            </div>
+
+            <span className="text-muted">→</span>
+
+            <div
+              className="d-flex align-items-center px-3 py-1.5 rounded-pill small"
+              style={
+                step > 3
+                  ? { background: 'var(--accent)', color: '#000', fontWeight: '700' }
+                  : step === 3
+                  ? { border: '2px solid var(--accent)', background: 'var(--accent-soft)', color: '#000', fontWeight: '700' }
+                  : { border: '1px solid var(--border-light)', background: '#F1F3F5', color: 'var(--text-muted)' }
+              }
+            >
+              {step > 3 ? <CheckCircle2 size={14} className="me-1.5" /> : null}
               3. Review & Bill
-            </span>
+            </div>
           </div>
         </div>
       </div>
@@ -353,17 +387,17 @@ export default function NewSale() {
       {step === 1 && (
         <div className="row justify-content-center">
           <div className="col-12 col-lg-8">
-            <div className="glass-panel p-4 p-md-5">
-              <div className="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom border-secondary border-opacity-20">
+            <div className="card-clean p-4 p-md-5 bg-white">
+              <div className="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom" style={{ borderColor: 'var(--border-light)' }}>
                 <div>
-                  <h4 className="text-white fw-bold m-0">Step 1: Customer Information</h4>
-                  <p className="text-secondary small m-0 mt-1">
+                  <h4 className="fw-bold m-0" style={{ color: 'var(--text-on-light)' }}>Step 1: Customer Information</h4>
+                  <p className="text-muted small m-0 mt-1">
                     Enter mobile number to auto-fill repeat customers
                   </p>
                 </div>
                 {foundExistingCustomer && (
-                  <span className="badge bg-success bg-opacity-20 text-success border border-success border-opacity-30 px-3 py-1.5">
-                    Repeat Customer Found
+                  <span className="badge-pill-yellow">
+                    ★ Repeat Customer Found
                   </span>
                 )}
               </div>
@@ -372,7 +406,7 @@ export default function NewSale() {
                 <div className="row g-3 mb-4">
                   {/* Phone with Auto-Lookup */}
                   <div className="col-12 col-md-6">
-                    <label className="form-label text-light small fw-semibold">
+                    <label className="form-label small fw-semibold" style={{ color: 'var(--text-on-light)' }}>
                       Mobile Number <span className="text-danger">*</span>
                     </label>
                     <div className="input-group">
@@ -388,16 +422,16 @@ export default function NewSale() {
                       />
                       {phoneLookupLoading && (
                         <span className="input-group-text">
-                          <span className="spinner-border spinner-border-sm text-info" />
+                          <span className="spinner-border spinner-border-sm" style={{ color: 'var(--accent-dark)' }} />
                         </span>
                       )}
                     </div>
-                    <small className="text-secondary extra-small">Auto-fetches details if already in system</small>
+                    <small className="text-muted extra-small">Auto-fetches details if already in system</small>
                   </div>
 
                   {/* Customer Name */}
                   <div className="col-12 col-md-6">
-                    <label className="form-label text-light small fw-semibold">
+                    <label className="form-label small fw-semibold" style={{ color: 'var(--text-on-light)' }}>
                       Customer Name <span className="text-danger">*</span>
                     </label>
                     <div className="input-group">
@@ -415,7 +449,7 @@ export default function NewSale() {
 
                   {/* Email */}
                   <div className="col-12 col-md-6">
-                    <label className="form-label text-light small fw-semibold">
+                    <label className="form-label small fw-semibold" style={{ color: 'var(--text-on-light)' }}>
                       Email Address (for Receipt PDF) <span className="text-danger">*</span>
                     </label>
                     <div className="input-group">
@@ -433,7 +467,7 @@ export default function NewSale() {
 
                   {/* Address */}
                   <div className="col-12 col-md-6">
-                    <label className="form-label text-light small fw-semibold">
+                    <label className="form-label small fw-semibold" style={{ color: 'var(--text-on-light)' }}>
                       Customer Address <span className="text-danger">*</span>
                     </label>
                     <div className="input-group">
@@ -451,14 +485,14 @@ export default function NewSale() {
 
                   {/* Vehicle Number (Optional) */}
                   <div className="col-12 col-md-6">
-                    <label className="form-label text-secondary small fw-semibold">
+                    <label className="form-label text-muted small fw-semibold">
                       Vehicle Registration No. (Optional)
                     </label>
                     <div className="input-group">
                       <span className="input-group-text"><Car size={16} /></span>
                       <input
                         type="text"
-                        className="form-control text-uppercase"
+                        className="form-control text-uppercase font-monospace"
                         placeholder="e.g. UP 78 BK 1234"
                         value={customer.vehicleNumber}
                         onChange={(e) => setCustomer({ ...customer, vehicleNumber: e.target.value.toUpperCase() })}
@@ -468,7 +502,7 @@ export default function NewSale() {
 
                   {/* Vehicle Model (Optional) */}
                   <div className="col-12 col-md-6">
-                    <label className="form-label text-secondary small fw-semibold">
+                    <label className="form-label text-muted small fw-semibold">
                       Vehicle Make / Model (Optional)
                     </label>
                     <input
@@ -482,7 +516,7 @@ export default function NewSale() {
                 </div>
 
                 <div className="d-flex justify-content-end">
-                  <button type="submit" className="btn btn-primary-glass px-4 py-2.5 d-flex align-items-center gap-2">
+                  <button type="submit" className="btn btn-accent px-4 py-2.5 d-flex align-items-center gap-2">
                     Next: Select Tyres & Items <ArrowRight size={18} />
                   </button>
                 </div>
@@ -497,18 +531,18 @@ export default function NewSale() {
         <div className="row g-3">
           {/* Left Column: Catalog & Search */}
           <div className="col-12 col-lg-8">
-            <div className="glass-panel p-3 mb-3">
+            <div className="card-clean p-3 mb-3 bg-white">
               {/* Type Switcher & Search Bar */}
               <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
-                <div className="btn-group p-1 rounded-pill bg-slate-900 border border-secondary border-opacity-25">
+                <div className="btn-group p-1 rounded-pill" style={{ background: 'var(--bg-light)', border: '1px solid var(--border-light)' }}>
                   <button
-                    className={`btn btn-sm rounded-pill px-3 ${tab === 'tyres' ? 'btn-primary-glass' : 'btn-link text-secondary text-decoration-none'}`}
+                    className={`btn btn-sm rounded-pill px-3 fw-bold ${tab === 'tyres' ? 'btn-dark-solid' : 'btn-link text-muted text-decoration-none'}`}
                     onClick={() => setTab('tyres')}
                   >
                     <Disc3 size={15} className="me-1" /> Tyres ({filteredTyres.length})
                   </button>
                   <button
-                    className={`btn btn-sm rounded-pill px-3 ${tab === 'accessories' ? 'btn-primary-glass' : 'btn-link text-secondary text-decoration-none'}`}
+                    className={`btn btn-sm rounded-pill px-3 fw-bold ${tab === 'accessories' ? 'btn-dark-solid' : 'btn-link text-muted text-decoration-none'}`}
                     onClick={() => setTab('accessories')}
                   >
                     <Layers size={15} className="me-1" /> Accessories ({filteredAccessories.length})
@@ -530,7 +564,7 @@ export default function NewSale() {
 
               {/* Filters for Tyres */}
               {tab === 'tyres' && (
-                <div className="row g-2 pt-2 border-top border-secondary border-opacity-15">
+                <div className="row g-2 pt-2 border-top" style={{ borderColor: 'var(--border-light)' }}>
                   <div className="col-6 col-md-4">
                     <select
                       className="form-select form-select-sm"
@@ -573,7 +607,7 @@ export default function NewSale() {
               {tab === 'tyres' ? (
                 filteredTyres.length === 0 ? (
                   <div className="col-12">
-                    <div className="glass-panel p-5 text-center text-secondary">
+                    <div className="card-clean p-5 text-center text-muted bg-white">
                       No tyres matching filter criteria.
                     </div>
                   </div>
@@ -582,41 +616,41 @@ export default function NewSale() {
                     const isOutOfStock = tyre.quantity <= 0;
                     return (
                       <div key={tyre._id} className="col-12 col-sm-6 col-xl-4">
-                        <div className={`glass-panel p-3 h-100 d-flex flex-column justify-content-between ${isOutOfStock ? 'opacity-50' : 'glass-card-interactive'}`}>
+                        <div className={`card-clean p-3 h-100 d-flex flex-column justify-content-between bg-white ${isOutOfStock ? 'opacity-50' : ''}`}>
                           <div>
                             <div className="d-flex justify-content-between align-items-start mb-1">
-                              <span className="badge bg-secondary bg-opacity-30 text-white font-monospace extra-small">
+                              <span className="badge bg-light text-dark border font-monospace extra-small">
                                 {tyre.companyId?.name || 'Tyre'}
                               </span>
-                              <span className={`badge ${isOutOfStock ? 'bg-danger' : tyre.quantity <= tyre.lowStockThreshold ? 'badge-glass-amber' : 'badge-glass-emerald'} extra-small`}>
+                              <span className={isOutOfStock ? 'badge-pill-danger' : tyre.quantity <= tyre.lowStockThreshold ? 'badge-pill-warning' : 'badge-pill-success'}>
                                 {isOutOfStock ? 'Out of stock' : `${tyre.quantity} in stock`}
                               </span>
                             </div>
 
-                            <h6 className="text-white fw-bold mb-1">{tyre.modelName}</h6>
-                            <div className="text-info font-monospace fw-semibold fs-6 mb-2">{tyre.size}</div>
+                            <h6 className="fw-bold mb-1 text-dark">{tyre.modelName}</h6>
+                            <div className="font-monospace fw-bold fs-6 mb-2" style={{ color: 'var(--text-on-light)' }}>{tyre.size}</div>
 
                             <div className="d-flex flex-wrap gap-1 mb-2">
-                              <span className="badge bg-dark text-secondary border border-secondary border-opacity-25 extra-small">
+                              <span className="badge bg-light text-muted border extra-small">
                                 {tyre.vehicleType}
                               </span>
-                              <span className="badge bg-dark text-secondary border border-secondary border-opacity-25 extra-small">
+                              <span className="badge bg-light text-muted border extra-small">
                                 {tyre.tubeType}
                               </span>
                             </div>
                           </div>
 
-                          <div className="pt-2 border-top border-secondary border-opacity-20 d-flex justify-content-between align-items-center">
+                          <div className="pt-2 border-top d-flex justify-content-between align-items-center" style={{ borderColor: 'var(--border-light)' }}>
                             <div>
-                              <div className="text-secondary extra-small">Selling Rate</div>
-                              <div className="text-white fw-bold font-monospace fs-6">
+                              <div className="text-muted extra-small">Selling Rate</div>
+                              <div className="fw-bold font-monospace fs-6 text-dark">
                                 {formatRupees(tyre.sellingPricePaise)}
                               </div>
-                              <div className="text-secondary extra-small">+ {tyre.gstPercent}% GST</div>
+                              <div className="text-muted extra-small">+ {tyre.gstPercent}% GST</div>
                             </div>
 
                             <button
-                              className="btn btn-sm btn-primary-glass d-flex align-items-center gap-1"
+                              className="btn btn-sm btn-accent d-flex align-items-center gap-1"
                               disabled={isOutOfStock}
                               onClick={() => addToCart(tyre, 'Tyre')}
                             >
@@ -631,7 +665,7 @@ export default function NewSale() {
               ) : (
                 filteredAccessories.length === 0 ? (
                   <div className="col-12">
-                    <div className="glass-panel p-5 text-center text-secondary">
+                    <div className="card-clean p-5 text-center text-muted bg-white">
                       No accessories found.
                     </div>
                   </div>
@@ -640,32 +674,32 @@ export default function NewSale() {
                     const isOutOfStock = acc.quantity <= 0;
                     return (
                       <div key={acc._id} className="col-12 col-sm-6 col-xl-4">
-                        <div className={`glass-panel p-3 h-100 d-flex flex-column justify-content-between ${isOutOfStock ? 'opacity-50' : 'glass-card-interactive'}`}>
+                        <div className={`card-clean p-3 h-100 d-flex flex-column justify-content-between bg-white ${isOutOfStock ? 'opacity-50' : ''}`}>
                           <div>
                             <div className="d-flex justify-content-between align-items-start mb-1">
-                              <span className="badge bg-secondary bg-opacity-30 text-white extra-small">
+                              <span className="badge bg-light text-dark border extra-small">
                                 {acc.category}
                               </span>
-                              <span className={`badge ${isOutOfStock ? 'bg-danger' : acc.quantity <= acc.lowStockThreshold ? 'badge-glass-amber' : 'badge-glass-emerald'} extra-small`}>
+                              <span className={isOutOfStock ? 'badge-pill-danger' : acc.quantity <= acc.lowStockThreshold ? 'badge-pill-warning' : 'badge-pill-success'}>
                                 {isOutOfStock ? 'Out of stock' : `${acc.quantity} in stock`}
                               </span>
                             </div>
 
-                            <h6 className="text-white fw-bold mb-1">{acc.name}</h6>
-                            <div className="text-secondary font-monospace extra-small mb-2">SKU: {acc.sku}</div>
+                            <h6 className="fw-bold mb-1 text-dark">{acc.name}</h6>
+                            <div className="text-muted font-monospace extra-small mb-2">SKU: {acc.sku}</div>
                           </div>
 
-                          <div className="pt-2 border-top border-secondary border-opacity-20 d-flex justify-content-between align-items-center">
+                          <div className="pt-2 border-top d-flex justify-content-between align-items-center" style={{ borderColor: 'var(--border-light)' }}>
                             <div>
-                              <div className="text-secondary extra-small">Rate</div>
-                              <div className="text-white fw-bold font-monospace fs-6">
+                              <div className="text-muted extra-small">Rate</div>
+                              <div className="fw-bold font-monospace fs-6 text-dark">
                                 {formatRupees(acc.sellingPricePaise)}
                               </div>
-                              <div className="text-secondary extra-small">+ {acc.gstPercent}% GST</div>
+                              <div className="text-muted extra-small">+ {acc.gstPercent}% GST</div>
                             </div>
 
                             <button
-                              className="btn btn-sm btn-primary-glass d-flex align-items-center gap-1"
+                              className="btn btn-sm btn-accent d-flex align-items-center gap-1"
                               disabled={isOutOfStock}
                               onClick={() => addToCart(acc, 'Accessory')}
                             >
@@ -683,31 +717,32 @@ export default function NewSale() {
 
           {/* Right Column: Live Billing Cart */}
           <div className="col-12 col-lg-4">
-            <div className="glass-panel p-3 h-100 d-flex flex-column">
-              <div className="d-flex align-items-center justify-content-between pb-2 mb-3 border-bottom border-secondary border-opacity-25">
+            <div className="card-clean p-3 h-100 d-flex flex-column bg-white">
+              <div className="d-flex align-items-center justify-content-between pb-2 mb-3 border-bottom" style={{ borderColor: 'var(--border-light)' }}>
                 <div className="d-flex align-items-center gap-2">
-                  <ShoppingCart size={18} className="text-info" />
-                  <h5 className="text-white fw-bold m-0">Bill Items ({cart.length})</h5>
+                  <ShoppingCart size={18} style={{ color: 'var(--accent-dark)' }} />
+                  <h5 className="fw-bold m-0 text-dark">Bill Items ({cart.length})</h5>
                 </div>
                 {cart.length > 0 && (
-                  <button className="btn btn-sm text-danger p-0 extra-small" onClick={() => setCart([])}>
+                  <button className="btn btn-sm text-danger p-0 extra-small fw-semibold" onClick={() => setCart([])}>
                     Clear all
                   </button>
                 )}
               </div>
 
               {/* Customer quick info */}
-              <div className="p-2 mb-3 rounded-2 bg-slate-900 border border-secondary border-opacity-20 small">
+              <div className="p-2 mb-3 rounded-2 small" style={{ background: 'var(--bg-light)', border: '1px solid var(--border-light)' }}>
                 <div className="d-flex justify-content-between align-items-center">
-                  <span className="text-secondary">Customer:</span>
-                  <span className="text-white fw-semibold">{customer.name}</span>
+                  <span className="text-muted">Customer:</span>
+                  <span className="text-dark fw-bold">{customer.name}</span>
                 </div>
                 <div className="d-flex justify-content-between align-items-center">
-                  <span className="text-secondary">Phone:</span>
-                  <span className="text-light font-monospace">{customer.phone}</span>
+                  <span className="text-muted">Phone:</span>
+                  <span className="text-dark font-monospace">{customer.phone}</span>
                 </div>
                 <button
-                  className="btn btn-link extra-small text-info p-0 mt-1 text-decoration-none"
+                  className="btn btn-link extra-small p-0 mt-1 text-decoration-none fw-semibold"
+                  style={{ color: 'var(--link-blue)' }}
                   onClick={() => setStep(1)}
                 >
                   Edit customer details
@@ -717,39 +752,39 @@ export default function NewSale() {
               {/* Cart Items List */}
               <div className="flex-grow-1 overflow-y-auto pe-1 mb-3" style={{ maxHeight: '340px' }}>
                 {cart.length === 0 ? (
-                  <div className="text-center py-5 text-secondary">
+                  <div className="text-center py-5 text-muted">
                     <ShoppingCart size={36} className="opacity-30 mb-2" />
                     <p className="small m-0">No items added to bill yet.</p>
                     <small className="extra-small">Select tyres or accessories on the left.</small>
                   </div>
                 ) : (
                   cart.map((item, idx) => (
-                    <div key={idx} className="p-2.5 mb-2 rounded-2 bg-slate-900 bg-opacity-70 border border-secondary border-opacity-15">
+                    <div key={idx} className="p-2.5 mb-2 rounded-2" style={{ background: '#FAFBFD', border: '1px solid var(--border-light)' }}>
                       <div className="d-flex justify-content-between align-items-start">
                         <div className="me-2">
-                          <div className="text-white fw-semibold small lh-sm">{item.name}</div>
-                          <div className="text-secondary extra-small font-monospace">{item.size !== '-' ? item.size : item.company}</div>
+                          <div className="text-dark fw-semibold small lh-sm">{item.name}</div>
+                          <div className="text-muted extra-small font-monospace">{item.size !== '-' ? item.size : item.company}</div>
                         </div>
                         <button
-                          className="btn btn-sm text-secondary hover-text-danger p-0"
+                          className="btn btn-sm text-muted hover-text-danger p-0"
                           onClick={() => removeFromCart(idx)}
                         >
                           <Trash2 size={14} />
                         </button>
                       </div>
 
-                      <div className="d-flex justify-content-between align-items-center mt-2 pt-2 border-top border-secondary border-opacity-10">
+                      <div className="d-flex justify-content-between align-items-center mt-2 pt-2 border-top" style={{ borderColor: 'var(--border-light)' }}>
                         {/* Qty Controls */}
-                        <div className="d-flex align-items-center gap-1.5 bg-dark p-1 rounded border border-secondary border-opacity-25">
+                        <div className="d-flex align-items-center gap-1.5 p-1 rounded" style={{ background: 'var(--bg-light)', border: '1px solid var(--border-light)' }}>
                           <button
-                            className="btn btn-sm text-light p-0 px-1"
+                            className="btn btn-sm text-dark p-0 px-1"
                             onClick={() => updateCartQty(idx, -1)}
                           >
                             <Minus size={12} />
                           </button>
-                          <span className="px-1 text-white fw-bold small">{item.quantity}</span>
+                          <span className="px-1 text-dark fw-bold small">{item.quantity}</span>
                           <button
-                            className="btn btn-sm text-light p-0 px-1"
+                            className="btn btn-sm text-dark p-0 px-1"
                             onClick={() => updateCartQty(idx, 1)}
                             disabled={item.quantity >= item.stockQuantity}
                           >
@@ -759,10 +794,10 @@ export default function NewSale() {
 
                         {/* Price */}
                         <div className="text-end">
-                          <div className="text-white fw-bold font-monospace small">
+                          <div className="text-dark fw-bold font-monospace small">
                             {formatRupees(item.unitPricePaise * item.quantity)}
                           </div>
-                          <div className="text-secondary extra-small">+{item.gstPercent}% GST</div>
+                          <div className="text-muted extra-small">+{item.gstPercent}% GST</div>
                         </div>
                       </div>
                     </div>
@@ -772,22 +807,24 @@ export default function NewSale() {
 
               {/* Financial Summary */}
               {cart.length > 0 && (
-                <div className="pt-2 border-top border-secondary border-opacity-25">
-                  <div className="d-flex justify-content-between text-secondary small mb-1">
+                <div className="pt-2 border-top" style={{ borderColor: 'var(--border-light)' }}>
+                  <div className="d-flex justify-content-between text-muted small mb-1">
                     <span>Taxable Subtotal:</span>
-                    <span className="font-monospace text-light">{formatRupees(subtotalPaise)}</span>
+                    <span className="font-monospace text-dark fw-semibold">{formatRupees(subtotalPaise)}</span>
                   </div>
-                  <div className="d-flex justify-content-between text-secondary small mb-2">
+                  <div className="d-flex justify-content-between text-muted small mb-2">
                     <span>Estimated GST:</span>
-                    <span className="font-monospace text-light">+ {formatRupees(gstPaise)}</span>
+                    <span className="font-monospace text-dark fw-semibold">+ {formatRupees(gstPaise)}</span>
                   </div>
-                  <div className="d-flex justify-content-between align-items-center py-2 border-top border-secondary border-opacity-15 mb-3">
-                    <span className="text-white fw-bold">Est. Total:</span>
-                    <span className="text-info fw-bold font-monospace fs-5">{formatRupees(subtotalPaise + gstPaise)}</span>
+                  <div className="d-flex justify-content-between align-items-center py-2 border-top mb-3" style={{ borderColor: 'var(--border-light)' }}>
+                    <span className="text-dark fw-bold">Est. Total:</span>
+                    <span className="fw-bold font-monospace fs-5 text-dark" style={{ borderBottom: '3.5px solid var(--accent)' }}>
+                      {formatRupees(subtotalPaise + gstPaise)}
+                    </span>
                   </div>
 
                   <button
-                    className="btn btn-primary-glass w-100 py-2.5 d-flex align-items-center justify-content-center gap-2"
+                    className="btn btn-accent w-100 py-2.5 d-flex align-items-center justify-content-center gap-2 fw-bold"
                     onClick={() => setStep(3)}
                   >
                     Proceed to Review & Bill <ArrowRight size={16} />
@@ -803,15 +840,15 @@ export default function NewSale() {
       {step === 3 && (
         <div className="row justify-content-center">
           <div className="col-12 col-lg-9">
-            <div className="glass-panel p-4 p-md-5">
-              <div className="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-secondary border-opacity-20">
+            <div className="card-clean p-4 p-md-5 bg-white">
+              <div className="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom" style={{ borderColor: 'var(--border-light)' }}>
                 <div>
-                  <h4 className="text-white fw-bold m-0">Step 3: Review Invoice & Confirm Sale</h4>
-                  <p className="text-secondary small m-0 mt-1">
+                  <h4 className="fw-bold m-0" style={{ color: 'var(--text-on-light)' }}>Step 3: Review Invoice & Confirm Sale</h4>
+                  <p className="text-muted small m-0 mt-1">
                     Zero-trust server calculation will verify stock and generate sequential GST invoice
                   </p>
                 </div>
-                <button className="btn btn-secondary-glass btn-sm" onClick={() => setStep(2)}>
+                <button className="btn btn-outline-dark-custom btn-sm" onClick={() => setStep(2)}>
                   <ArrowLeft size={15} /> Modify Items
                 </button>
               </div>
@@ -819,30 +856,30 @@ export default function NewSale() {
               {/* Customer Snapshot */}
               <div className="row g-3 mb-4">
                 <div className="col-12 col-md-6">
-                  <div className="p-3 rounded-2 bg-slate-900 border border-secondary border-opacity-25 h-100">
-                    <div className="text-secondary extra-small text-uppercase fw-bold mb-1">Customer</div>
-                    <div className="text-white fw-bold fs-6">{customer.name}</div>
-                    <div className="text-secondary small">Phone: <span className="text-light">{customer.phone}</span></div>
-                    <div className="text-secondary small">Email: <span className="text-light">{customer.email}</span></div>
-                    <div className="text-secondary small">Address: <span className="text-light">{customer.address}</span></div>
+                  <div className="p-3 rounded-2 h-100" style={{ background: 'var(--bg-light)', border: '1px solid var(--border-light)' }}>
+                    <div className="text-muted extra-small text-uppercase fw-bold mb-1">Customer</div>
+                    <div className="text-dark fw-bold fs-6">{customer.name}</div>
+                    <div className="text-muted small">Phone: <span className="text-dark font-monospace fw-medium">{customer.phone}</span></div>
+                    <div className="text-muted small">Email: <span className="text-dark fw-medium">{customer.email}</span></div>
+                    <div className="text-muted small">Address: <span className="text-dark">{customer.address}</span></div>
                   </div>
                 </div>
 
                 <div className="col-12 col-md-6">
-                  <div className="p-3 rounded-2 bg-slate-900 border border-secondary border-opacity-25 h-100">
-                    <div className="text-secondary extra-small text-uppercase fw-bold mb-1">Vehicle & Shop</div>
-                    <div className="text-secondary small">
-                      Vehicle: <span className="text-white fw-semibold">{customer.vehicleNumber || 'Walk-in / None'}</span> {customer.vehicleModel && `(${customer.vehicleModel})`}
+                  <div className="p-3 rounded-2 h-100" style={{ background: 'var(--bg-light)', border: '1px solid var(--border-light)' }}>
+                    <div className="text-muted extra-small text-uppercase fw-bold mb-1">Vehicle & Shop</div>
+                    <div className="text-muted small">
+                      Vehicle: <span className="badge bg-dark text-white font-monospace">{customer.vehicleNumber || 'Walk-in / None'}</span> {customer.vehicleModel && `(${customer.vehicleModel})`}
                     </div>
-                    <div className="text-secondary small mt-1">Shop GSTIN: <span className="text-warning fw-bold">{shopSettings?.gstin || '09AAACH7409R1ZZ'}</span></div>
-                    <div className="text-secondary small">Invoice Series: <span className="text-info font-monospace">HT-YYYYMMDD-XXXX</span></div>
+                    <div className="text-muted small mt-1">Shop GSTIN: <span className="fw-bold" style={{ color: '#B45309' }}>{shopSettings?.gstin || '09AAACH7409R1ZZ'}</span></div>
+                    <div className="text-muted small">Invoice Series: <span className="text-dark font-monospace fw-semibold">HT-YYYYMMDD-XXXX</span></div>
                   </div>
                 </div>
               </div>
 
               {/* Items Table */}
-              <div className="table-responsive mb-4">
-                <table className="table table-glass mb-0">
+              <div className="card-clean overflow-hidden mb-4 bg-white">
+                <table className="table table-custom mb-0">
                   <thead>
                     <tr>
                       <th>#</th>
@@ -860,13 +897,13 @@ export default function NewSale() {
                       const lineGst = Math.round((lineSubtotal * item.gstPercent) / 100);
                       return (
                         <tr key={idx}>
-                          <td className="text-secondary">{idx + 1}</td>
-                          <td className="text-white fw-semibold">{item.name}</td>
-                          <td className="text-secondary font-monospace">{item.size}</td>
-                          <td className="text-center text-white fw-bold">{item.quantity}</td>
+                          <td className="text-muted">{idx + 1}</td>
+                          <td className="text-dark fw-semibold">{item.name}</td>
+                          <td className="text-muted font-monospace">{item.size}</td>
+                          <td className="text-center text-dark fw-bold">{item.quantity}</td>
                           <td className="text-end font-monospace">{formatRupees(item.unitPricePaise, false)}</td>
-                          <td className="text-end font-monospace text-secondary">{item.gstPercent}%</td>
-                          <td className="text-end font-monospace text-white fw-bold">{formatRupees(lineSubtotal + lineGst, false)}</td>
+                          <td className="text-end font-monospace text-muted">{item.gstPercent}%</td>
+                          <td className="text-end font-monospace text-dark fw-bold">{formatRupees(lineSubtotal + lineGst, false)}</td>
                         </tr>
                       );
                     })}
@@ -877,7 +914,7 @@ export default function NewSale() {
               {/* Payment Mode Selection & Discount */}
               <div className="row g-4 mb-4">
                 <div className="col-12 col-md-6">
-                  <label className="form-label text-light small fw-semibold">Payment Mode</label>
+                  <label className="form-label small fw-semibold" style={{ color: 'var(--text-on-light)' }}>Payment Mode</label>
                   <div className="row g-2">
                     {[
                       { id: 'CASH', label: 'Cash', icon: Banknote },
@@ -893,8 +930,8 @@ export default function NewSale() {
                             type="button"
                             className={`btn w-100 p-2.5 d-flex align-items-center gap-2 justify-content-center ${
                               isSelected
-                                ? 'btn-primary-glass'
-                                : 'btn-secondary-glass'
+                                ? 'btn-accent'
+                                : 'btn-outline-dark-custom'
                             }`}
                             onClick={() => setPaymentMode(mode.id)}
                           >
@@ -908,7 +945,7 @@ export default function NewSale() {
 
                   {/* Optional Discount Input */}
                   <div className="mt-3">
-                    <label className="form-label text-secondary small fw-semibold">
+                    <label className="form-label text-muted small fw-semibold">
                       Discount in Rupees (Max {maxDiscountPercent}%: ₹{paiseToRupees(maxDiscountAllowedPaise)})
                     </label>
                     <div className="input-group">
@@ -928,36 +965,36 @@ export default function NewSale() {
 
                 {/* Calculation Summary Box */}
                 <div className="col-12 col-md-6">
-                  <div className="p-3.5 rounded-3 bg-slate-900 border border-secondary border-opacity-30">
-                    <div className="d-flex justify-content-between py-1.5 small border-bottom border-secondary border-opacity-10">
-                      <span className="text-secondary">Taxable Subtotal:</span>
-                      <span className="font-monospace text-light">{formatRupees(subtotalPaise)}</span>
+                  <div className="p-3.5 rounded-3 bg-white" style={{ border: '1px solid var(--border-light)' }}>
+                    <div className="d-flex justify-content-between py-1.5 small border-bottom" style={{ borderColor: 'var(--border-light)' }}>
+                      <span className="text-muted">Taxable Subtotal:</span>
+                      <span className="font-monospace text-dark fw-semibold">{formatRupees(subtotalPaise)}</span>
                     </div>
-                    <div className="d-flex justify-content-between py-1.5 small border-bottom border-secondary border-opacity-10">
-                      <span className="text-secondary">Total GST Output:</span>
-                      <span className="font-monospace text-light">+ {formatRupees(gstPaise)}</span>
+                    <div className="d-flex justify-content-between py-1.5 small border-bottom" style={{ borderColor: 'var(--border-light)' }}>
+                      <span className="text-muted">Total GST Output:</span>
+                      <span className="font-monospace text-dark fw-semibold">+ {formatRupees(gstPaise)}</span>
                     </div>
                     {discountPaise > 0 && (
-                      <div className="d-flex justify-content-between py-1.5 small border-bottom border-secondary border-opacity-10 text-danger">
+                      <div className="d-flex justify-content-between py-1.5 small border-bottom text-danger" style={{ borderColor: 'var(--border-light)' }}>
                         <span>Discount Applied:</span>
                         <span className="font-monospace">- {formatRupees(discountPaise)}</span>
                       </div>
                     )}
-                    <div className="d-flex justify-content-between align-items-center py-2.5 mt-2 bg-info bg-opacity-10 p-2 rounded">
-                      <span className="text-white fw-bold fs-6">Grand Total:</span>
-                      <span className="text-info fw-bold font-monospace fs-4">{formatRupees(grandTotalPaise)}</span>
+                    <div className="d-flex justify-content-between align-items-center py-2.5 mt-2 px-3 rounded" style={{ background: 'var(--accent-soft)', border: '2px solid var(--accent)' }}>
+                      <span className="text-dark fw-bold fs-6">Grand Total:</span>
+                      <span className="text-dark fw-bold font-monospace fs-4">{formatRupees(grandTotalPaise)}</span>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Submit Button */}
-              <div className="d-flex justify-content-between align-items-center pt-3 border-top border-secondary border-opacity-20">
-                <button className="btn btn-secondary-glass" onClick={() => setStep(2)} disabled={submitting}>
+              <div className="d-flex justify-content-between align-items-center pt-3 border-top" style={{ borderColor: 'var(--border-light)' }}>
+                <button className="btn btn-outline-dark-custom" onClick={() => setStep(2)} disabled={submitting}>
                   <ArrowLeft size={16} /> Back
                 </button>
                 <button
-                  className="btn btn-success-glass px-4 py-2.5 d-flex align-items-center gap-2"
+                  className="btn btn-accent px-4 py-2.5 d-flex align-items-center gap-2 fw-bold"
                   onClick={handleConfirmSale}
                   disabled={submitting}
                 >
@@ -982,45 +1019,45 @@ export default function NewSale() {
       {step === 4 && completedSale && (
         <div className="row justify-content-center">
           <div className="col-12 col-lg-8">
-            <div className="glass-panel p-4 p-md-5 text-center shadow-2xl">
-              <div className="d-inline-flex p-3 rounded-circle bg-success bg-opacity-20 text-success mb-3 shadow-lg">
+            <div className="card-clean p-4 p-md-5 text-center bg-white shadow-lg">
+              <div className="d-inline-flex p-3 rounded-circle mb-3" style={{ background: 'var(--accent-soft)', color: '#16A34A', border: '2px solid var(--accent)' }}>
                 <CheckCircle2 size={48} />
               </div>
 
-              <h3 className="text-white fw-bold mb-1 brand-font">Sale Completed Successfully!</h3>
-              <p className="text-secondary small mb-4">
-                Invoice <strong className="text-info font-monospace">{completedSale.invoiceNo}</strong> committed to database.
+              <h3 className="fw-bold mb-1 text-dark" style={{ fontFamily: 'Montserrat, sans-serif' }}>Sale Completed Successfully!</h3>
+              <p className="text-muted small mb-4">
+                Invoice <strong className="font-monospace text-dark">{completedSale.invoiceNo}</strong> committed to database.
                 Stock was reduced transactionally.
               </p>
 
               {/* Summary Card */}
-              <div className="glass-panel p-4 text-start mb-4 bg-slate-900" style={{ maxWidth: '520px', margin: '0 auto' }}>
-                <div className="d-flex justify-content-between py-1 border-bottom border-secondary border-opacity-15 small">
-                  <span className="text-secondary">Customer:</span>
-                  <span className="text-white fw-bold">{completedSale.customerSnapshot.name}</span>
+              <div className="p-4 text-start mb-4 rounded-3" style={{ maxWidth: '520px', margin: '0 auto', background: 'var(--bg-light)', border: '1px solid var(--border-light)' }}>
+                <div className="d-flex justify-content-between py-1 border-bottom small" style={{ borderColor: 'var(--border-light)' }}>
+                  <span className="text-muted">Customer:</span>
+                  <span className="text-dark fw-bold">{completedSale.customerSnapshot.name}</span>
                 </div>
-                <div className="d-flex justify-content-between py-1 border-bottom border-secondary border-opacity-15 small">
-                  <span className="text-secondary">Phone:</span>
-                  <span className="text-light font-monospace">{completedSale.customerSnapshot.phone}</span>
+                <div className="d-flex justify-content-between py-1 border-bottom small" style={{ borderColor: 'var(--border-light)' }}>
+                  <span className="text-muted">Phone:</span>
+                  <span className="text-dark font-monospace">{completedSale.customerSnapshot.phone}</span>
                 </div>
-                <div className="d-flex justify-content-between py-1 border-bottom border-secondary border-opacity-15 small">
-                  <span className="text-secondary">Date & Time:</span>
-                  <span className="text-light">{formatIST(completedSale.createdAt)}</span>
+                <div className="d-flex justify-content-between py-1 border-bottom small" style={{ borderColor: 'var(--border-light)' }}>
+                  <span className="text-muted">Date & Time:</span>
+                  <span className="text-dark">{formatIST(completedSale.createdAt)}</span>
                 </div>
-                <div className="d-flex justify-content-between py-1 border-bottom border-secondary border-opacity-15 small">
-                  <span className="text-secondary">Payment:</span>
-                  <span className="badge bg-success bg-opacity-20 text-success">{completedSale.paymentMode}</span>
+                <div className="d-flex justify-content-between py-1 border-bottom small" style={{ borderColor: 'var(--border-light)' }}>
+                  <span className="text-muted">Payment:</span>
+                  <span className="badge-pill-yellow font-monospace">{completedSale.paymentMode}</span>
                 </div>
-                <div className="d-flex justify-content-between py-2 mt-2">
-                  <span className="text-white fw-bold fs-6">Grand Total:</span>
-                  <span className="text-info fw-bold font-monospace fs-5">{formatRupees(completedSale.totalPaise)}</span>
+                <div className="d-flex justify-content-between py-2 mt-2 px-2 rounded" style={{ background: 'var(--accent-soft)' }}>
+                  <span className="text-dark fw-bold fs-6">Grand Total:</span>
+                  <span className="text-dark fw-bold font-monospace fs-5">{formatRupees(completedSale.totalPaise)}</span>
                 </div>
               </div>
 
-              {/* Action Buttons (As Specified by Step 3 in Section 6) */}
+              {/* Action Buttons */}
               <div className="d-flex flex-wrap justify-content-center gap-2 mb-4">
                 <button
-                  className="btn btn-primary-glass d-flex align-items-center gap-1.5"
+                  className="btn btn-outline-dark-custom d-flex align-items-center gap-1.5"
                   onClick={() => setShowReceiptModal(true)}
                 >
                   <Printer size={16} /> View & Print Receipt
@@ -1028,12 +1065,12 @@ export default function NewSale() {
                 <a
                   href={`/api/sales/${completedSale._id}/receipt.pdf`}
                   download={`Invoice_${completedSale.invoiceNo}.pdf`}
-                  className="btn btn-secondary-glass d-flex align-items-center gap-1.5"
+                  className="btn btn-accent d-flex align-items-center gap-1.5"
                 >
                   <Download size={16} /> Download Receipt (PDF)
                 </a>
                 <button
-                  className="btn btn-success-glass d-flex align-items-center gap-1.5"
+                  className="btn btn-dark-solid d-flex align-items-center gap-1.5"
                   onClick={handleStartNewSale}
                 >
                   <Plus size={16} /> Start New Sale

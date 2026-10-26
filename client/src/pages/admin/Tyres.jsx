@@ -259,25 +259,25 @@ export default function Tyres() {
   return (
     <div className="container-fluid p-3 p-md-4">
       {/* Header */}
-      <div className="glass-panel p-4 mb-4">
+      <div className="card-clean bg-white p-4 mb-4">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <div>
-            <h3 className="text-white fw-bold m-0 brand-font">Tyre Catalog & Stock Manager</h3>
-            <p className="text-secondary small m-0 mt-0.5">
+            <h3 className="text-dark fw-bold m-0 brand-font">Tyre Catalog & Stock Manager</h3>
+            <p className="text-muted small m-0 mt-0.5">
               Multi-company inventory, sizes, selling rates, GST & bulk price adjustment
             </p>
           </div>
           <div className="d-flex align-items-center gap-2">
             <button
-              className="btn btn-secondary-glass btn-sm d-flex align-items-center gap-1.5"
+              className="btn btn-outline-dark-custom btn-sm d-flex align-items-center gap-1.5"
               onClick={() => {
                 setBulkPreview(null);
                 setShowBulkModal(true);
               }}
             >
-              <TrendingUp size={15} className="text-warning" /> Bulk Price Update
+              <TrendingUp size={15} style={{ color: 'var(--accent-dark)' }} /> Bulk Price Update
             </button>
-            <button className="btn btn-primary-glass btn-sm d-flex align-items-center gap-1.5" onClick={handleOpenAdd}>
+            <button className="btn btn-accent btn-sm d-flex align-items-center gap-1.5" onClick={handleOpenAdd}>
               <Plus size={16} /> Add New Tyre
             </button>
           </div>
@@ -285,7 +285,7 @@ export default function Tyres() {
       </div>
 
       {/* Search & Filters Bar */}
-      <div className="glass-panel p-3 mb-3">
+      <div className="card-clean bg-white p-3 mb-3">
         <form onSubmit={handleSearchSubmit} className="row g-2 align-items-center">
           <div className="col-12 col-md-4">
             <div className="input-group input-group-sm">
@@ -341,28 +341,28 @@ export default function Tyres() {
                   setPage(1);
                 }}
               />
-              <label className="form-check-label text-warning small ms-1" htmlFor="lowStockToggle">
+              <label className="form-check-label text-dark small fw-semibold ms-1" htmlFor="lowStockToggle">
                 Low Stock Only
               </label>
             </div>
           </div>
           <div className="col-6 col-md-1">
-            <button type="submit" className="btn btn-secondary-glass btn-sm w-100">Filter</button>
+            <button type="submit" className="btn btn-outline-dark-custom btn-sm w-100">Filter</button>
           </div>
         </form>
       </div>
 
       {/* Catalog Table */}
-      <div className="glass-panel overflow-hidden mb-3">
+      <div className="card-clean bg-white overflow-hidden mb-3">
         {loading ? (
           <TableSkeleton rows={8} cols={8} />
         ) : tyres.length === 0 ? (
-          <div className="p-5 text-center text-secondary">
+          <div className="p-5 text-center text-muted">
             No tyres found matching the criteria.
           </div>
         ) : (
           <div className="table-responsive">
-            <table className="table table-glass mb-0">
+            <table className="table table-custom mb-0">
               <thead>
                 <tr>
                   <th>Brand</th>
@@ -382,40 +382,40 @@ export default function Tyres() {
                   const isOut = t.quantity <= 0;
                   return (
                     <tr key={t._id}>
-                      <td className="text-white fw-bold">{t.companyId?.name || 'Tyre'}</td>
+                      <td className="text-dark fw-bold">{t.companyId?.name || 'Tyre'}</td>
                       <td>
-                        <div className="text-white fw-semibold small">{t.modelName}</div>
-                        <div className="text-secondary extra-small font-monospace">SKU: {t.sku}</div>
+                        <div className="text-dark fw-semibold small">{t.modelName}</div>
+                        <div className="text-muted extra-small font-monospace">SKU: {t.sku}</div>
                       </td>
-                      <td className="text-info font-monospace fw-semibold">{t.size}</td>
+                      <td className="text-dark font-monospace fw-semibold">{t.size}</td>
                       <td>
-                        <span className="badge bg-slate-800 text-light border border-secondary border-opacity-25 extra-small">
+                        <span className="badge bg-light text-dark border extra-small">
                           {t.vehicleType} ({t.tubeType})
                         </span>
                       </td>
-                      <td className="text-end text-secondary font-monospace small">
+                      <td className="text-end text-muted font-monospace small">
                         {formatRupees(t.purchasePricePaise)}
                       </td>
-                      <td className="text-end text-white font-monospace fw-bold fs-6">
+                      <td className="text-end text-dark font-monospace fw-bold fs-6">
                         {formatRupees(t.sellingPricePaise)}
                       </td>
-                      <td className="text-center text-secondary small">{t.gstPercent}%</td>
+                      <td className="text-center text-muted small">{t.gstPercent}%</td>
                       <td className="text-center">
-                        <span className={`badge ${isOut ? 'bg-danger' : isLow ? 'badge-glass-amber' : 'badge-glass-emerald'} extra-small`}>
+                        <span className={`badge ${isOut ? 'badge-pill-danger' : isLow ? 'badge-pill-warning' : 'badge-pill-success'} extra-small`}>
                           {t.quantity} units
                         </span>
                       </td>
                       <td className="text-end">
                         <div className="d-flex align-items-center justify-content-end gap-1.5">
                           <button
-                            className="btn btn-sm btn-secondary-glass p-1.5"
+                            className="btn btn-sm btn-outline-dark-custom p-1.5"
                             title="Edit Tyre & Pricing"
                             onClick={() => handleOpenEdit(t)}
                           >
                             <Edit2 size={14} />
                           </button>
                           <button
-                            className="btn btn-sm btn-danger-glass p-1.5"
+                            className="btn btn-sm btn-outline-danger p-1.5"
                             title="Archive Tyre"
                             onClick={() => setArchiveTarget(t)}
                           >
@@ -434,20 +434,20 @@ export default function Tyres() {
 
       {/* Pagination Controls */}
       {totalPages > 1 && (
-        <div className="d-flex justify-content-between align-items-center glass-panel p-2 px-3">
-          <small className="text-secondary">
-            Showing Page <strong className="text-white">{page}</strong> of <strong className="text-white">{totalPages}</strong> ({totalCount} total tyres)
+        <div className="d-flex justify-content-between align-items-center card-clean bg-white p-2 px-3">
+          <small className="text-muted">
+            Showing Page <strong className="text-dark">{page}</strong> of <strong className="text-dark">{totalPages}</strong> ({totalCount} total tyres)
           </small>
           <div className="btn-group btn-group-sm">
             <button
-              className="btn btn-secondary-glass"
+              className="btn btn-outline-dark-custom"
               disabled={page <= 1}
               onClick={() => setPage((p) => p - 1)}
             >
               Previous
             </button>
             <button
-              className="btn btn-secondary-glass"
+              className="btn btn-outline-dark-custom"
               disabled={page >= totalPages}
               onClick={() => setPage((p) => p + 1)}
             >
@@ -459,14 +459,14 @@ export default function Tyres() {
 
       {/* Add / Edit Tyre Modal */}
       {showModal && (
-        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(5, 8, 15, 0.85)', backdropFilter: 'blur(8px)', zIndex: 1055 }}>
+        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0, 0, 0, 0.65)', zIndex: 1055 }}>
           <div className="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-            <div className="modal-content glass-modal border-0 shadow-2xl">
-              <div className="modal-header border-bottom border-secondary border-opacity-25 py-3">
-                <h5 className="modal-title text-white fw-bold m-0">
+            <div className="modal-content border-0 shadow-lg" style={{ borderRadius: 'var(--radius-md)', background: '#FFFFFF' }}>
+              <div className="modal-header border-bottom py-3">
+                <h5 className="modal-title text-dark fw-bold m-0">
                   {editingTyre ? 'Edit Tyre & Price' : 'Add New Tyre to Inventory'}
                 </h5>
-                <button type="button" className="btn btn-sm text-secondary" onClick={() => setShowModal(false)}>
+                <button type="button" className="btn btn-sm text-muted" onClick={() => setShowModal(false)}>
                   ✕
                 </button>
               </div>
@@ -475,7 +475,7 @@ export default function Tyres() {
                 <div className="modal-body py-3">
                   <div className="row g-3">
                     <div className="col-12 col-md-6">
-                      <label className="form-label text-light small fw-semibold">Company / Brand *</label>
+                      <label className="form-label text-dark small fw-semibold">Company / Brand *</label>
                       <select
                         className="form-select"
                         value={formData.companyId}
@@ -490,7 +490,7 @@ export default function Tyres() {
                     </div>
 
                     <div className="col-12 col-md-6">
-                      <label className="form-label text-light small fw-semibold">Model Name *</label>
+                      <label className="form-label text-dark small fw-semibold">Model Name *</label>
                       <input
                         type="text"
                         className="form-control"
@@ -502,7 +502,7 @@ export default function Tyres() {
                     </div>
 
                     <div className="col-12 col-md-6">
-                      <label className="form-label text-light small fw-semibold">Tyre Size *</label>
+                      <label className="form-label text-dark small fw-semibold">Tyre Size *</label>
                       <input
                         type="text"
                         className="form-control font-monospace"
@@ -514,7 +514,7 @@ export default function Tyres() {
                     </div>
 
                     <div className="col-12 col-md-6">
-                      <label className="form-label text-light small fw-semibold">Unique SKU *</label>
+                      <label className="form-label text-dark small fw-semibold">Unique SKU *</label>
                       <input
                         type="text"
                         className="form-control font-monospace text-uppercase"
@@ -526,7 +526,7 @@ export default function Tyres() {
                     </div>
 
                     <div className="col-6 col-md-4">
-                      <label className="form-label text-light small fw-semibold">Vehicle Category</label>
+                      <label className="form-label text-dark small fw-semibold">Vehicle Category</label>
                       <select
                         className="form-select"
                         value={formData.vehicleType}
@@ -539,7 +539,7 @@ export default function Tyres() {
                     </div>
 
                     <div className="col-6 col-md-4">
-                      <label className="form-label text-light small fw-semibold">Tube Type</label>
+                      <label className="form-label text-dark small fw-semibold">Tube Type</label>
                       <select
                         className="form-select"
                         value={formData.tubeType}
@@ -551,7 +551,7 @@ export default function Tyres() {
                     </div>
 
                     <div className="col-12 col-md-4">
-                      <label className="form-label text-light small fw-semibold">GST Rate (%)</label>
+                      <label className="form-label text-dark small fw-semibold">GST Rate (%)</label>
                       <input
                         type="number"
                         className="form-control"
@@ -563,7 +563,7 @@ export default function Tyres() {
 
                     {/* Pricing in Rupees */}
                     <div className="col-12 col-md-4">
-                      <label className="form-label text-secondary small fw-semibold">Purchase Price (₹)</label>
+                      <label className="form-label text-muted small fw-semibold">Purchase Price (₹)</label>
                       <input
                         type="number"
                         step="0.01"
@@ -576,11 +576,11 @@ export default function Tyres() {
                     </div>
 
                     <div className="col-12 col-md-4">
-                      <label className="form-label text-info small fw-bold">Selling Price Ex-GST (₹) *</label>
+                      <label className="form-label text-dark small fw-bold">Selling Price Ex-GST (₹) *</label>
                       <input
                         type="number"
                         step="0.01"
-                        className="form-control border-info"
+                        className="form-control"
                         placeholder="0.00"
                         value={formData.sellingPriceRupees}
                         onChange={(e) => setFormData({ ...formData, sellingPriceRupees: e.target.value })}
@@ -589,7 +589,7 @@ export default function Tyres() {
                     </div>
 
                     <div className="col-12 col-md-4">
-                      <label className="form-label text-secondary small fw-semibold">Printed MRP (₹)</label>
+                      <label className="form-label text-muted small fw-semibold">Printed MRP (₹)</label>
                       <input
                         type="number"
                         step="0.01"
@@ -602,7 +602,7 @@ export default function Tyres() {
 
                     {/* Quantity & Threshold */}
                     <div className="col-6">
-                      <label className="form-label text-light small fw-semibold">Current Quantity</label>
+                      <label className="form-label text-dark small fw-semibold">Current Quantity</label>
                       <input
                         type="number"
                         className="form-control"
@@ -613,7 +613,7 @@ export default function Tyres() {
                     </div>
 
                     <div className="col-6">
-                      <label className="form-label text-light small fw-semibold">Low Stock Alert Threshold</label>
+                      <label className="form-label text-dark small fw-semibold">Low Stock Alert Threshold</label>
                       <input
                         type="number"
                         className="form-control"
@@ -625,11 +625,11 @@ export default function Tyres() {
                   </div>
                 </div>
 
-                <div className="modal-footer border-top border-secondary border-opacity-25 py-3">
-                  <button type="button" className="btn btn-secondary-glass" onClick={() => setShowModal(false)}>
+                <div className="modal-footer border-top py-3">
+                  <button type="button" className="btn btn-outline-dark-custom" onClick={() => setShowModal(false)}>
                     Cancel
                   </button>
-                  <button type="submit" className="btn btn-primary-glass" disabled={saving}>
+                  <button type="submit" className="btn btn-accent" disabled={saving}>
                     {saving ? 'Saving Tyre...' : 'Save Tyre Specification'}
                   </button>
                 </div>
@@ -641,28 +641,28 @@ export default function Tyres() {
 
       {/* BULK PRICE UPDATE MODAL (Spec Requirement 5) */}
       {showBulkModal && (
-        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(5, 8, 15, 0.85)', backdropFilter: 'blur(8px)', zIndex: 1055 }}>
+        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0, 0, 0, 0.65)', zIndex: 1055 }}>
           <div className="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-            <div className="modal-content glass-modal border-0 shadow-2xl">
-              <div className="modal-header border-bottom border-secondary border-opacity-25 py-3">
+            <div className="modal-content border-0 shadow-lg" style={{ borderRadius: 'var(--radius-md)', background: '#FFFFFF' }}>
+              <div className="modal-header border-bottom py-3">
                 <div className="d-flex align-items-center gap-2">
-                  <TrendingUp className="text-warning" size={20} />
-                  <h5 className="modal-title text-white fw-bold m-0">Bulk Selling Price Adjustment</h5>
+                  <TrendingUp style={{ color: 'var(--accent-dark)' }} size={20} />
+                  <h5 className="modal-title text-dark fw-bold m-0">Bulk Selling Price Adjustment</h5>
                 </div>
-                <button type="button" className="btn btn-sm text-secondary" onClick={() => setShowBulkModal(false)}>
+                <button type="button" className="btn btn-sm text-muted" onClick={() => setShowBulkModal(false)}>
                   ✕
                 </button>
               </div>
 
               <div className="modal-body py-4">
-                <p className="text-secondary small mb-3">
+                <p className="text-muted small mb-3">
                   Adjust selling rates company-wide or across a vehicle category (e.g., "+5% for all MRF tyres").
                   Preview all changes before committing to the database.
                 </p>
 
-                <form onSubmit={handleBulkPreview} className="row g-3 mb-4 p-3 rounded-3 bg-slate-900 border border-secondary border-opacity-25">
+                <form onSubmit={handleBulkPreview} className="row g-3 mb-4 p-3 rounded-3 bg-light border">
                   <div className="col-12 col-md-4">
-                    <label className="form-label text-light small fw-semibold">Target Company</label>
+                    <label className="form-label text-dark small fw-semibold">Target Company</label>
                     <select
                       className="form-select"
                       value={bulkFilter.companyId}
@@ -676,7 +676,7 @@ export default function Tyres() {
                   </div>
 
                   <div className="col-12 col-md-4">
-                    <label className="form-label text-light small fw-semibold">Target Vehicle Type</label>
+                    <label className="form-label text-dark small fw-semibold">Target Vehicle Type</label>
                     <select
                       className="form-select"
                       value={bulkFilter.vehicleType}
@@ -690,7 +690,7 @@ export default function Tyres() {
                   </div>
 
                   <div className="col-12 col-md-4">
-                    <label className="form-label text-warning small fw-bold">Percentage Delta (%)</label>
+                    <label className="form-label text-dark small fw-bold">Percentage Delta (%)</label>
                     <div className="input-group">
                       <input
                         type="number"
@@ -706,7 +706,7 @@ export default function Tyres() {
                   </div>
 
                   <div className="col-12 text-end">
-                    <button type="submit" className="btn btn-secondary-glass btn-sm" disabled={bulkLoading}>
+                    <button type="submit" className="btn btn-outline-dark-custom btn-sm" disabled={bulkLoading}>
                       {bulkLoading ? 'Calculating Preview...' : 'Calculate Preview'}
                     </button>
                   </div>
@@ -716,16 +716,16 @@ export default function Tyres() {
                 {bulkPreview && (
                   <div>
                     <div className="d-flex justify-content-between align-items-center mb-2">
-                      <span className="text-white fw-bold small">
+                      <span className="text-dark fw-bold small">
                         Preview: {bulkPreview.count} Tyres Will Be Updated
                       </span>
-                      <span className="badge bg-warning bg-opacity-20 text-warning">
+                      <span className="badge-pill-warning">
                         Delta: {bulkFilter.percentageDelta > 0 ? `+${bulkFilter.percentageDelta}%` : `${bulkFilter.percentageDelta}%`}
                       </span>
                     </div>
 
                     <div className="table-responsive overflow-y-auto mb-3" style={{ maxHeight: '280px' }}>
-                      <table className="table table-glass table-sm mb-0">
+                      <table className="table table-custom table-sm mb-0">
                         <thead>
                           <tr>
                             <th>Tyre Description</th>
@@ -738,12 +738,12 @@ export default function Tyres() {
                         <tbody>
                           {bulkPreview.items.map((item) => (
                             <tr key={item._id}>
-                              <td className="text-white small">{item.companyName} {item.modelName}</td>
-                              <td className="text-info font-monospace extra-small">{item.size}</td>
-                              <td className="text-end font-monospace text-secondary small">
+                              <td className="text-dark small">{item.companyName} {item.modelName}</td>
+                              <td className="text-dark font-monospace extra-small">{item.size}</td>
+                              <td className="text-end font-monospace text-muted small">
                                 {formatRupees(item.currentSellingPricePaise)}
                               </td>
-                              <td className="text-end font-monospace text-white fw-bold small">
+                              <td className="text-end font-monospace text-dark fw-bold small">
                                 {formatRupees(item.newSellingPricePaise)}
                               </td>
                               <td className={`text-end font-monospace extra-small ${item.differencePaise >= 0 ? 'text-success' : 'text-danger'}`}>
@@ -758,14 +758,14 @@ export default function Tyres() {
                 )}
               </div>
 
-              <div className="modal-footer border-top border-secondary border-opacity-25 py-3">
-                <button type="button" className="btn btn-secondary-glass" onClick={() => setShowBulkModal(false)}>
+              <div className="modal-footer border-top py-3">
+                <button type="button" className="btn btn-outline-dark-custom" onClick={() => setShowBulkModal(false)}>
                   Cancel
                 </button>
                 {bulkPreview && (
                   <button
                     type="button"
-                    className="btn btn-success-glass d-flex align-items-center gap-2"
+                    className="btn btn-accent d-flex align-items-center gap-2"
                     onClick={handleBulkApply}
                     disabled={bulkLoading}
                   >

@@ -64,7 +64,7 @@ export default function ForgotPassword() {
         setStep(3);
       }
     } catch (err) {
-      toast.error(err.response?.data?.error || 'Invalid or expired OTP');
+      toast.error(err.response?.data?.error || 'Invalid or expired OTP code');
     } finally {
       setLoading(false);
     }
@@ -74,7 +74,7 @@ export default function ForgotPassword() {
   const handleResetPassword = async (e) => {
     e.preventDefault();
     if (newPassword.length < 6) {
-      toast.error('Password must be at least 6 characters.');
+      toast.error('Password must be at least 6 characters long.');
       return;
     }
     if (newPassword !== confirmPassword) {
@@ -84,9 +84,14 @@ export default function ForgotPassword() {
 
     try {
       setLoading(true);
-      const res = await api.post('/auth/reset-password', { email, otp, newPassword });
+      const res = await api.post('/auth/reset-password', {
+        email,
+        otp,
+        newPassword,
+      });
+
       if (res.data.success) {
-        toast.success('Password successfully reset! Please sign in with your new password.');
+        toast.success('Password reset successfully! Please sign in with your new credentials.');
         navigate('/login');
       }
     } catch (err) {
@@ -97,170 +102,255 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="min-vh-100 d-flex align-items-center justify-content-center p-3" style={{ background: 'radial-gradient(ellipse at 50% 20%, rgba(99, 102, 241, 0.12) 0%, #080c14 70%)' }}>
-      <div className="w-100" style={{ maxWidth: '440px' }}>
-        <div className="text-center mb-4">
-          <div className="d-inline-flex p-3 rounded-4 bg-info bg-opacity-10 border border-info border-opacity-30 text-info mb-2">
-            <KeyRound size={36} />
-          </div>
-          <h3 className="text-white fw-bold brand-font m-0">Reset Password</h3>
-          <p className="text-secondary small mt-1">HIND TYRES Account Recovery Flow</p>
+    <div className="min-vh-100 d-flex flex-column flex-lg-row" style={{ backgroundColor: 'var(--bg-black)' }}>
+      {/* Left Workshop Hero */}
+      <div
+        className="col-12 col-lg-6 d-flex flex-column justify-content-between p-4 p-md-5 text-white position-relative"
+        style={{
+          backgroundImage: `linear-gradient(to right, rgba(10, 10, 12, 0.94) 0%, rgba(10, 10, 12, 0.85) 60%, rgba(10, 10, 12, 0.70) 100%), url('/images/hero_tyre_workshop.jpg')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          minHeight: '320px',
+        }}
+      >
+        <div>
+          <Link to="/" className="d-flex align-items-center gap-2 text-decoration-none">
+            <div
+              className="d-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
+              style={{ width: '40px', height: '40px', backgroundColor: 'var(--bg-card-dark)', color: 'var(--accent)' }}
+            >
+              <Disc3 size={24} className="animate-spin-slow" />
+            </div>
+            <div>
+              <div className="fw-black text-white fs-5 lh-1 font-monospace" style={{ letterSpacing: '0.03em' }}>
+                HIND TYRES & ACCESSORIES
+              </div>
+              <div className="text-muted extra-small mt-0.5 fw-bold" style={{ fontSize: '0.62rem', letterSpacing: '0.12em' }}>
+                DRIVE SAFE · DRIVE FAR
+              </div>
+            </div>
+          </Link>
         </div>
 
-        <div className="glass-panel p-4 p-sm-5 shadow-2xl">
-          {/* Step Progress Pills */}
-          <div className="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom border-secondary border-opacity-20">
-            <div className={`d-flex align-items-center gap-1.5 small fw-semibold ${step >= 1 ? 'text-info' : 'text-secondary'}`}>
-              <span className={`badge rounded-circle p-1.5 ${step >= 1 ? 'bg-info text-dark' : 'bg-secondary text-light'}`}>1</span>
-              <span>Email</span>
-            </div>
-            <div className="border-top border-secondary border-opacity-25 flex-grow-1 mx-2"></div>
-            <div className={`d-flex align-items-center gap-1.5 small fw-semibold ${step >= 2 ? 'text-info' : 'text-secondary'}`}>
-              <span className={`badge rounded-circle p-1.5 ${step >= 2 ? 'bg-info text-dark' : 'bg-secondary text-light'}`}>2</span>
-              <span>OTP</span>
-            </div>
-            <div className="border-top border-secondary border-opacity-25 flex-grow-1 mx-2"></div>
-            <div className={`d-flex align-items-center gap-1.5 small fw-semibold ${step >= 3 ? 'text-info' : 'text-secondary'}`}>
-              <span className={`badge rounded-circle p-1.5 ${step >= 3 ? 'bg-info text-dark' : 'bg-secondary text-light'}`}>3</span>
-              <span>Password</span>
-            </div>
+        <div className="my-4 my-lg-auto py-3">
+          <div className="hero-eyebrow text-light mb-2 opacity-90">
+            ACCOUNT RECOVERY
           </div>
+          <h1 className="hero-headline display-4 text-white mb-3">
+            SECURE<br />
+            <span style={{ color: 'var(--accent)' }}>PASSWORD</span><br />
+            RESET
+          </h1>
+          <p className="fs-6 text-light opacity-80 mb-0" style={{ maxWidth: '420px' }}>
+            Verify your account with a secure one-time passcode sent directly to your registered email.
+          </p>
+        </div>
 
-          {/* STEP 1: Enter Email */}
-          {step === 1 && (
-            <form onSubmit={handleRequestOtp}>
-              <p className="text-secondary small mb-3">
-                Enter your account email address. We will dispatch a 6-digit one-time verification code (OTP).
-              </p>
-              <div className="mb-4">
-                <label className="form-label text-secondary small fw-semibold">Email Address</label>
-                <div className="input-group">
-                  <span className="input-group-text"><Mail size={16} /></span>
-                  <input
-                    type="email"
-                    className="form-control"
-                    placeholder="name@hindtyres.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    autoFocus
-                  />
-                </div>
-              </div>
+        <div className="pt-3 border-top" style={{ borderColor: 'var(--border-dark)' }}>
+          <Link to="/login" className="text-light d-flex align-items-center gap-1.5 small text-decoration-none">
+            <ArrowLeft size={16} style={{ color: 'var(--accent)' }} />
+            <span>Back to Sign In</span>
+          </Link>
+        </div>
+      </div>
 
-              <button
-                type="submit"
-                className="btn btn-primary-glass w-100 py-2.5 d-flex align-items-center justify-content-center gap-2"
-                disabled={loading}
-              >
-                {loading ? 'Sending OTP...' : <>Send Verification Code <ArrowRight size={16} /></>}
-              </button>
-            </form>
-          )}
+      {/* Right Form Container */}
+      <div
+        className="col-12 col-lg-6 d-flex align-items-center justify-content-center p-4 p-md-5"
+        style={{ backgroundColor: 'var(--bg-light)' }}
+      >
+        <div className="w-100" style={{ maxWidth: '440px' }}>
+          <div className="card-clean p-4 p-sm-5 bg-white shadow-md">
+            <h3 className="fw-black text-dark mb-1">Reset Password</h3>
+            <p className="text-muted small mb-4">Follow the 3-step verification to restore access</p>
 
-          {/* STEP 2: Verify OTP */}
-          {step === 2 && (
-            <form onSubmit={handleVerifyOtp}>
-              <p className="text-secondary small mb-3">
-                Enter the 6-digit OTP code sent to <strong className="text-white">{email}</strong> (valid for 10 minutes).
-              </p>
-              <div className="mb-4">
-                <label className="form-label text-secondary small fw-semibold">6-Digit OTP</label>
-                <input
-                  type="text"
-                  maxLength="6"
-                  className="form-control text-center fs-3 font-monospace letter-spacing-2"
-                  style={{ letterSpacing: '8px', fontWeight: 'bold', color: '#38bdf8' }}
-                  placeholder="000000"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-                  required
-                  autoFocus
-                />
-                <div className="d-flex justify-content-between align-items-center mt-2">
-                  <span className="text-secondary extra-small">Didn't receive code?</span>
-                  <button
-                    type="button"
-                    className="btn btn-link extra-small text-info p-0 text-decoration-none"
-                    onClick={handleRequestOtp}
-                    disabled={cooldown > 0 || loading}
-                  >
-                    {cooldown > 0 ? `Resend in ${cooldown}s` : 'Resend OTP'}
-                  </button>
-                </div>
-              </div>
-
-              <div className="d-flex gap-2">
-                <button
-                  type="button"
-                  className="btn btn-secondary-glass flex-grow-1"
-                  onClick={() => setStep(1)}
+            {/* Stepper Indicator */}
+            <div className="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom">
+              <div className={`d-flex align-items-center gap-1.5 small fw-bold ${step >= 1 ? 'text-dark' : 'text-muted'}`}>
+                <span
+                  className="rounded-circle d-flex align-items-center justify-content-center"
+                  style={{
+                    width: '24px',
+                    height: '24px',
+                    backgroundColor: step >= 1 ? 'var(--accent)' : '#e2e8f0',
+                    color: '#0A0A0C',
+                    fontSize: '0.75rem',
+                  }}
                 >
-                  Back
-                </button>
+                  1
+                </span>
+                <span>Email</span>
+              </div>
+              <div className="border-top flex-grow-1 mx-2" style={{ borderColor: 'var(--border-light)' }}></div>
+              <div className={`d-flex align-items-center gap-1.5 small fw-bold ${step >= 2 ? 'text-dark' : 'text-muted'}`}>
+                <span
+                  className="rounded-circle d-flex align-items-center justify-content-center"
+                  style={{
+                    width: '24px',
+                    height: '24px',
+                    backgroundColor: step >= 2 ? 'var(--accent)' : '#e2e8f0',
+                    color: '#0A0A0C',
+                    fontSize: '0.75rem',
+                  }}
+                >
+                  2
+                </span>
+                <span>OTP</span>
+              </div>
+              <div className="border-top flex-grow-1 mx-2" style={{ borderColor: 'var(--border-light)' }}></div>
+              <div className={`d-flex align-items-center gap-1.5 small fw-bold ${step >= 3 ? 'text-dark' : 'text-muted'}`}>
+                <span
+                  className="rounded-circle d-flex align-items-center justify-content-center"
+                  style={{
+                    width: '24px',
+                    height: '24px',
+                    backgroundColor: step >= 3 ? 'var(--accent)' : '#e2e8f0',
+                    color: '#0A0A0C',
+                    fontSize: '0.75rem',
+                  }}
+                >
+                  3
+                </span>
+                <span>New Password</span>
+              </div>
+            </div>
+
+            {/* Step 1: Request OTP */}
+            {step === 1 && (
+              <form onSubmit={handleRequestOtp}>
+                <p className="text-muted small mb-3">
+                  Enter your email address. We will dispatch a 6-digit one-time code.
+                </p>
+                <div className="mb-4">
+                  <label className="form-label text-dark small fw-semibold">Email Address</label>
+                  <div className="input-group">
+                    <span className="input-group-text bg-white text-muted"><Mail size={16} /></span>
+                    <input
+                      type="email"
+                      className="form-control"
+                      placeholder="name@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      autoFocus
+                    />
+                  </div>
+                </div>
+
                 <button
                   type="submit"
-                  className="btn btn-primary-glass flex-grow-1"
-                  disabled={loading || otp.length !== 6}
+                  className="btn-accent w-100 py-2.5 d-flex align-items-center justify-content-center gap-2 rounded-3 text-dark fw-bold"
+                  disabled={loading}
                 >
-                  {loading ? 'Verifying...' : 'Verify OTP'}
+                  {loading ? 'Sending OTP...' : <>Send Verification Code <ArrowRight size={16} /></>}
                 </button>
-              </div>
-            </form>
-          )}
+              </form>
+            )}
 
-          {/* STEP 3: Reset Password */}
-          {step === 3 && (
-            <form onSubmit={handleResetPassword}>
-              <div className="d-flex align-items-center gap-2 text-success small mb-3">
-                <CheckCircle2 size={16} /> OTP Verified! Set your new password.
-              </div>
-
-              <div className="mb-3">
-                <label className="form-label text-secondary small fw-semibold">New Password</label>
-                <div className="input-group">
-                  <span className="input-group-text"><Lock size={16} /></span>
+            {/* Step 2: Verify OTP */}
+            {step === 2 && (
+              <form onSubmit={handleVerifyOtp}>
+                <p className="text-muted small mb-3">
+                  Enter the 6-digit code sent to <strong className="text-dark">{email}</strong>.
+                </p>
+                <div className="mb-4">
+                  <label className="form-label text-dark small fw-semibold">6-Digit OTP</label>
                   <input
-                    type="password"
-                    className="form-control"
-                    placeholder="Min 6 characters"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
+                    type="text"
+                    maxLength="6"
+                    className="form-control text-center fs-3 font-monospace fw-bold"
+                    style={{ letterSpacing: '8px', color: '#0A0A0C' }}
+                    placeholder="000000"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
                     required
                     autoFocus
                   />
+                  <div className="d-flex justify-content-between align-items-center mt-2">
+                    <span className="text-muted extra-small">Didn't receive code?</span>
+                    <button
+                      type="button"
+                      className="btn btn-link extra-small text-link-blue p-0"
+                      onClick={handleRequestOtp}
+                      disabled={cooldown > 0 || loading}
+                    >
+                      {cooldown > 0 ? `Resend in ${cooldown}s` : 'Resend OTP'}
+                    </button>
+                  </div>
                 </div>
-              </div>
 
-              <div className="mb-4">
-                <label className="form-label text-secondary small fw-semibold">Confirm Password</label>
-                <div className="input-group">
-                  <span className="input-group-text"><Lock size={16} /></span>
-                  <input
-                    type="password"
-                    className="form-control"
-                    placeholder="Re-enter password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    required
-                  />
+                <div className="d-flex gap-2">
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary flex-grow-1"
+                    onClick={() => setStep(1)}
+                  >
+                    Back
+                  </button>
+                  <button
+                    type="submit"
+                    className="btn-accent flex-grow-1 py-2 text-dark fw-bold"
+                    disabled={loading || otp.length !== 6}
+                  >
+                    {loading ? 'Verifying...' : 'Verify OTP'}
+                  </button>
                 </div>
-              </div>
+              </form>
+            )}
 
-              <button
-                type="submit"
-                className="btn btn-success-glass w-100 py-2.5"
-                disabled={loading}
-              >
-                {loading ? 'Updating Password...' : 'Save New Password & Sign In'}
-              </button>
-            </form>
-          )}
+            {/* Step 3: New Password */}
+            {step === 3 && (
+              <form onSubmit={handleResetPassword}>
+                <div className="d-flex align-items-center gap-2 text-success small mb-3">
+                  <CheckCircle2 size={16} /> OTP Verified! Enter your new password below.
+                </div>
 
-          <div className="text-center mt-4 pt-3 border-top border-secondary border-opacity-20">
-            <Link to="/login" className="text-secondary small text-decoration-none d-inline-flex align-items-center gap-1.5 hover-text-white">
-              <ArrowLeft size={15} /> Back to Sign In
-            </Link>
+                <div className="mb-3">
+                  <label className="form-label text-dark small fw-semibold">New Password</label>
+                  <div className="input-group">
+                    <span className="input-group-text bg-white text-muted"><Lock size={16} /></span>
+                    <input
+                      type="password"
+                      className="form-control"
+                      placeholder="Minimum 6 characters"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="mb-4">
+                  <label className="form-label text-dark small fw-semibold">Confirm Password</label>
+                  <div className="input-group">
+                    <span className="input-group-text bg-white text-muted"><Lock size={16} /></span>
+                    <input
+                      type="password"
+                      className="form-control"
+                      placeholder="Re-enter new password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="btn-accent w-100 py-2.5 rounded-3 text-dark fw-bold"
+                  disabled={loading}
+                >
+                  {loading ? 'Updating Password...' : 'Save & Sign In'}
+                </button>
+              </form>
+            )}
+
+            <div className="text-center mt-3 pt-2 border-top extra-small text-muted">
+              Remember your password?{' '}
+              <Link to="/login" className="text-link-blue fw-bold">
+                Sign In →
+              </Link>
+            </div>
           </div>
         </div>
       </div>

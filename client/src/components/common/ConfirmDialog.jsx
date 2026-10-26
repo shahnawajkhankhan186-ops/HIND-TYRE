@@ -39,22 +39,22 @@ export default function ConfirmDialog({
       className="modal show d-block"
       tabIndex="-1"
       role="dialog"
-      style={{ backgroundColor: 'rgba(5, 8, 15, 0.82)', backdropFilter: 'blur(10px)', zIndex: 1055 }}
+      style={{ backgroundColor: 'rgba(0, 0, 0, 0.65)', zIndex: 1055 }}
     >
       <div className="modal-dialog modal-dialog-centered" role="document">
-        <div className="modal-content glass-modal border-0 shadow-lg">
-          <div className="modal-header border-bottom border-secondary border-opacity-25 pb-3">
+        <div className="modal-content border-0 shadow-lg" style={{ background: 'var(--bg-white)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-light)' }}>
+          <div className="modal-header border-bottom py-3" style={{ borderColor: 'var(--border-light)' }}>
             <div className="d-flex align-items-center gap-2">
               <div
                 className={`p-2 rounded-circle ${
                   variant === 'danger'
-                    ? 'bg-danger bg-opacity-25 text-danger'
-                    : 'bg-warning bg-opacity-25 text-warning'
+                    ? 'bg-danger bg-opacity-10 text-danger'
+                    : 'bg-warning bg-opacity-15 text-dark'
                 }`}
               >
                 <AlertTriangle size={20} />
               </div>
-              <h5 className="modal-title m-0 text-white fw-bold">{title}</h5>
+              <h5 className="modal-title m-0 fw-bold" style={{ color: 'var(--text-on-light)' }}>{title}</h5>
             </div>
             <button
               type="button"
@@ -72,7 +72,7 @@ export default function ConfirmDialog({
 
               {showInput && (
                 <div className="mb-2">
-                  <label className="form-label text-light small fw-semibold">
+                  <label className="form-label small fw-semibold" style={{ color: 'var(--text-on-light)' }}>
                     {inputLabel} {inputRequired && <span className="text-danger">*</span>}
                   </label>
                   <textarea
@@ -88,10 +88,10 @@ export default function ConfirmDialog({
               )}
             </div>
 
-            <div className="modal-footer border-top border-secondary border-opacity-25 pt-3">
+            <div className="modal-footer border-top pt-3" style={{ borderColor: 'var(--border-light)' }}>
               <button
                 type="button"
-                className="btn btn-secondary-glass"
+                className="btn btn-outline-dark-custom"
                 onClick={onCancel}
                 disabled={isLoading}
               >
@@ -101,8 +101,8 @@ export default function ConfirmDialog({
                 type="submit"
                 className={`btn ${
                   variant === 'danger'
-                    ? 'btn-danger-glass'
-                    : 'btn-primary-glass'
+                    ? 'btn-danger px-3'
+                    : 'btn-accent'
                 } d-flex align-items-center gap-2`}
                 disabled={isConfirmDisabled}
               >
