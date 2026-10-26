@@ -64,6 +64,9 @@ export default function Users() {
     if (!formData.name.trim() || !formData.email.trim()) {
       return toast.error('Please enter name and email');
     }
+    if (!formData.password || formData.password.trim().length < 6) {
+      return toast.error('Password is compulsory (minimum 6 characters required)');
+    }
 
     try {
       setSaving(true);
@@ -83,22 +86,22 @@ export default function Users() {
   return (
     <div className="container-fluid p-3 p-md-4">
       {/* Header */}
-      <div className="glass-panel p-4 mb-4">
+      <div className="card-clean bg-white p-4 mb-4">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <div>
-            <h3 className="text-white fw-bold m-0 brand-font">Administrators & Staff Accounts</h3>
-            <p className="text-secondary small m-0 mt-0.5">
+            <h3 className="text-dark fw-bold m-0 brand-font">Administrators & Staff Accounts</h3>
+            <p className="text-muted small m-0 mt-0.5">
               Add new shop admins with Gmail & phone, manage counter cashiers, and control portal privileges
             </p>
           </div>
           <div className="d-flex align-items-center gap-2">
-            <button className="btn btn-secondary-glass btn-sm d-flex align-items-center gap-1.5" onClick={fetchUsers}>
+            <button className="btn btn-outline-dark-custom btn-sm d-flex align-items-center gap-1.5" onClick={fetchUsers}>
               <RefreshCw size={14} /> Refresh
             </button>
-            <button className="btn btn-secondary-glass btn-sm d-flex align-items-center gap-1.5" onClick={() => handleOpenModal('COUNTER')}>
-              <User size={15} className="text-emerald" /> + Add Cashier
+            <button className="btn btn-outline-dark-custom btn-sm d-flex align-items-center gap-1.5" onClick={() => handleOpenModal('COUNTER')}>
+              <User size={15} /> + Add Cashier
             </button>
-            <button className="btn btn-primary-glass btn-sm d-flex align-items-center gap-1.5" onClick={() => handleOpenModal('ADMIN')}>
+            <button className="btn btn-accent btn-sm d-flex align-items-center gap-1.5" onClick={() => handleOpenModal('ADMIN')}>
               <Shield size={15} /> + Add New Admin
             </button>
           </div>
@@ -106,14 +109,14 @@ export default function Users() {
       </div>
 
       {/* Users Table */}
-      <div className="glass-panel overflow-hidden">
+      <div className="card-clean bg-white overflow-hidden mb-4">
         {loading ? (
           <TableSkeleton rows={4} cols={6} />
         ) : users.length === 0 ? (
-          <div className="p-5 text-center text-secondary">No user accounts found.</div>
+          <div className="p-5 text-center text-muted">No user accounts found.</div>
         ) : (
           <div className="table-responsive">
-            <table className="table table-glass mb-0">
+            <table className="table table-custom mb-0">
               <thead>
                 <tr>
                   <th>Account Member</th>
@@ -130,43 +133,43 @@ export default function Users() {
                   <tr key={u._id}>
                     <td>
                       <div className="d-flex align-items-center gap-2.5">
-                        <div className={`p-2 rounded-circle ${u.role === 'ADMIN' ? 'bg-primary bg-opacity-20 text-primary border border-primary border-opacity-30' : 'bg-success bg-opacity-20 text-success border border-success border-opacity-30'}`}>
+                        <div className="p-2 rounded-circle bg-light border text-dark">
                           {u.role === 'ADMIN' ? <Shield size={16} /> : <User size={16} />}
                         </div>
                         <div>
-                          <div className="text-white fw-bold small">{u.name}</div>
+                          <div className="text-dark fw-bold small">{u.name}</div>
                           {u.email === 'prolemda@gmail.com' && (
-                            <span className="badge bg-primary bg-opacity-25 text-info extra-small border border-info border-opacity-20">
+                            <span className="badge-pill-yellow extra-small">
                               Primary Admin
                             </span>
                           )}
                         </div>
                       </div>
                     </td>
-                    <td className="text-info small font-monospace">{u.email}</td>
+                    <td className="text-dark small font-monospace">{u.email}</td>
                     <td>
                       {u.phone ? (
-                        <div className="d-flex align-items-center gap-1.5 text-secondary small font-monospace">
-                          <Phone size={13} className="text-info" /> {u.phone}
+                        <div className="d-flex align-items-center gap-1.5 text-muted small font-monospace">
+                          <Phone size={13} /> {u.phone}
                         </div>
                       ) : (
-                        <span className="text-secondary extra-small">-</span>
+                        <span className="text-muted extra-small">-</span>
                       )}
                     </td>
                     <td>
-                      <span className={`badge ${u.role === 'ADMIN' ? 'badge-glass-cyan' : 'badge-glass-emerald'} extra-small`}>
+                      <span className={`badge ${u.role === 'ADMIN' ? 'badge-pill-yellow' : 'badge-pill-info'} extra-small`}>
                         {u.role === 'ADMIN' ? 'Administrator (Full Access)' : 'Counter Cashier (POS)'}
                       </span>
                     </td>
                     <td>
-                      <span className={`badge ${u.isActive ? 'badge-glass-emerald' : 'badge-glass-rose'} extra-small`}>
+                      <span className={`badge ${u.isActive ? 'badge-pill-success' : 'badge-pill-danger'} extra-small`}>
                         {u.isActive ? 'Active' : 'Disabled'}
                       </span>
                     </td>
-                    <td className="text-secondary small">{formatIST(u.createdAt)}</td>
+                    <td className="text-muted small font-monospace">{formatIST(u.createdAt)}</td>
                     <td className="text-end">
                       <button
-                        className={`btn btn-sm ${u.isActive ? 'btn-secondary-glass text-rose' : 'btn-success-glass'} extra-small`}
+                        className={`btn btn-sm ${u.isActive ? 'btn-outline-danger' : 'btn-outline-success'} extra-small`}
                         onClick={() => handleToggleStatus(u)}
                       >
                         {u.isActive ? 'Disable Access' : 'Enable Access'}
@@ -182,58 +185,58 @@ export default function Users() {
 
       {/* Add User Modal */}
       {showModal && (
-        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(5, 8, 15, 0.85)', backdropFilter: 'blur(8px)', zIndex: 1055 }}>
+        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0, 0, 0, 0.65)', zIndex: 1055 }}>
           <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content glass-modal border-0 shadow-2xl">
-              <div className="modal-header border-bottom border-secondary border-opacity-25 pb-3">
+            <div className="modal-content border-0 shadow-lg" style={{ borderRadius: 'var(--radius-md)', background: '#FFFFFF' }}>
+              <div className="modal-header border-bottom pb-3">
                 <div className="d-flex align-items-center gap-2">
-                  <div className={`p-2 rounded-3 ${formData.role === 'ADMIN' ? 'bg-primary bg-opacity-20 text-primary' : 'bg-success bg-opacity-20 text-success'}`}>
+                  <div className="p-2 rounded-3 bg-light border text-dark">
                     {formData.role === 'ADMIN' ? <Shield size={18} /> : <User size={18} />}
                   </div>
                   <div>
-                    <h5 className="modal-title text-white fw-bold m-0">
+                    <h5 className="modal-title text-dark fw-bold m-0">
                       {formData.role === 'ADMIN' ? 'Add New Administrator' : 'Add Cashier Staff'}
                     </h5>
-                    <small className="text-secondary">
+                    <small className="text-muted">
                       {formData.role === 'ADMIN' ? 'Full access to stock, reports, settings & pricing' : 'POS counter sales and receipt generation'}
                     </small>
                   </div>
                 </div>
-                <button type="button" className="btn btn-sm text-secondary" onClick={() => setShowModal(false)}>✕</button>
+                <button type="button" className="btn btn-sm text-muted" onClick={() => setShowModal(false)}>✕</button>
               </div>
 
               <form onSubmit={handleCreate}>
                 <div className="modal-body py-3">
                   {/* Role Selector Card */}
                   <div className="mb-3">
-                    <label className="form-label text-light small fw-semibold">Account Role *</label>
+                    <label className="form-label text-dark small fw-semibold">Account Role *</label>
                     <div className="row g-2">
                       <div className="col-6">
                         <div
-                          className={`p-2.5 rounded-3 border text-center cursor-pointer transition-all ${
+                          className={`p-2.5 rounded-3 border text-center transition-all ${
                             formData.role === 'ADMIN'
-                              ? 'bg-primary bg-opacity-20 border-info text-white shadow-sm'
-                              : 'bg-slate-900 bg-opacity-60 border-secondary border-opacity-30 text-secondary'
+                              ? 'bg-warning bg-opacity-10 border-warning text-dark shadow-sm'
+                              : 'bg-light border text-muted'
                           }`}
                           onClick={() => setFormData({ ...formData, role: 'ADMIN' })}
                           style={{ cursor: 'pointer' }}
                         >
-                          <Shield size={18} className={formData.role === 'ADMIN' ? 'text-info mb-1' : 'mb-1'} />
+                          <Shield size={18} className="mb-1" style={{ color: formData.role === 'ADMIN' ? 'var(--accent-dark)' : 'inherit' }} />
                           <div className="fw-bold small">Administrator</div>
                           <div className="extra-small opacity-75" style={{ fontSize: '0.68rem' }}>Full Portal Control</div>
                         </div>
                       </div>
                       <div className="col-6">
                         <div
-                          className={`p-2.5 rounded-3 border text-center cursor-pointer transition-all ${
+                          className={`p-2.5 rounded-3 border text-center transition-all ${
                             formData.role === 'COUNTER'
-                              ? 'bg-success bg-opacity-20 border-success text-white shadow-sm'
-                              : 'bg-slate-900 bg-opacity-60 border-secondary border-opacity-30 text-secondary'
+                              ? 'bg-warning bg-opacity-10 border-warning text-dark shadow-sm'
+                              : 'bg-light border text-muted'
                           }`}
                           onClick={() => setFormData({ ...formData, role: 'COUNTER' })}
                           style={{ cursor: 'pointer' }}
                         >
-                          <User size={18} className={formData.role === 'COUNTER' ? 'text-success mb-1' : 'mb-1'} />
+                          <User size={18} className="mb-1" style={{ color: formData.role === 'COUNTER' ? 'var(--accent-dark)' : 'inherit' }} />
                           <div className="fw-bold small">Counter Staff</div>
                           <div className="extra-small opacity-75" style={{ fontSize: '0.68rem' }}>POS Billing Only</div>
                         </div>
@@ -243,7 +246,7 @@ export default function Users() {
 
                   {/* Name */}
                   <div className="mb-3">
-                    <label className="form-label text-light small fw-semibold">Full Name *</label>
+                    <label className="form-label text-dark small fw-semibold">Full Name *</label>
                     <input
                       type="text"
                       className="form-control"
@@ -257,7 +260,7 @@ export default function Users() {
 
                   {/* Gmail / Email */}
                   <div className="mb-3">
-                    <label className="form-label text-light small fw-semibold">Gmail / Email Address *</label>
+                    <label className="form-label text-dark small fw-semibold">Gmail / Email Address *</label>
                     <div className="input-group">
                       <span className="input-group-text"><Mail size={15} /></span>
                       <input
@@ -269,14 +272,14 @@ export default function Users() {
                         required
                       />
                     </div>
-                    <small className="text-secondary extra-small mt-1 d-block">
+                    <small className="text-muted extra-small mt-1 d-block">
                       💡 This user can directly log in using <strong>"Sign in with Google"</strong> button on login page.
                     </small>
                   </div>
 
                   {/* Contact Number */}
                   <div className="mb-3">
-                    <label className="form-label text-light small fw-semibold">Contact Phone Number</label>
+                    <label className="form-label text-dark small fw-semibold">Contact Phone Number</label>
                     <div className="input-group">
                       <span className="input-group-text"><Phone size={15} /></span>
                       <input
@@ -289,28 +292,32 @@ export default function Users() {
                     </div>
                   </div>
 
-                  {/* Password (Optional for Google Login) */}
+                  {/* Password (Compulsory) */}
                   <div className="mb-3">
-                    <div className="d-flex justify-content-between align-items-center mb-1">
-                      <label className="form-label text-light small fw-semibold m-0">Password</label>
-                      <span className="text-secondary extra-small">Optional if using Google Sign-in</span>
-                    </div>
+                    <label className="form-label text-dark small fw-semibold">
+                      Account Password * <span className="text-danger fw-bold">(Compulsory)</span>
+                    </label>
                     <div className="input-group">
                       <span className="input-group-text"><Lock size={15} /></span>
                       <input
                         type="password"
                         className="form-control"
-                        placeholder="Leave blank for Google Sign-in or enter 6+ chars"
+                        placeholder="Enter password (minimum 6 characters)"
                         value={formData.password}
                         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                        required
+                        minLength={6}
                       />
                     </div>
+                    <small className="text-muted extra-small mt-1 d-block">
+                      🔑 Staff member will use this Gmail/Email and Password to sign in to the portal.
+                    </small>
                   </div>
                 </div>
 
-                <div className="modal-footer border-top border-secondary border-opacity-25 pt-3">
-                  <button type="button" className="btn btn-secondary-glass" onClick={() => setShowModal(false)}>Cancel</button>
-                  <button type="submit" className="btn btn-primary-glass" disabled={saving}>
+                <div className="modal-footer border-top pt-3">
+                  <button type="button" className="btn btn-outline-dark-custom" onClick={() => setShowModal(false)}>Cancel</button>
+                  <button type="submit" className="btn btn-accent" disabled={saving}>
                     {saving ? 'Creating...' : formData.role === 'ADMIN' ? '+ Create Administrator' : '+ Create Cashier'}
                   </button>
                 </div>

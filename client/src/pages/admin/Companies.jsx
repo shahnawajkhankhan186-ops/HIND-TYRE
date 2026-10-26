@@ -95,17 +95,17 @@ export default function Companies() {
   return (
     <div className="container-fluid p-3 p-md-4">
       {/* Header */}
-      <div className="glass-panel p-4 mb-4">
+      <div className="card-clean bg-white p-4 mb-4">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <div>
-            <h3 className="text-white fw-bold m-0 brand-font">Tyre Companies & Brands</h3>
-            <p className="text-secondary small m-0 mt-0.5">Manage partner manufacturers and brand status</p>
+            <h3 className="text-dark fw-bold m-0 brand-font">Tyre Companies & Brands</h3>
+            <p className="text-muted small m-0 mt-0.5">Manage partner manufacturers and brand status</p>
           </div>
           <div className="d-flex align-items-center gap-2">
-            <button className="btn btn-secondary-glass btn-sm" onClick={fetchCompanies}>
+            <button className="btn btn-outline-dark-custom btn-sm" onClick={fetchCompanies}>
               <RefreshCw size={14} /> Refresh
             </button>
-            <button className="btn btn-primary-glass btn-sm d-flex align-items-center gap-1.5" onClick={handleOpenAdd}>
+            <button className="btn btn-accent btn-sm d-flex align-items-center gap-1.5" onClick={handleOpenAdd}>
               <Plus size={16} /> Add Company
             </button>
           </div>
@@ -113,12 +113,12 @@ export default function Companies() {
       </div>
 
       {/* Table */}
-      <div className="glass-panel overflow-hidden">
+      <div className="card-clean bg-white overflow-hidden mb-4">
         {loading ? (
           <TableSkeleton rows={6} cols={4} />
         ) : (
           <div className="table-responsive">
-            <table className="table table-glass mb-0">
+            <table className="table table-custom mb-0">
               <thead>
                 <tr>
                   <th>Brand / Company Name</th>
@@ -132,14 +132,14 @@ export default function Companies() {
                   <tr key={comp._id} className={comp.isArchived ? 'opacity-50' : ''}>
                     <td>
                       <div className="d-flex align-items-center gap-2">
-                        <div className="p-2 rounded-circle bg-slate-900 border border-secondary border-opacity-25 text-info">
+                        <div className="p-2 rounded-circle bg-light border text-dark">
                           <Building2 size={18} />
                         </div>
-                        <span className="text-white fw-bold fs-6">{comp.name}</span>
+                        <span className="text-dark fw-bold fs-6">{comp.name}</span>
                       </div>
                     </td>
                     <td>
-                      <span className={`badge ${comp.isActive ? 'badge-glass-emerald' : 'badge-glass-rose'}`}>
+                      <span className={`badge ${comp.isActive ? 'badge-pill-success' : 'badge-pill-danger'}`}>
                         {comp.isActive ? 'Active' : 'Inactive'}
                       </span>
                     </td>
@@ -147,13 +147,13 @@ export default function Companies() {
                       {comp.isArchived ? (
                         <span className="badge bg-secondary text-light">Archived</span>
                       ) : (
-                        <span className="text-secondary small">No</span>
+                        <span className="text-muted small">No</span>
                       )}
                     </td>
                     <td className="text-end">
                       <div className="d-flex align-items-center justify-content-end gap-1.5">
                         <button
-                          className="btn btn-sm btn-secondary-glass p-1.5"
+                          className="btn btn-sm btn-outline-dark-custom p-1.5"
                           title="Edit Company"
                           onClick={() => handleOpenEdit(comp)}
                           disabled={comp.isArchived}
@@ -162,7 +162,7 @@ export default function Companies() {
                         </button>
                         {!comp.isArchived && (
                           <button
-                            className="btn btn-sm btn-danger-glass p-1.5"
+                            className="btn btn-sm btn-outline-danger p-1.5"
                             title="Archive Company"
                             onClick={() => setArchiveTarget(comp)}
                           >
@@ -181,14 +181,14 @@ export default function Companies() {
 
       {/* Add / Edit Modal */}
       {showModal && (
-        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(5, 8, 15, 0.85)', backdropFilter: 'blur(8px)', zIndex: 1055 }}>
+        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0, 0, 0, 0.65)', zIndex: 1055 }}>
           <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content glass-modal border-0 shadow-2xl">
-              <div className="modal-header border-bottom border-secondary border-opacity-25 pb-3">
-                <h5 className="modal-title text-white fw-bold m-0">
+            <div className="modal-content border-0 shadow-lg" style={{ borderRadius: 'var(--radius-md)', background: '#FFFFFF' }}>
+              <div className="modal-header border-bottom pb-3">
+                <h5 className="modal-title text-dark fw-bold m-0">
                   {editingCompany ? 'Edit Tyre Company' : 'Add Tyre Company'}
                 </h5>
-                <button type="button" className="btn btn-sm text-secondary" onClick={() => setShowModal(false)}>
+                <button type="button" className="btn btn-sm text-muted" onClick={() => setShowModal(false)}>
                   ✕
                 </button>
               </div>
@@ -196,7 +196,7 @@ export default function Companies() {
               <form onSubmit={handleSave}>
                 <div className="modal-body py-4">
                   <div className="mb-3">
-                    <label className="form-label text-light small fw-semibold">
+                    <label className="form-label text-dark small fw-semibold">
                       Company / Brand Name <span className="text-danger">*</span>
                     </label>
                     <input
@@ -218,17 +218,17 @@ export default function Companies() {
                       checked={formData.isActive}
                       onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
                     />
-                    <label className="form-check-label text-light small ms-1" htmlFor="compActiveSwitch">
+                    <label className="form-check-label text-dark small ms-1" htmlFor="compActiveSwitch">
                       Active for sales and billing
                     </label>
                   </div>
                 </div>
 
-                <div className="modal-footer border-top border-secondary border-opacity-25 pt-3">
-                  <button type="button" className="btn btn-secondary-glass" onClick={() => setShowModal(false)}>
+                <div className="modal-footer border-top pt-3">
+                  <button type="button" className="btn btn-outline-dark-custom" onClick={() => setShowModal(false)}>
                     Cancel
                   </button>
-                  <button type="submit" className="btn btn-primary-glass" disabled={saving}>
+                  <button type="submit" className="btn btn-accent" disabled={saving}>
                     {saving ? 'Saving...' : 'Save Company'}
                   </button>
                 </div>

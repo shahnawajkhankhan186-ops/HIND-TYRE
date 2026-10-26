@@ -65,16 +65,16 @@ export default function Reports() {
   return (
     <div className="container-fluid p-3 p-md-4">
       {/* Header */}
-      <div className="glass-panel p-4 mb-4">
+      <div className="card-clean bg-white p-4 mb-4">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <div>
-            <h3 className="text-white fw-bold m-0 brand-font">Business Reports & Data Exports</h3>
-            <p className="text-secondary small m-0 mt-0.5">
+            <h3 className="text-dark fw-bold m-0 brand-font">Business Reports & Data Exports</h3>
+            <p className="text-muted small m-0 mt-0.5">
               Comprehensive valuation, company performance, profit margins & streaming CSV exports
             </p>
           </div>
           <div className="d-flex align-items-center gap-2">
-            <button className="btn btn-primary-glass btn-sm d-flex align-items-center gap-1.5" onClick={handleExportCSV}>
+            <button className="btn btn-accent btn-sm d-flex align-items-center gap-1.5" onClick={handleExportCSV}>
               <Download size={15} /> Export Streaming CSV
             </button>
           </div>
@@ -82,10 +82,10 @@ export default function Reports() {
       </div>
 
       {/* Tabs & Date Filter Bar */}
-      <div className="glass-panel p-3 mb-3">
+      <div className="card-clean bg-white p-3 mb-3">
         <div className="d-flex flex-wrap align-items-center justify-content-between gap-3">
           {/* Tabs */}
-          <div className="btn-group p-1 rounded-pill bg-slate-900 border border-secondary border-opacity-25 flex-wrap">
+          <div className="btn-group p-1 rounded-pill bg-light border flex-wrap">
             {REPORT_TABS.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -93,7 +93,7 @@ export default function Reports() {
                 <button
                   key={tab.id}
                   className={`btn btn-sm rounded-pill px-3 py-1.5 d-flex align-items-center gap-1.5 ${
-                    isActive ? 'btn-primary-glass' : 'btn-link text-secondary text-decoration-none'
+                    isActive ? 'btn-accent' : 'btn-link text-muted text-decoration-none'
                   }`}
                   onClick={() => setActiveTab(tab.id)}
                 >
@@ -113,7 +113,7 @@ export default function Reports() {
               onChange={(e) => setStartDate(e.target.value)}
               placeholder="From"
             />
-            <span className="text-secondary small">to</span>
+            <span className="text-muted small">to</span>
             <input
               type="date"
               className="form-control form-control-sm"
@@ -121,7 +121,7 @@ export default function Reports() {
               onChange={(e) => setEndDate(e.target.value)}
               placeholder="To"
             />
-            <button className="btn btn-secondary-glass btn-sm" onClick={fetchReport}>
+            <button className="btn btn-outline-dark-custom btn-sm" onClick={fetchReport}>
               Apply
             </button>
           </div>
@@ -129,17 +129,17 @@ export default function Reports() {
       </div>
 
       {/* Report Content Panels */}
-      <div className="glass-panel overflow-hidden">
+      <div className="card-clean bg-white overflow-hidden mb-4">
         {loading ? (
           <TableSkeleton rows={8} cols={7} />
         ) : !reportData ? (
-          <div className="p-5 text-center text-secondary">No data returned for this report.</div>
+          <div className="p-5 text-center text-muted">No data returned for this report.</div>
         ) : (
           <>
             {/* 1. SALES REPORT */}
             {activeTab === 'sales' && Array.isArray(reportData) && (
               <div className="table-responsive">
-                <table className="table table-glass mb-0">
+                <table className="table table-custom mb-0">
                   <thead>
                     <tr>
                       <th>Invoice No</th>
@@ -154,18 +154,18 @@ export default function Reports() {
                   <tbody>
                     {reportData.map((s) => (
                       <tr key={s._id}>
-                        <td className="text-info font-monospace fw-bold">{s.invoiceNo}</td>
-                        <td className="text-secondary small">{formatIST(s.createdAt)}</td>
+                        <td className="text-dark font-monospace fw-bold">{s.invoiceNo}</td>
+                        <td className="text-muted small font-monospace">{formatIST(s.createdAt)}</td>
                         <td>
-                          <div className="text-white small fw-semibold">{s.customerSnapshot.name}</div>
-                          <div className="text-secondary extra-small font-monospace">{s.customerSnapshot.phone}</div>
+                          <div className="text-dark small fw-semibold">{s.customerSnapshot.name}</div>
+                          <div className="text-muted extra-small font-monospace">{s.customerSnapshot.phone}</div>
                         </td>
                         <td>
-                          <span className="badge bg-secondary bg-opacity-30 text-white extra-small">{s.paymentMode}</span>
+                          <span className="badge bg-light text-dark border extra-small">{s.paymentMode}</span>
                         </td>
-                        <td className="text-end font-monospace text-secondary small">{formatRupees(s.subtotalPaise)}</td>
-                        <td className="text-end font-monospace text-secondary small">+{formatRupees(s.gstPaise)}</td>
-                        <td className="text-end font-monospace text-white fw-bold">{formatRupees(s.totalPaise)}</td>
+                        <td className="text-end font-monospace text-muted small">{formatRupees(s.subtotalPaise)}</td>
+                        <td className="text-end font-monospace text-muted small">+{formatRupees(s.gstPaise)}</td>
+                        <td className="text-end font-monospace text-dark fw-bold">{formatRupees(s.totalPaise)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -176,7 +176,7 @@ export default function Reports() {
             {/* 2. VALUATION REPORT */}
             {activeTab === 'valuation' && (
               <div className="table-responsive">
-                <table className="table table-glass mb-0">
+                <table className="table table-custom mb-0">
                   <thead>
                     <tr>
                       <th>Type</th>
@@ -192,16 +192,16 @@ export default function Reports() {
                   <tbody>
                     {reportData.tyres?.map((t) => (
                       <tr key={t._id}>
-                        <td><span className="badge badge-glass-cyan extra-small">Tyre</span></td>
+                        <td><span className="badge badge-pill-info extra-small">Tyre</span></td>
                         <td>
-                          <div className="text-white fw-semibold small">{t.modelName}</div>
-                          <div className="text-secondary extra-small">{t.companyId?.name}</div>
+                          <div className="text-dark fw-semibold small">{t.modelName}</div>
+                          <div className="text-muted extra-small">{t.companyId?.name}</div>
                         </td>
-                        <td className="text-info font-monospace small">{t.size}</td>
-                        <td className="text-center text-white fw-bold">{t.quantity}</td>
-                        <td className="text-end font-monospace text-secondary small">{formatRupees(t.purchasePricePaise)}</td>
-                        <td className="text-end font-monospace text-white small">{formatRupees(t.sellingPricePaise)}</td>
-                        <td className="text-end font-monospace text-secondary fw-semibold">
+                        <td className="text-dark font-monospace small">{t.size}</td>
+                        <td className="text-center text-dark fw-bold">{t.quantity}</td>
+                        <td className="text-end font-monospace text-muted small">{formatRupees(t.purchasePricePaise)}</td>
+                        <td className="text-end font-monospace text-dark small">{formatRupees(t.sellingPricePaise)}</td>
+                        <td className="text-end font-monospace text-muted fw-semibold">
                           {formatRupees(t.quantity * t.purchasePricePaise)}
                         </td>
                         <td className="text-end font-monospace text-success fw-bold">
@@ -217,7 +217,7 @@ export default function Reports() {
             {/* 3. LOW STOCK REPORT */}
             {activeTab === 'low-stock' && (
               <div className="table-responsive">
-                <table className="table table-glass mb-0">
+                <table className="table table-custom mb-0">
                   <thead>
                     <tr>
                       <th>Category</th>
@@ -231,16 +231,16 @@ export default function Reports() {
                   <tbody>
                     {reportData.tyres?.map((t) => (
                       <tr key={t._id}>
-                        <td><span className="badge badge-glass-cyan extra-small">Tyre</span></td>
+                        <td><span className="badge badge-pill-info extra-small">Tyre</span></td>
                         <td>
-                          <div className="text-white fw-semibold small">{t.modelName}</div>
-                          <div className="text-secondary extra-small">{t.companyId?.name}</div>
+                          <div className="text-dark fw-semibold small">{t.modelName}</div>
+                          <div className="text-muted extra-small">{t.companyId?.name}</div>
                         </td>
-                        <td className="text-info font-monospace small">{t.size}</td>
-                        <td className="text-center font-monospace fw-bold text-warning">{t.quantity}</td>
-                        <td className="text-center text-secondary small">{t.lowStockThreshold}</td>
+                        <td className="text-dark font-monospace small">{t.size}</td>
+                        <td className="text-center font-monospace fw-bold text-dark">{t.quantity}</td>
+                        <td className="text-center text-muted small">{t.lowStockThreshold}</td>
                         <td>
-                          <span className={`badge ${t.quantity <= 0 ? 'bg-danger' : 'badge-glass-amber'} extra-small`}>
+                          <span className={`badge ${t.quantity <= 0 ? 'badge-pill-danger' : 'badge-pill-warning'} extra-small`}>
                             {t.quantity <= 0 ? 'Out of Stock' : 'Low Stock Alert'}
                           </span>
                         </td>
@@ -254,7 +254,7 @@ export default function Reports() {
             {/* 4. COMPANY-WISE SALES REPORT */}
             {activeTab === 'company-sales' && Array.isArray(reportData) && (
               <div className="table-responsive">
-                <table className="table table-glass mb-0">
+                <table className="table table-custom mb-0">
                   <thead>
                     <tr>
                       <th>Tyre Manufacturer</th>
@@ -266,10 +266,10 @@ export default function Reports() {
                   <tbody>
                     {reportData.map((c, idx) => (
                       <tr key={idx}>
-                        <td className="text-white fw-bold fs-6">{c.company || 'Other'}</td>
-                        <td className="text-center text-secondary">{c.invoices} bills</td>
-                        <td className="text-center text-white fw-bold">{c.totalQty} tyres</td>
-                        <td className="text-end font-monospace text-info fw-bold fs-6">
+                        <td className="text-dark fw-bold fs-6">{c.company || 'Other'}</td>
+                        <td className="text-center text-muted">{c.invoices} bills</td>
+                        <td className="text-center text-dark fw-bold">{c.totalQty} tyres</td>
+                        <td className="text-end font-monospace text-dark fw-bold fs-6">
                           {formatRupees(c.revenuePaise)}
                         </td>
                       </tr>
@@ -282,7 +282,7 @@ export default function Reports() {
             {/* 5. PROFIT REPORT */}
             {activeTab === 'profit' && Array.isArray(reportData) && (
               <div className="table-responsive">
-                <table className="table table-glass mb-0">
+                <table className="table table-custom mb-0">
                   <thead>
                     <tr>
                       <th>Invoice No</th>
@@ -298,16 +298,16 @@ export default function Reports() {
                       const isProfit = (p.grossProfitPaise || 0) >= 0;
                       return (
                         <tr key={idx}>
-                          <td className="text-info font-monospace small">{p.invoiceNo}</td>
+                          <td className="text-dark font-monospace small">{p.invoiceNo}</td>
                           <td>
-                            <div className="text-white fw-semibold small">{p.itemName}</div>
-                            <div className="text-secondary extra-small font-monospace">{p.size}</div>
+                            <div className="text-dark fw-semibold small">{p.itemName}</div>
+                            <div className="text-muted extra-small font-monospace">{p.size}</div>
                           </td>
-                          <td className="text-center text-white fw-bold">{p.qty}</td>
-                          <td className="text-end font-monospace text-secondary small">
+                          <td className="text-center text-dark fw-bold">{p.qty}</td>
+                          <td className="text-end font-monospace text-muted small">
                             {formatRupees(p.unitPurchasePricePaise)}
                           </td>
-                          <td className="text-end font-monospace text-white small">
+                          <td className="text-end font-monospace text-dark small">
                             {formatRupees(p.unitSellingPricePaise)}
                           </td>
                           <td className={`text-end font-monospace fw-bold ${isProfit ? 'text-success' : 'text-danger'}`}>

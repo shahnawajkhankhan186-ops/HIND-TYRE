@@ -111,22 +111,22 @@ export default function SalesLedger() {
   return (
     <div className="container-fluid p-3 p-md-4">
       {/* Header */}
-      <div className="glass-panel p-4 mb-4">
+      <div className="card-clean bg-white p-4 mb-4">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <div>
-            <h3 className="text-white fw-bold m-0 brand-font">Sales & GST Invoices Ledger</h3>
-            <p className="text-secondary small m-0 mt-0.5">
+            <h3 className="text-dark fw-bold m-0 brand-font">Sales & GST Invoices Ledger</h3>
+            <p className="text-muted small m-0 mt-0.5">
               Complete invoice records, customer details, PDF receipts, and audited cancellation
             </p>
           </div>
-          <button className="btn btn-secondary-glass btn-sm d-flex align-items-center gap-1.5" onClick={fetchSales}>
+          <button className="btn btn-outline-dark-custom btn-sm d-flex align-items-center gap-1.5" onClick={fetchSales}>
             <RefreshCw size={14} /> Refresh
           </button>
         </div>
       </div>
 
       {/* Filter Bar */}
-      <div className="glass-panel p-3 mb-3">
+      <div className="card-clean bg-white p-3 mb-3">
         <form onSubmit={handleSearchSubmit} className="row g-2 align-items-center">
           <div className="col-12 col-md-4">
             <div className="input-group input-group-sm">
@@ -213,20 +213,20 @@ export default function SalesLedger() {
           </div>
 
           <div className="col-12 col-md-auto ms-auto">
-            <button type="submit" className="btn btn-secondary-glass btn-sm w-100">Filter</button>
+            <button type="submit" className="btn btn-outline-dark-custom btn-sm w-100">Filter</button>
           </div>
         </form>
       </div>
 
       {/* Sales Invoices Table */}
-      <div className="glass-panel overflow-hidden mb-3">
+      <div className="card-clean bg-white overflow-hidden mb-3">
         {loading ? (
           <TableSkeleton rows={8} cols={8} />
         ) : sales.length === 0 ? (
-          <div className="p-5 text-center text-secondary">No invoices matching criteria.</div>
+          <div className="p-5 text-center text-muted">No invoices matching criteria.</div>
         ) : (
           <div className="table-responsive">
-            <table className="table table-glass mb-0">
+            <table className="table table-custom mb-0">
               <thead>
                 <tr>
                   <th>Invoice No</th>
@@ -245,38 +245,38 @@ export default function SalesLedger() {
                   return (
                     <tr key={sale._id} className={isCancelled ? 'opacity-60' : ''}>
                       <td>
-                        <span className="text-info font-monospace fw-bold">{sale.invoiceNo}</span>
+                        <span className="text-dark font-monospace fw-bold">{sale.invoiceNo}</span>
                       </td>
                       <td>
-                        <div className="text-white fw-semibold small">{sale.customerSnapshot.name}</div>
-                        <div className="text-secondary extra-small font-monospace">{sale.customerSnapshot.phone}</div>
+                        <div className="text-dark fw-semibold small">{sale.customerSnapshot.name}</div>
+                        <div className="text-muted extra-small font-monospace">{sale.customerSnapshot.phone}</div>
                       </td>
-                      <td className="text-secondary small font-monospace">{formatIST(sale.createdAt)}</td>
+                      <td className="text-muted small font-monospace">{formatIST(sale.createdAt)}</td>
                       <td>
-                        <span className="badge bg-slate-800 text-light border border-secondary border-opacity-25 extra-small">
+                        <span className="badge bg-light text-dark border extra-small">
                           {sale.items.reduce((acc, i) => acc + i.qty, 0)} units ({sale.items.length} items)
                         </span>
                       </td>
                       <td>
-                        <span className="badge bg-secondary bg-opacity-30 text-white extra-small">
+                        <span className="badge bg-light text-dark border extra-small">
                           {sale.paymentMode}
                         </span>
                       </td>
                       <td>
                         {isCancelled ? (
-                          <span className="badge badge-glass-rose">CANCELLED</span>
+                          <span className="badge badge-pill-danger">CANCELLED</span>
                         ) : (
-                          <span className="badge badge-glass-emerald">COMPLETED</span>
+                          <span className="badge badge-pill-success">COMPLETED</span>
                         )}
                       </td>
-                      <td className="text-end font-monospace text-white fw-bold">
+                      <td className="text-end font-monospace text-dark fw-bold">
                         {formatRupees(sale.totalPaise)}
                       </td>
                       <td className="text-center">
                         <div className="d-flex align-items-center justify-content-center gap-1.5">
                           {/* View Receipt */}
                           <button
-                            className="btn btn-sm btn-secondary-glass p-1.5"
+                            className="btn btn-sm btn-outline-dark-custom p-1.5"
                             title="View Receipt"
                             onClick={() => {
                               setSelectedSale(sale);
@@ -290,7 +290,7 @@ export default function SalesLedger() {
                           <a
                             href={`/api/sales/${sale._id}/receipt.pdf`}
                             download={`Invoice_${sale.invoiceNo}.pdf`}
-                            className="btn btn-sm btn-primary-glass p-1.5"
+                            className="btn btn-sm btn-accent p-1.5"
                             title="Download PDF"
                           >
                             <Download size={14} />
@@ -299,7 +299,7 @@ export default function SalesLedger() {
                           {/* Cancel Sale (if not already cancelled) */}
                           {!isCancelled && (
                             <button
-                              className="btn btn-sm btn-danger-glass p-1.5"
+                              className="btn btn-sm btn-outline-danger p-1.5"
                               title="Cancel Sale & Restore Stock"
                               onClick={() => {
                                 setSaleToCancel(sale);
@@ -322,20 +322,20 @@ export default function SalesLedger() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="d-flex justify-content-between align-items-center glass-panel p-2 px-3">
-          <small className="text-secondary">
-            Page <strong className="text-white">{page}</strong> of <strong className="text-white">{totalPages}</strong> ({totalCount} total invoices)
+        <div className="d-flex justify-content-between align-items-center card-clean bg-white p-2 px-3">
+          <small className="text-muted">
+            Page <strong className="text-dark">{page}</strong> of <strong className="text-dark">{totalPages}</strong> ({totalCount} total invoices)
           </small>
           <div className="btn-group btn-group-sm">
             <button
-              className="btn btn-secondary-glass"
+              className="btn btn-outline-dark-custom"
               disabled={page <= 1}
               onClick={() => setPage((p) => p - 1)}
             >
               Previous
             </button>
             <button
-              className="btn btn-secondary-glass"
+              className="btn btn-outline-dark-custom"
               disabled={page >= totalPages}
               onClick={() => setPage((p) => p + 1)}
             >

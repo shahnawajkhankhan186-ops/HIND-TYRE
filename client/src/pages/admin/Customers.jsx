@@ -67,22 +67,22 @@ export default function Customers() {
   return (
     <div className="container-fluid p-3 p-md-4">
       {/* Header */}
-      <div className="glass-panel p-4 mb-4">
+      <div className="card-clean bg-white p-4 mb-4">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <div>
-            <h3 className="text-white fw-bold m-0 brand-font">Customer Directory & Purchase Ledger</h3>
-            <p className="text-secondary small m-0 mt-0.5">
+            <h3 className="text-dark fw-bold m-0 brand-font">Customer Directory & Purchase Ledger</h3>
+            <p className="text-muted small m-0 mt-0.5">
               Registered vehicle owners, lifetime invoice history & warranty profiles
             </p>
           </div>
-          <button className="btn btn-secondary-glass btn-sm d-flex align-items-center gap-1.5" onClick={fetchCustomers}>
+          <button className="btn btn-outline-dark-custom btn-sm d-flex align-items-center gap-1.5" onClick={fetchCustomers}>
             <RefreshCw size={14} /> Refresh
           </button>
         </div>
       </div>
 
       {/* Search Bar */}
-      <div className="glass-panel p-3 mb-3">
+      <div className="card-clean bg-white p-3 mb-3">
         <form onSubmit={handleSearchSubmit} className="row g-2 align-items-center">
           <div className="col-12 col-md-5">
             <div className="input-group input-group-sm">
@@ -97,20 +97,20 @@ export default function Customers() {
             </div>
           </div>
           <div className="col-12 col-md-2">
-            <button type="submit" className="btn btn-secondary-glass btn-sm w-100">Search</button>
+            <button type="submit" className="btn btn-outline-dark-custom btn-sm w-100">Search</button>
           </div>
         </form>
       </div>
 
       {/* Customers Table */}
-      <div className="glass-panel overflow-hidden mb-3">
+      <div className="card-clean bg-white overflow-hidden mb-3">
         {loading ? (
           <TableSkeleton rows={8} cols={6} />
         ) : customers.length === 0 ? (
-          <div className="p-5 text-center text-secondary">No customer records found.</div>
+          <div className="p-5 text-center text-muted">No customer records found.</div>
         ) : (
           <div className="table-responsive">
-            <table className="table table-glass mb-0">
+            <table className="table table-custom mb-0">
               <thead>
                 <tr>
                   <th>Customer Name</th>
@@ -126,38 +126,38 @@ export default function Customers() {
                 {customers.map((c) => (
                   <tr key={c._id}>
                     <td>
-                      <span className="text-white fw-bold">{c.name}</span>
+                      <span className="text-dark fw-bold">{c.name}</span>
                     </td>
-                    <td className="text-info font-monospace">{c.phone}</td>
+                    <td className="text-dark font-monospace">{c.phone}</td>
                     <td>
-                      <div className="text-secondary small">{c.email}</div>
-                      <div className="text-secondary extra-small truncate" style={{ maxWidth: '220px' }}>
+                      <div className="text-muted small">{c.email}</div>
+                      <div className="text-muted extra-small truncate" style={{ maxWidth: '220px' }}>
                         {c.address}
                       </div>
                     </td>
                     <td>
                       {c.vehicleNumber ? (
                         <div>
-                          <span className="badge bg-slate-800 text-white border border-secondary border-opacity-25 font-monospace extra-small">
+                          <span className="badge bg-light text-dark border font-monospace extra-small">
                             {c.vehicleNumber}
                           </span>
                           {c.vehicleModel && (
-                            <div className="text-secondary extra-small">{c.vehicleModel}</div>
+                            <div className="text-muted extra-small">{c.vehicleModel}</div>
                           )}
                         </div>
                       ) : (
-                        <span className="text-secondary extra-small">-</span>
+                        <span className="text-muted extra-small">-</span>
                       )}
                     </td>
                     <td className="text-center">
-                      <span className="badge badge-glass-cyan extra-small">{c.totalInvoicesCount} bills</span>
+                      <span className="badge bg-light text-dark border extra-small">{c.totalInvoicesCount} bills</span>
                     </td>
-                    <td className="text-end font-monospace text-white fw-bold">
+                    <td className="text-end font-monospace text-dark fw-bold">
                       {formatRupees(c.totalPurchasesPaise)}
                     </td>
                     <td className="text-center">
                       <button
-                        className="btn btn-sm btn-secondary-glass p-1.5"
+                        className="btn btn-sm btn-outline-dark-custom p-1.5"
                         title="View Purchase History"
                         onClick={() => handleViewHistory(c)}
                       >
@@ -174,15 +174,15 @@ export default function Customers() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="d-flex justify-content-between align-items-center glass-panel p-2 px-3">
-          <small className="text-secondary">
-            Page <strong className="text-white">{page}</strong> of <strong className="text-white">{totalPages}</strong> ({totalCount} customers)
+        <div className="d-flex justify-content-between align-items-center card-clean bg-white p-2 px-3">
+          <small className="text-muted">
+            Page <strong className="text-dark">{page}</strong> of <strong className="text-dark">{totalPages}</strong> ({totalCount} customers)
           </small>
           <div className="btn-group btn-group-sm">
-            <button className="btn btn-secondary-glass" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+            <button className="btn btn-outline-dark-custom" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
               Previous
             </button>
-            <button className="btn btn-secondary-glass" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>
+            <button className="btn btn-outline-dark-custom" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>
               Next
             </button>
           </div>
@@ -191,25 +191,25 @@ export default function Customers() {
 
       {/* Customer Invoices History Modal */}
       {showHistoryModal && selectedCustomer && (
-        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(5, 8, 15, 0.85)', backdropFilter: 'blur(8px)', zIndex: 1055 }}>
+        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0, 0, 0, 0.65)', zIndex: 1055 }}>
           <div className="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-            <div className="modal-content glass-modal border-0 shadow-2xl">
-              <div className="modal-header border-bottom border-secondary border-opacity-25 py-3">
+            <div className="modal-content border-0 shadow-lg" style={{ borderRadius: 'var(--radius-md)', background: '#FFFFFF' }}>
+              <div className="modal-header border-bottom py-3">
                 <div>
-                  <h5 className="modal-title text-white fw-bold m-0">{selectedCustomer.name}'s Invoices</h5>
-                  <small className="text-info font-monospace">{selectedCustomer.phone}</small>
+                  <h5 className="modal-title text-dark fw-bold m-0">{selectedCustomer.name}'s Invoices</h5>
+                  <small className="text-muted font-monospace">{selectedCustomer.phone}</small>
                 </div>
-                <button type="button" className="btn btn-sm text-secondary" onClick={() => setShowHistoryModal(false)}>✕</button>
+                <button type="button" className="btn btn-sm text-muted" onClick={() => setShowHistoryModal(false)}>✕</button>
               </div>
 
               <div className="modal-body py-3">
                 {historyLoading ? (
                   <TableSkeleton rows={4} cols={5} />
                 ) : customerSales.length === 0 ? (
-                  <div className="p-4 text-center text-secondary">No invoices found for this customer.</div>
+                  <div className="p-4 text-center text-muted">No invoices found for this customer.</div>
                 ) : (
                   <div className="table-responsive">
-                    <table className="table table-glass table-sm mb-0">
+                    <table className="table table-custom table-sm mb-0">
                       <thead>
                         <tr>
                           <th>Invoice No</th>
@@ -222,19 +222,19 @@ export default function Customers() {
                       <tbody>
                         {customerSales.map((s) => (
                           <tr key={s._id}>
-                            <td className="text-info font-monospace fw-bold">{s.invoiceNo}</td>
-                            <td className="text-secondary small">{formatIST(s.createdAt)}</td>
+                            <td className="text-dark font-monospace fw-bold">{s.invoiceNo}</td>
+                            <td className="text-muted small">{formatIST(s.createdAt)}</td>
                             <td>
-                              <span className="badge bg-slate-800 text-light extra-small">
+                              <span className="badge bg-light text-dark border extra-small">
                                 {s.items.map((i) => `${i.name} (x${i.qty})`).join(', ')}
                               </span>
                             </td>
                             <td>
-                              <span className={`badge ${s.status === 'COMPLETED' ? 'badge-glass-emerald' : 'badge-glass-rose'} extra-small`}>
+                              <span className={`badge ${s.status === 'COMPLETED' ? 'badge-pill-success' : 'badge-pill-danger'} extra-small`}>
                                 {s.status}
                               </span>
                             </td>
-                            <td className="text-end font-monospace text-white fw-bold">
+                            <td className="text-end font-monospace text-dark fw-bold">
                               {formatRupees(s.totalPaise)}
                             </td>
                           </tr>
@@ -245,8 +245,8 @@ export default function Customers() {
                 )}
               </div>
 
-              <div className="modal-footer border-top border-secondary border-opacity-25 py-2">
-                <button className="btn btn-secondary-glass btn-sm" onClick={() => setShowHistoryModal(false)}>
+              <div className="modal-footer border-top py-2">
+                <button className="btn btn-outline-dark-custom btn-sm" onClick={() => setShowHistoryModal(false)}>
                   Close
                 </button>
               </div>

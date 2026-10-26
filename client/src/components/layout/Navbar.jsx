@@ -11,7 +11,8 @@ import {
   Globe,
   Home,
   ChevronDown,
-  Sparkles
+  Sparkles,
+  Phone
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -24,7 +25,6 @@ export default function Navbar({ onToggleSidebar }) {
 
   const isCounterRoute = location.pathname.startsWith('/counter');
   const isAdminRoute = location.pathname.startsWith('/admin');
-  const isPortalRoute = location.pathname.startsWith('/portal');
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -38,10 +38,9 @@ export default function Navbar({ onToggleSidebar }) {
   }, []);
 
   const getActivePortalLabel = () => {
-    if (isAdminRoute) return { label: 'Admin Portal', icon: LayoutDashboard, color: 'text-info' };
+    if (isAdminRoute) return { label: 'Admin Portal', icon: LayoutDashboard, color: 'text-warning' };
     if (isCounterRoute) return { label: 'Counter POS', icon: ShoppingCart, color: 'text-warning' };
-    if (isPortalRoute) return { label: 'Customer Portal', icon: Globe, color: 'text-success' };
-    return { label: 'Explore Portal', icon: Sparkles, color: 'text-primary' };
+    return { label: 'Staff Portal', icon: Shield, color: 'text-warning' };
   };
 
   const activePortal = getActivePortalLabel();
@@ -50,7 +49,7 @@ export default function Navbar({ onToggleSidebar }) {
   return (
     <nav
       className="navbar navbar-expand-lg border-bottom border-secondary border-opacity-25 px-3 py-2 sticky-top"
-      style={{ backgroundColor: 'rgba(8, 12, 20, 0.90)', backdropFilter: 'blur(16px)', zIndex: 1040 }}
+      style={{ backgroundColor: 'rgba(10, 14, 26, 0.95)', backdropFilter: 'blur(16px)', zIndex: 1040 }}
     >
       <div className="container-fluid px-0">
         <div className="d-flex align-items-center gap-2">
@@ -65,20 +64,23 @@ export default function Navbar({ onToggleSidebar }) {
             </button>
           )}
 
-          {/* Brand Logo */}
+          {/* Brand Logo with Golden Amber Tyre Icon */}
           <Link
-            to={isAdmin ? '/admin/dashboard' : isCounter ? '/counter/new-sale' : '/portal'}
+            to={isAdmin ? '/admin/dashboard' : '/counter/new-sale'}
             className="navbar-brand d-flex align-items-center gap-2 m-0 text-decoration-none"
           >
-            <div className="p-2 rounded-3 bg-info bg-opacity-10 text-info border border-info border-opacity-50 d-flex align-items-center justify-content-center">
+            <div
+              className="d-flex align-items-center justify-content-center rounded-circle"
+              style={{ width: '38px', height: '38px', background: '#0a0e1a', color: '#f59e0b', border: '1px solid rgba(245, 158, 11, 0.4)' }}
+            >
               <Disc3 size={24} className="animate-spin-slow" />
             </div>
             <div>
-              <div className="fw-bold text-white fs-6 brand-font lh-1" style={{ letterSpacing: '0.02em' }}>
+              <div className="fw-black text-white fs-6 font-monospace lh-1" style={{ letterSpacing: '0.04em' }}>
                 {shopSettings?.shopName || 'HIND TYRES'}
               </div>
-              <small className="text-info fw-semibold extra-small" style={{ fontSize: '0.68rem', letterSpacing: '0.08em' }}>
-                & ACCESSORIES
+              <small className="extra-small fw-semibold text-warning" style={{ fontSize: '0.62rem', letterSpacing: '0.12em' }}>
+                DRIVE SAFE • DRIVE FAR
               </small>
             </div>
           </Link>
@@ -90,38 +92,41 @@ export default function Navbar({ onToggleSidebar }) {
           {(isAdmin || isCounter) && (
             <div className="position-relative" ref={dropdownRef}>
               <button
-                className="btn btn-sm btn-secondary-glass d-flex align-items-center gap-1.5 px-2.5 py-1.5"
+                className="btn btn-sm btn-secondary-glass d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill"
+                style={{ borderColor: 'rgba(245, 158, 11, 0.35)' }}
                 onClick={() => setShowPortalMenu((prev) => !prev)}
                 title="Switch Application Portal"
               >
-                <ActiveIcon size={15} className={activePortal.color} />
-                <span className="d-none d-sm-inline fw-semibold small text-white">{activePortal.label}</span>
+                <ActiveIcon size={15} style={{ color: '#f59e0b' }} />
+                <span className="d-none d-sm-inline fw-bold small text-white">{activePortal.label}</span>
                 <ChevronDown size={14} className="text-secondary ms-1" />
               </button>
 
               {showPortalMenu && (
                 <div
-                  className="position-absolute end-0 mt-2 p-2 rounded-3 shadow-2xl glass-modal border border-secondary border-opacity-30"
-                  style={{ minWidth: '220px', zIndex: 1060, background: 'rgba(12, 18, 30, 0.98)' }}
+                  className="position-absolute end-0 mt-2 p-2 rounded-3 shadow-lg border"
+                  style={{ minWidth: '240px', zIndex: 1060, backgroundColor: 'var(--bg-charcoal)', borderColor: 'var(--border-dark)' }}
                 >
-                  <div className="px-2 py-1 text-secondary extra-small fw-bold text-uppercase" style={{ fontSize: '0.68rem' }}>
+                  <div className="px-2 py-1 extra-small fw-bold text-uppercase" style={{ fontSize: '0.68rem', letterSpacing: '0.05em', color: 'var(--accent)' }}>
                     Switch Portal
                   </div>
 
                   {isAdmin && (
                     <button
                       className={`btn btn-sm w-100 text-start d-flex align-items-center gap-2 px-2.5 py-2 rounded-2 mb-1 ${
-                        isAdminRoute ? 'btn-primary-glass text-info' : 'btn-link text-light text-decoration-none hover-glass'
+                        isAdminRoute
+                          ? 'btn-accent'
+                          : 'btn-link text-white text-decoration-none'
                       }`}
                       onClick={() => {
                         setShowPortalMenu(false);
                         navigate('/admin/dashboard');
                       }}
                     >
-                      <LayoutDashboard size={15} className="text-info" />
+                      <LayoutDashboard size={15} style={{ color: isAdminRoute ? '#0A0A0C' : 'var(--accent)' }} />
                       <div>
                         <div className="small fw-semibold">Admin Portal</div>
-                        <div className="extra-small text-secondary">Analytics, stock & controls</div>
+                        <div className="extra-small opacity-75">Inventory, Reports & Users</div>
                       </div>
                     </button>
                   )}
@@ -129,36 +134,22 @@ export default function Navbar({ onToggleSidebar }) {
                   {(isAdmin || isCounter) && (
                     <button
                       className={`btn btn-sm w-100 text-start d-flex align-items-center gap-2 px-2.5 py-2 rounded-2 mb-1 ${
-                        isCounterRoute ? 'btn-primary-glass text-warning' : 'btn-link text-light text-decoration-none hover-glass'
+                        isCounterRoute
+                          ? 'btn-accent'
+                          : 'btn-link text-white text-decoration-none'
                       }`}
                       onClick={() => {
                         setShowPortalMenu(false);
                         navigate('/counter/new-sale');
                       }}
                     >
-                      <ShoppingCart size={15} className="text-warning" />
+                      <ShoppingCart size={15} style={{ color: isCounterRoute ? '#0A0A0C' : 'var(--accent)' }} />
                       <div>
                         <div className="small fw-semibold">Counter POS Billing</div>
-                        <div className="extra-small text-secondary">Live cashier invoicing</div>
+                        <div className="extra-small opacity-75">Live cashier invoicing</div>
                       </div>
                     </button>
                   )}
-
-                  <button
-                    className={`btn btn-sm w-100 text-start d-flex align-items-center gap-2 px-2.5 py-2 rounded-2 mb-1 ${
-                      isPortalRoute ? 'btn-primary-glass text-success' : 'btn-link text-light text-decoration-none hover-glass'
-                    }`}
-                    onClick={() => {
-                      setShowPortalMenu(false);
-                      navigate('/portal');
-                    }}
-                  >
-                    <Globe size={15} className="text-success" />
-                    <div>
-                      <div className="small fw-semibold">Customer Showcase</div>
-                      <div className="extra-small text-secondary">Tyre quality, features & lifespan</div>
-                    </div>
-                  </button>
 
                   <div className="border-top border-secondary border-opacity-20 my-1"></div>
 
@@ -179,32 +170,32 @@ export default function Navbar({ onToggleSidebar }) {
 
           {/* User Badge */}
           {user ? (
-            <div className="d-flex align-items-center gap-2 px-2.5 py-1 rounded-pill bg-slate-800 bg-opacity-60 border border-secondary border-opacity-25">
+            <div className="d-flex align-items-center gap-2 px-2.5 py-1 rounded-pill bg-dark border border-secondary border-opacity-30">
               <div
-                className={`p-1 rounded-circle ${
-                  user.role === 'ADMIN'
-                    ? 'bg-primary bg-opacity-25 text-primary'
-                    : user.role === 'COUNTER'
-                    ? 'bg-warning bg-opacity-25 text-warning'
-                    : 'bg-success bg-opacity-25 text-success'
-                }`}
+                className="p-1 rounded-circle d-flex align-items-center justify-content-center"
+                style={{
+                  backgroundColor: 'rgba(245, 158, 11, 0.15)',
+                  color: '#f59e0b'
+                }}
               >
                 {user.role === 'ADMIN' ? <Shield size={14} /> : <User size={14} />}
               </div>
               <div className="d-none d-md-block text-start lh-1 me-1">
-                <div className="text-white fw-semibold small">{user.name}</div>
+                <div className="text-white fw-bold small">{user.name}</div>
                 <span
-                  className={`badge px-1 py-0 extra-small ${
-                    user.role === 'ADMIN' ? 'text-primary' : user.role === 'COUNTER' ? 'text-warning' : 'text-success'
-                  }`}
+                  className="badge px-1 py-0 extra-small text-warning"
                   style={{ fontSize: '0.65rem' }}
                 >
-                  {user.role === 'ADMIN' ? 'Owner / Admin' : user.role === 'COUNTER' ? 'Counter Staff' : 'Customer'}
+                  {user.role === 'ADMIN' ? 'Owner / Admin' : 'Counter Staff'}
                 </span>
               </div>
             </div>
           ) : (
-            <Link to="/login" className="btn btn-sm btn-primary-glass">
+            <Link
+              to="/login"
+              className="btn btn-sm fw-bold px-3 py-1.5 rounded-pill text-dark shadow-sm"
+              style={{ backgroundColor: '#f59e0b' }}
+            >
               Sign In
             </Link>
           )}
@@ -212,7 +203,7 @@ export default function Navbar({ onToggleSidebar }) {
           {/* Logout */}
           {user && (
             <button
-              className="btn btn-sm btn-secondary-glass p-2 text-danger"
+              className="btn btn-sm btn-secondary-glass p-2 text-danger rounded-circle"
               onClick={logout}
               title="Log out"
             >

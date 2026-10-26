@@ -47,19 +47,19 @@ async function generateInvoicePDF({ sale, settings }) {
         console.error('QR code generation warning:', e.message);
       }
 
-      const primaryColor = '#0f172a';
-      const secondaryColor = '#3b82f6';
-      const textColor = '#1e293b';
-      const lightGray = '#f1f5f9';
-      const borderColor = '#cbd5e1';
+      const primaryColor = '#0A0A0C';
+      const accentYellow = '#FFC107';
+      const textColor = '#111318';
+      const lightGray = '#F4F5F7';
+      const borderColor = '#E3E5E9';
 
       // --- Header Banner ---
       doc.rect(36, 36, 523, 76).fill(primaryColor);
 
-      doc.fillColor('#ffffff').fontSize(18).font('Helvetica-Bold');
+      doc.fillColor(accentYellow).fontSize(18).font('Helvetica-Bold');
       doc.text(settings?.shopName || 'HIND TYRES AND ACCESSORIES', 50, 48);
 
-      doc.fillColor('#94a3b8').fontSize(9).font('Helvetica');
+      doc.fillColor('#A9AEB8').fontSize(9).font('Helvetica');
       doc.text(
         `${settings?.address || 'GT Road Bypass, Transport Nagar, Kanpur, UP'} | Phone: ${settings?.phone || '+91 98765 43210'}`,
         50,
@@ -71,7 +71,7 @@ async function generateInvoicePDF({ sale, settings }) {
         86
       );
 
-      doc.fillColor('#38bdf8').fontSize(12).font('Helvetica-Bold');
+      doc.fillColor('#FFFFFF').fontSize(12).font('Helvetica-Bold');
       doc.text('TAX INVOICE', 450, 48, { align: 'right', width: 95 });
 
       // --- Invoice Meta & Customer Details Box ---
@@ -113,10 +113,10 @@ async function generateInvoicePDF({ sale, settings }) {
 
       // --- Items Table Header ---
       let y = 222;
-      doc.rect(36, y, 523, 22).fill(lightGray);
-      doc.rect(36, y, 523, 22).strokeColor(borderColor).stroke();
+      doc.rect(36, y, 523, 22).fill('#131418');
+      doc.rect(36, y, 523, 22).strokeColor('#2A2D34').stroke();
 
-      doc.fillColor(primaryColor).fontSize(9).font('Helvetica-Bold');
+      doc.fillColor('#FFFFFF').fontSize(9).font('Helvetica-Bold');
       doc.text('#', 44, y + 6, { width: 20 });
       doc.text('Item Description', 70, y + 6, { width: 170 });
       doc.text('Size / Model', 245, y + 6, { width: 95 });
@@ -132,9 +132,9 @@ async function generateInvoicePDF({ sale, settings }) {
       sale.items.forEach((item, index) => {
         const rowHeight = 24;
         if (index % 2 === 1) {
-          doc.rect(36, y, 523, rowHeight).fill('#fafafa');
+          doc.rect(36, y, 523, rowHeight).fill('#F8FAFC');
         }
-        doc.rect(36, y, 523, rowHeight).strokeColor('#e2e8f0').stroke();
+        doc.rect(36, y, 523, rowHeight).strokeColor('#E2E8F0').stroke();
 
         doc.fillColor(textColor);
         doc.text(String(index + 1), 44, y + 7, { width: 20 });
@@ -176,8 +176,8 @@ async function generateInvoicePDF({ sale, settings }) {
 
       const calcRow = (label, valueStr, currentY, isBold = false, isHighlight = false) => {
         if (isHighlight) {
-          doc.rect(summaryLeft, currentY - 2, summaryWidth, 18).fill(primaryColor);
-          doc.fillColor('#ffffff').fontSize(10).font('Helvetica-Bold');
+          doc.rect(summaryLeft, currentY - 2, summaryWidth, 18).fill(accentYellow);
+          doc.fillColor('#0A0A0C').fontSize(10).font('Helvetica-Bold');
         } else {
           doc.fillColor(isBold ? primaryColor : '#475569')
             .fontSize(isBold ? 9.5 : 8.5)

@@ -77,15 +77,7 @@ async function seedDatabase() {
       isActive: true,
     });
 
-    // Demo Customer Account
-    const customerPasswordHash = await bcrypt.hash('User@123', salt);
-    await User.create({
-      name: 'Rohan Gupta (Customer)',
-      email: 'customer@example.com',
-      passwordHash: customerPasswordHash,
-      role: 'USER',
-      isActive: true,
-    });
+
 
     // 3. Seed Companies (8 major tyre brands)
     console.log('[Seed] Creating Tyre Companies...');

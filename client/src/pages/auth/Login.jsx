@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Disc3, Lock, Mail, Eye, EyeOff, Shield, User, ArrowRight } from 'lucide-react';
+import { Disc3, Lock, Mail, Eye, EyeOff, LogIn, CheckCircle2 } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
@@ -11,7 +11,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const { login, googleLogin } = useAuth();
+  const { login, googleLogin, shopSettings } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -30,7 +30,8 @@ export default function Login() {
       } else if (user.role === 'COUNTER') {
         navigate('/counter/new-sale');
       } else {
-        navigate('/portal');
+        toast.error('Access denied. Only registered staff and administrators can access the portal.');
+        navigate('/login');
       }
     } catch (err) {
       toast.error(err.response?.data?.error || err.friendlyMessage || err.message || 'Invalid credentials');
@@ -49,7 +50,8 @@ export default function Login() {
       } else if (user.role === 'COUNTER') {
         navigate('/counter/new-sale');
       } else {
-        navigate('/portal');
+        toast.error('Access denied. Only registered staff and administrators can access the portal.');
+        navigate('/login');
       }
     } catch (err) {
       toast.error(err.response?.data?.error || err.friendlyMessage || err.message || 'Google Sign-In failed');
@@ -58,179 +60,215 @@ export default function Login() {
     }
   };
 
-  const handleQuickFill = (demoEmail, demoPassword) => {
-    setEmail(demoEmail);
-    setPassword(demoPassword);
-    toast.success(`Filled demo credentials for ${demoEmail}`);
-  };
-
   return (
-    <div className="min-vh-100 d-flex align-items-center justify-content-center p-3" style={{ background: 'radial-gradient(ellipse at 50% 20%, rgba(56, 189, 248, 0.12) 0%, #080c14 70%)' }}>
-      <div className="w-100" style={{ maxWidth: '440px' }}>
-        {/* Brand Banner */}
-        <div className="text-center mb-4">
-          <div className="d-inline-flex p-3 rounded-4 bg-info bg-opacity-10 border border-info border-opacity-30 text-info mb-3 shadow-lg shadow-cyan">
-            <Disc3 size={44} className="animate-spin-slow" />
-          </div>
-          <h2 className="text-white fw-bold brand-font m-0" style={{ letterSpacing: '0.02em' }}>
-            HIND TYRES & ACCESSORIES
-          </h2>
-          <p className="text-secondary small mt-1">Multi-Company Stock, Billing & GST Management</p>
+    <div className="min-vh-100 d-flex flex-column flex-lg-row" style={{ backgroundColor: 'var(--bg-black)' }}>
+      {/* ========================================================== */}
+      {/* LEFT SIDE: Black/Charcoal with Tyre Workshop & Headline */}
+      {/* ========================================================== */}
+      <div
+        className="col-12 col-lg-6 d-flex flex-column justify-content-between p-4 p-md-5 text-white position-relative"
+        style={{
+          backgroundImage: `linear-gradient(to right, rgba(10, 10, 12, 0.94) 0%, rgba(10, 10, 12, 0.85) 60%, rgba(10, 10, 12, 0.70) 100%), url('/images/hero_tyre_workshop.jpg')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          minHeight: '340px',
+        }}
+      >
+        {/* Top Logo */}
+        <div>
+          <Link to="/" className="d-flex align-items-center gap-2 text-decoration-none">
+            <div
+              className="d-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
+              style={{ width: '40px', height: '40px', backgroundColor: 'var(--bg-card-dark)', color: 'var(--accent)' }}
+            >
+              <Disc3 size={24} className="animate-spin-slow" />
+            </div>
+            <div>
+              <div className="fw-black text-white fs-5 lh-1 font-monospace" style={{ letterSpacing: '0.03em' }}>
+                {shopSettings?.shopName || 'HIND TYRES & ACCESSORIES'}
+              </div>
+              <div className="text-muted extra-small mt-0.5 fw-bold" style={{ fontSize: '0.62rem', letterSpacing: '0.12em' }}>
+                DRIVE SAFE · DRIVE FAR
+              </div>
+            </div>
+          </Link>
         </div>
 
-        {/* Login Glass Card */}
-        <div className="glass-panel p-4 p-sm-5 shadow-2xl border-opacity-20">
-          <h4 className="text-white fw-bold mb-1">Sign In</h4>
-          <p className="text-secondary small mb-4">Access Counter POS or Administrator Portal</p>
+        {/* Center Headline */}
+        <div className="my-4 my-lg-auto py-3">
+          <div className="hero-eyebrow text-light mb-2 opacity-90">
+            PREMIUM TYRES FOR A
+          </div>
+          <h1 className="hero-headline display-4 text-white mb-3">
+            SAFER<br />
+            <span style={{ color: 'var(--accent)' }}>SMOOTHER</span><br />
+            JOURNEY
+          </h1>
+          <p className="fs-6 text-light opacity-80 mb-0" style={{ maxWidth: '420px' }}>
+            Multi-brand stock inventory, instant GST counter billing, and genuine customer tyre durability warranty hub.
+          </p>
+        </div>
 
-          <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label className="form-label text-secondary small fw-semibold">Email Address</label>
-              <div className="input-group">
-                <span className="input-group-text"><Mail size={16} /></span>
-                <input
-                  type="email"
-                  className="form-control"
-                  placeholder="name@hindtyres.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
+        {/* Bottom Trust Feature */}
+        <div className="d-flex flex-wrap align-items-center gap-3 pt-3 border-top" style={{ borderColor: 'var(--border-dark)' }}>
+          <div className="d-flex align-items-center gap-1.5 small text-light">
+            <CheckCircle2 size={16} style={{ color: 'var(--accent)' }} />
+            <span>100% Genuine Tyres</span>
+          </div>
+          <div className="d-flex align-items-center gap-1.5 small text-light">
+            <CheckCircle2 size={16} style={{ color: 'var(--accent)' }} />
+            <span>Certified 5-Year Warranty</span>
+          </div>
+          <div className="d-flex align-items-center gap-1.5 small text-light">
+            <CheckCircle2 size={16} style={{ color: 'var(--accent)' }} />
+            <span>3D Laser Alignment</span>
+          </div>
+        </div>
+      </div>
 
-            <div className="mb-3">
-              <div className="d-flex justify-content-between align-items-center mb-1">
-                <label className="form-label text-secondary small fw-semibold m-0">Password</label>
-                <Link to="/forgot-password" className="text-info extra-small text-decoration-none">
-                  Forgot password?
-                </Link>
-              </div>
-              <div className="input-group">
-                <span className="input-group-text"><Lock size={16} /></span>
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  className="form-control"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-                <button
-                  type="button"
-                  className="input-group-text btn btn-link text-secondary"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              className="btn btn-primary-glass w-100 py-2.5 mt-2 d-flex align-items-center justify-content-center gap-2"
-              disabled={loading}
+      {/* ========================================================== */}
+      {/* RIGHT SIDE: White Clean Form Card with Yellow Primary Sign In */}
+      {/* ========================================================== */}
+      <div
+        className="col-12 col-lg-6 d-flex align-items-center justify-content-center p-3 p-sm-4 p-md-5"
+        style={{ backgroundColor: 'var(--bg-light)', minHeight: '100vh' }}
+      >
+        <div className="w-100" style={{ maxWidth: '440px' }}>
+          <div
+            className="card-clean p-4 p-sm-4 bg-white shadow-lg rounded-4"
+            style={{ border: '1px solid var(--border-light)' }}
+          >
+            {/* Header */}
+            <div
+              className="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom"
+              style={{ borderColor: 'var(--border-light)' }}
             >
-              {loading ? (
-                <>
-                  <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
-                  Signing in...
-                </>
-              ) : (
-                <>
-                  Sign In to System <ArrowRight size={16} />
-                </>
-              )}
-            </button>
-          </form>
-
-          {/* Google Sign-in Option */}
-          <div className="mt-3">
-            <div className="d-flex align-items-center my-3">
-              <div className="flex-grow-1 border-top border-secondary border-opacity-25" />
-              <span className="px-3 text-secondary extra-small text-uppercase fw-semibold" style={{ fontSize: '0.68rem', letterSpacing: '0.06em' }}>
-                Or continue with
-              </span>
-              <div className="flex-grow-1 border-top border-secondary border-opacity-25" />
-            </div>
-
-            <div className="d-flex justify-content-center">
-              <GoogleLogin
-                onSuccess={handleGoogleSuccess}
-                onError={() => toast.error('Google Sign-In was unsuccessful')}
-                theme="filled_black"
-                shape="pill"
-                size="large"
-                text="signin_with"
-                width="100%"
-              />
-            </div>
-          </div>
-
-          {/* Registration link */}
-          <div className="mt-3 text-center">
-            <span className="text-secondary small">Don't have an account? </span>
-            <Link to="/register" className="text-info fw-semibold text-decoration-none small">
-              Register here
-            </Link>
-          </div>
-
-          {/* Quick Demo Fill Buttons (As Required by Spec) */}
-          <div className="mt-4 pt-3 border-top border-secondary border-opacity-25">
-            <div className="text-secondary extra-small text-uppercase fw-bold text-center mb-2.5" style={{ fontSize: '0.68rem', letterSpacing: '0.06em' }}>
-              ⚡ Quick-Fill Logins
-            </div>
-            <div className="d-grid gap-2">
-              <button
-                type="button"
-                className="btn btn-sm btn-secondary-glass d-flex align-items-center justify-content-between px-3 py-2 text-start"
-                onClick={() => handleQuickFill('prolemda@gmail.com', 'Admin@123')}
+              <div>
+                <h3 className="fw-black text-dark mb-0.5" style={{ letterSpacing: '-0.02em' }}>
+                  Sign In
+                </h3>
+                <p className="text-muted small mb-0">Staff & Administrator Access Portal</p>
+              </div>
+              <Link
+                to="/"
+                className="btn btn-sm btn-outline-secondary rounded-pill extra-small px-3 hover-lift"
               >
-                <div className="d-flex align-items-center gap-2">
-                  <Shield size={16} className="text-primary" />
-                  <div>
-                    <div className="text-white fw-semibold small">Super Admin (prolemda)</div>
-                    <div className="text-secondary extra-small">prolemda@gmail.com</div>
-                  </div>
-                </div>
-                <span className="badge bg-primary bg-opacity-20 text-primary">Admin@123</span>
-              </button>
-
-              <button
-                type="button"
-                className="btn btn-sm btn-secondary-glass d-flex align-items-center justify-content-between px-3 py-2 text-start"
-                onClick={() => handleQuickFill('counter@hindtyres.com', 'Counter@123')}
-              >
-                <div className="d-flex align-items-center gap-2">
-                  <User size={16} className="text-success" />
-                  <div>
-                    <div className="text-white fw-semibold small">Cashier (Counter Staff)</div>
-                    <div className="text-secondary extra-small">counter@hindtyres.com</div>
-                  </div>
-                </div>
-                <span className="badge bg-success bg-opacity-20 text-success">Counter@123</span>
-              </button>
-
-              <button
-                type="button"
-                className="btn btn-sm btn-secondary-glass d-flex align-items-center justify-content-between px-3 py-2 text-start"
-                onClick={() => handleQuickFill('customer@example.com', 'User@123')}
-              >
-                <div className="d-flex align-items-center gap-2">
-                  <Disc3 size={16} className="text-info" />
-                  <div>
-                    <div className="text-white fw-semibold small">Customer (User Portal)</div>
-                    <div className="text-secondary extra-small">customer@example.com</div>
-                  </div>
-                </div>
-                <span className="badge bg-info bg-opacity-20 text-info">User@123</span>
-              </button>
-            </div>
-
-            <div className="text-center mt-3">
-              <Link to="/" className="text-secondary extra-small text-decoration-none">
-                ← Back to Main Landing Page
+                Home
               </Link>
+            </div>
+
+            {/* Email & Password Form */}
+            <form onSubmit={handleSubmit}>
+              <div className="mb-3">
+                <label className="form-label text-dark small fw-semibold mb-1.5">
+                  Email Address
+                </label>
+                <div className="input-group">
+                  <span className="input-group-text bg-white text-muted">
+                    <Mail size={16} />
+                  </span>
+                  <input
+                    type="email"
+                    className="form-control"
+                    placeholder="name@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    style={{ height: '44px' }}
+                  />
+                </div>
+              </div>
+
+              <div className="mb-3.5">
+                <div className="d-flex justify-content-between align-items-center mb-1.5">
+                  <label className="form-label text-dark small fw-semibold m-0">Password</label>
+                  <Link
+                    to="/forgot-password"
+                    className="text-link-blue extra-small text-decoration-none"
+                  >
+                    Forgot password?
+                  </Link>
+                </div>
+                <div className="input-group">
+                  <span className="input-group-text bg-white text-muted">
+                    <Lock size={16} />
+                  </span>
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    className="form-control"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    style={{ height: '44px' }}
+                  />
+                  <button
+                    type="button"
+                    className="input-group-text bg-white btn btn-link text-muted"
+                    onClick={() => setShowPassword(!showPassword)}
+                    tabIndex={-1}
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="btn-accent w-100 py-2.5 rounded-3 text-dark fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm"
+                style={{ height: '44px', fontSize: '0.95rem' }}
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm" role="status" />
+                    <span>Signing in...</span>
+                  </>
+                ) : (
+                  <>
+                    <LogIn size={18} />
+                    <span>Sign In</span>
+                  </>
+                )}
+              </button>
+            </form>
+
+            {/* Clean Flex Divider */}
+            <div className="d-flex align-items-center my-3.5 py-1">
+              <div className="flex-grow-1 border-top" style={{ borderColor: 'var(--border-light)' }} />
+              <span
+                className="px-3 text-muted extra-small fw-semibold text-uppercase"
+                style={{ letterSpacing: '0.06em', fontSize: '0.7rem' }}
+              >
+                OR CONTINUE WITH
+              </span>
+              <div className="flex-grow-1 border-top" style={{ borderColor: 'var(--border-light)' }} />
+            </div>
+
+            {/* Google Sign-In */}
+            <div className="text-center">
+              <div className="d-flex justify-content-center w-100 mb-2">
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={() => toast.error('Google Sign-In failed')}
+                  theme="outline"
+                  shape="pill"
+                  size="large"
+                  text="continue_with"
+                  width="100%"
+                />
+              </div>
+              <div className="extra-small text-muted text-center" style={{ fontSize: '0.74rem', lineHeight: 1.45 }}>
+                ⚡ Only staff and administrator Gmail accounts authorized by the Shop Owner can sign in.
+              </div>
+            </div>
+
+            {/* Bottom Security Note */}
+            <div
+              className="text-center mt-4 pt-3 border-top extra-small text-muted"
+              style={{ borderColor: 'var(--border-light)', fontSize: '0.78rem' }}
+            >
+              🔒 Authorized store staff portal. Need account access? Contact the shop owner.
             </div>
           </div>
         </div>

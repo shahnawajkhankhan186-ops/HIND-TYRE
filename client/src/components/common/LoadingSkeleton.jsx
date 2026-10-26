@@ -27,7 +27,7 @@ export function CardSkeleton({ count = 4 }) {
     <div className="row g-3">
       {Array.from({ length: count }).map((_, i) => (
         <div key={i} className="col-12 col-sm-6 col-lg-3">
-          <div className="glass-panel p-4 h-100">
+          <div className="card-clean p-4 h-100 bg-white">
             <div className="skeleton-box mb-3" style={{ height: '24px', width: '50%' }} />
             <div className="skeleton-box mb-2" style={{ height: '36px', width: '80%' }} />
             <div className="skeleton-box" style={{ height: '16px', width: '60%' }} />

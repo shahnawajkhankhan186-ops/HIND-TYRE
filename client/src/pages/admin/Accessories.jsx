@@ -139,20 +139,20 @@ export default function Accessories() {
   return (
     <div className="container-fluid p-3 p-md-4">
       {/* Header */}
-      <div className="glass-panel p-4 mb-4">
+      <div className="card-clean bg-white p-4 mb-4">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <div>
-            <h3 className="text-white fw-bold m-0 brand-font">Accessories & Parts Catalog</h3>
-            <p className="text-secondary small m-0 mt-0.5">Tubes, valves, wheel weights, alloy covers & repair kits</p>
+            <h3 className="text-dark fw-bold m-0 brand-font">Accessories & Parts Catalog</h3>
+            <p className="text-muted small m-0 mt-0.5">Tubes, valves, wheel weights, alloy covers & repair kits</p>
           </div>
-          <button className="btn btn-primary-glass btn-sm d-flex align-items-center gap-1.5" onClick={handleOpenAdd}>
+          <button className="btn btn-accent btn-sm d-flex align-items-center gap-1.5" onClick={handleOpenAdd}>
             <Plus size={16} /> Add Accessory
           </button>
         </div>
       </div>
 
       {/* Filter Bar */}
-      <div className="glass-panel p-3 mb-3">
+      <div className="card-clean bg-white p-3 mb-3">
         <div className="row g-2 align-items-center">
           <div className="col-12 col-md-6">
             <div className="input-group input-group-sm">
@@ -179,7 +179,7 @@ export default function Accessories() {
             </select>
           </div>
           <div className="col-12 col-md-2">
-            <button className="btn btn-secondary-glass btn-sm w-100" onClick={fetchAccessories}>
+            <button className="btn btn-outline-dark-custom btn-sm w-100" onClick={fetchAccessories}>
               Search
             </button>
           </div>
@@ -187,12 +187,12 @@ export default function Accessories() {
       </div>
 
       {/* Table */}
-      <div className="glass-panel overflow-hidden">
+      <div className="card-clean bg-white overflow-hidden mb-4">
         {loading ? (
           <TableSkeleton rows={6} cols={6} />
         ) : (
           <div className="table-responsive">
-            <table className="table table-glass mb-0">
+            <table className="table table-custom mb-0">
               <thead>
                 <tr>
                   <th>Item Name</th>
@@ -207,32 +207,32 @@ export default function Accessories() {
               <tbody>
                 {accessories.map((item) => (
                   <tr key={item._id}>
-                    <td className="text-white fw-semibold">{item.name}</td>
+                    <td className="text-dark fw-semibold">{item.name}</td>
                     <td>
-                      <span className="badge bg-secondary bg-opacity-30 text-white extra-small">
+                      <span className="badge bg-light text-dark border extra-small">
                         {item.category}
                       </span>
                     </td>
-                    <td className="text-secondary font-monospace extra-small">{item.sku}</td>
-                    <td className="text-end font-monospace text-white fw-bold">
+                    <td className="text-muted font-monospace extra-small">{item.sku}</td>
+                    <td className="text-end font-monospace text-dark fw-bold">
                       {formatRupees(item.sellingPricePaise)}
                     </td>
-                    <td className="text-center text-secondary">{item.gstPercent}%</td>
+                    <td className="text-center text-muted">{item.gstPercent}%</td>
                     <td className="text-center">
-                      <span className={`badge ${item.quantity <= 0 ? 'bg-danger' : item.quantity <= item.lowStockThreshold ? 'badge-glass-amber' : 'badge-glass-emerald'} extra-small`}>
+                      <span className={`badge ${item.quantity <= 0 ? 'badge-pill-danger' : item.quantity <= item.lowStockThreshold ? 'badge-pill-warning' : 'badge-pill-success'} extra-small`}>
                         {item.quantity} units
                       </span>
                     </td>
                     <td className="text-end">
                       <div className="d-flex align-items-center justify-content-end gap-1.5">
                         <button
-                          className="btn btn-sm btn-secondary-glass p-1.5"
+                          className="btn btn-sm btn-outline-dark-custom p-1.5"
                           onClick={() => handleOpenEdit(item)}
                         >
                           <Edit2 size={14} />
                         </button>
                         <button
-                          className="btn btn-sm btn-danger-glass p-1.5"
+                          className="btn btn-sm btn-outline-danger p-1.5"
                           onClick={() => setArchiveTarget(item)}
                         >
                           <Archive size={14} />
@@ -249,21 +249,21 @@ export default function Accessories() {
 
       {/* Add / Edit Modal */}
       {showModal && (
-        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(5, 8, 15, 0.85)', backdropFilter: 'blur(8px)', zIndex: 1055 }}>
+        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0, 0, 0, 0.65)', zIndex: 1055 }}>
           <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content glass-modal border-0 shadow-2xl">
-              <div className="modal-header border-bottom border-secondary border-opacity-25 pb-3">
-                <h5 className="modal-title text-white fw-bold m-0">
+            <div className="modal-content border-0 shadow-lg" style={{ borderRadius: 'var(--radius-md)', background: '#FFFFFF' }}>
+              <div className="modal-header border-bottom pb-3">
+                <h5 className="modal-title text-dark fw-bold m-0">
                   {editingItem ? 'Edit Accessory' : 'Add Accessory'}
                 </h5>
-                <button type="button" className="btn btn-sm text-secondary" onClick={() => setShowModal(false)}>✕</button>
+                <button type="button" className="btn btn-sm text-muted" onClick={() => setShowModal(false)}>✕</button>
               </div>
 
               <form onSubmit={handleSave}>
                 <div className="modal-body py-3">
                   <div className="row g-3">
                     <div className="col-12">
-                      <label className="form-label text-light small fw-semibold">Item Name *</label>
+                      <label className="form-label text-dark small fw-semibold">Item Name *</label>
                       <input
                         type="text"
                         className="form-control"
@@ -275,7 +275,7 @@ export default function Accessories() {
                     </div>
 
                     <div className="col-6">
-                      <label className="form-label text-light small fw-semibold">Category</label>
+                      <label className="form-label text-dark small fw-semibold">Category</label>
                       <select
                         className="form-select"
                         value={formData.category}
@@ -288,7 +288,7 @@ export default function Accessories() {
                     </div>
 
                     <div className="col-6">
-                      <label className="form-label text-light small fw-semibold">SKU *</label>
+                      <label className="form-label text-dark small fw-semibold">SKU *</label>
                       <input
                         type="text"
                         className="form-control font-monospace text-uppercase"
@@ -299,7 +299,7 @@ export default function Accessories() {
                     </div>
 
                     <div className="col-6">
-                      <label className="form-label text-secondary small fw-semibold">Cost Price (₹)</label>
+                      <label className="form-label text-muted small fw-semibold">Cost Price (₹)</label>
                       <input
                         type="number"
                         step="0.01"
@@ -311,11 +311,11 @@ export default function Accessories() {
                     </div>
 
                     <div className="col-6">
-                      <label className="form-label text-info small fw-bold">Selling Price (₹) *</label>
+                      <label className="form-label text-dark small fw-bold">Selling Price (₹) *</label>
                       <input
                         type="number"
                         step="0.01"
-                        className="form-control border-info"
+                        className="form-control"
                         placeholder="0.00"
                         value={formData.sellingPriceRupees}
                         onChange={(e) => setFormData({ ...formData, sellingPriceRupees: e.target.value })}
@@ -324,7 +324,7 @@ export default function Accessories() {
                     </div>
 
                     <div className="col-4">
-                      <label className="form-label text-light small fw-semibold">GST Rate (%)</label>
+                      <label className="form-label text-dark small fw-semibold">GST Rate (%)</label>
                       <input
                         type="number"
                         className="form-control"
@@ -335,7 +335,7 @@ export default function Accessories() {
                     </div>
 
                     <div className="col-4">
-                      <label className="form-label text-light small fw-semibold">Stock Qty</label>
+                      <label className="form-label text-dark small fw-semibold">Stock Qty</label>
                       <input
                         type="number"
                         className="form-control"
@@ -346,7 +346,7 @@ export default function Accessories() {
                     </div>
 
                     <div className="col-4">
-                      <label className="form-label text-light small fw-semibold">Threshold</label>
+                      <label className="form-label text-dark small fw-semibold">Threshold</label>
                       <input
                         type="number"
                         className="form-control"
@@ -358,9 +358,9 @@ export default function Accessories() {
                   </div>
                 </div>
 
-                <div className="modal-footer border-top border-secondary border-opacity-25 pt-3">
-                  <button type="button" className="btn btn-secondary-glass" onClick={() => setShowModal(false)}>Cancel</button>
-                  <button type="submit" className="btn btn-primary-glass" disabled={saving}>
+                <div className="modal-footer border-top pt-3">
+                  <button type="button" className="btn btn-outline-dark-custom" onClick={() => setShowModal(false)}>Cancel</button>
+                  <button type="submit" className="btn btn-accent" disabled={saving}>
                     {saving ? 'Saving...' : 'Save Accessory'}
                   </button>
                 </div>

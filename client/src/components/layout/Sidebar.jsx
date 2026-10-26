@@ -47,13 +47,13 @@ export default function Sidebar({ isOpen, onClose }) {
 
       {/* Sidebar container */}
       <aside
-        className={`admin-sidebar glass-panel border-top-0 border-start-0 border-bottom-0 rounded-0 p-3 d-flex flex-column ${
+        className={`admin-sidebar border-top-0 border-start-0 border-bottom-0 rounded-0 p-3 d-flex flex-column ${
           isOpen ? 'show-sidebar' : ''
         }`}
         style={{
           width: 'var(--sidebar-width)',
           zIndex: 1050,
-          background: 'rgba(10, 15, 26, 0.96)',
+          backgroundColor: 'var(--bg-charcoal)',
         }}
       >
         <div className="d-flex justify-content-between align-items-center mb-3 d-lg-none flex-shrink-0">

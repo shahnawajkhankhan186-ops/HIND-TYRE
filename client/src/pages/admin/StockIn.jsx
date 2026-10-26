@@ -97,24 +97,24 @@ export default function StockIn() {
 
   return (
     <div className="container-fluid p-3 p-md-4">
-      <div className="glass-panel p-4 mb-4">
-        <h3 className="text-white fw-bold m-0 brand-font">Stock In (Purchase Entry)</h3>
-        <p className="text-secondary small m-0 mt-0.5">
+      <div className="card-clean bg-white p-4 mb-4">
+        <h3 className="text-dark fw-bold m-0 brand-font">Stock In (Purchase Entry)</h3>
+        <p className="text-muted small m-0 mt-0.5">
           Record received tyre shipments & supplier purchases with ledger updates
         </p>
       </div>
 
       <div className="row justify-content-center">
         <div className="col-12 col-lg-8">
-          <div className="glass-panel p-4 p-md-5">
+          <div className="card-clean bg-white p-4 p-md-5">
             <form onSubmit={handleSubmit}>
               {/* Item Type Switcher */}
               <div className="mb-4">
-                <label className="form-label text-light small fw-semibold">Item Category *</label>
-                <div className="btn-group w-100 p-1 rounded-pill bg-slate-900 border border-secondary border-opacity-25">
+                <label className="form-label text-dark small fw-semibold">Item Category *</label>
+                <div className="btn-group w-100 p-1 rounded-pill bg-light border">
                   <button
                     type="button"
-                    className={`btn btn-sm rounded-pill py-2 ${itemType === 'Tyre' ? 'btn-primary-glass' : 'btn-link text-secondary text-decoration-none'}`}
+                    className={`btn btn-sm rounded-pill py-2 ${itemType === 'Tyre' ? 'btn-accent' : 'btn-link text-muted text-decoration-none'}`}
                     onClick={() => {
                       setItemType('Tyre');
                       setSelectedItemId('');
@@ -125,7 +125,7 @@ export default function StockIn() {
                   </button>
                   <button
                     type="button"
-                    className={`btn btn-sm rounded-pill py-2 ${itemType === 'Accessory' ? 'btn-primary-glass' : 'btn-link text-secondary text-decoration-none'}`}
+                    className={`btn btn-sm rounded-pill py-2 ${itemType === 'Accessory' ? 'btn-accent' : 'btn-link text-muted text-decoration-none'}`}
                     onClick={() => {
                       setItemType('Accessory');
                       setSelectedItemId('');
@@ -139,7 +139,7 @@ export default function StockIn() {
 
               {/* Select Item */}
               <div className="mb-3">
-                <label className="form-label text-light small fw-semibold">
+                <label className="form-label text-dark small fw-semibold">
                   Select {itemType === 'Tyre' ? 'Tyre Specification' : 'Accessory'} *
                 </label>
                 <select
@@ -165,14 +165,14 @@ export default function StockIn() {
 
               {/* Current Item Live Info Badge */}
               {selectedItem && (
-                <div className="p-3 mb-4 rounded-3 bg-slate-900 border border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
+                <div className="p-3 mb-4 rounded-3 bg-light border d-flex justify-content-between align-items-center">
                   <div>
-                    <span className="text-secondary extra-small text-uppercase">Current On-Hand Stock:</span>
-                    <div className="text-white fw-bold fs-6">{selectedItem.quantity} units</div>
+                    <span className="text-muted extra-small text-uppercase">Current On-Hand Stock:</span>
+                    <div className="text-dark fw-bold fs-6">{selectedItem.quantity} units</div>
                   </div>
                   <div className="text-end">
-                    <span className="text-secondary extra-small text-uppercase">Standard Cost Price:</span>
-                    <div className="text-info font-monospace fw-bold fs-6">
+                    <span className="text-muted extra-small text-uppercase">Standard Cost Price:</span>
+                    <div className="text-dark font-monospace fw-bold fs-6">
                       {formatRupees(selectedItem.purchasePricePaise)}
                     </div>
                   </div>
@@ -182,11 +182,11 @@ export default function StockIn() {
               <div className="row g-3 mb-3">
                 {/* Quantity Received */}
                 <div className="col-12 col-md-6">
-                  <label className="form-label text-white small fw-bold">Quantity Received *</label>
+                  <label className="form-label text-dark small fw-bold">Quantity Received *</label>
                   <input
                     type="number"
                     min="1"
-                    className="form-control form-control-lg fs-6 border-info"
+                    className="form-control form-control-lg fs-6"
                     placeholder="e.g. 10"
                     value={quantity}
                     onChange={(e) => setQuantity(e.target.value)}
@@ -196,7 +196,7 @@ export default function StockIn() {
 
                 {/* Purchase Cost per unit */}
                 <div className="col-12 col-md-6">
-                  <label className="form-label text-light small fw-semibold">
+                  <label className="form-label text-dark small fw-semibold">
                     Purchase Price per Unit (₹)
                   </label>
                   <div className="input-group input-group-lg">
@@ -214,7 +214,7 @@ export default function StockIn() {
 
                 {/* Supplier */}
                 <div className="col-12 col-md-6">
-                  <label className="form-label text-light small fw-semibold">Supplier / Distributor Name</label>
+                  <label className="form-label text-dark small fw-semibold">Supplier / Distributor Name</label>
                   <div className="input-group">
                     <span className="input-group-text"><Truck size={16} /></span>
                     <input
@@ -229,7 +229,7 @@ export default function StockIn() {
 
                 {/* PO / Invoice Reference / Note */}
                 <div className="col-12 col-md-6">
-                  <label className="form-label text-light small fw-semibold">PO / Invoice / Batch Note</label>
+                  <label className="form-label text-dark small fw-semibold">PO / Invoice / Batch Note</label>
                   <input
                     type="text"
                     className="form-control"
@@ -241,10 +241,10 @@ export default function StockIn() {
               </div>
 
               {/* Submit */}
-              <div className="pt-3 border-top border-secondary border-opacity-20 d-flex justify-content-end">
+              <div className="pt-3 border-top d-flex justify-content-end">
                 <button
                   type="submit"
-                  className="btn btn-primary-glass px-4 py-2.5 d-flex align-items-center gap-2"
+                  className="btn btn-accent px-4 py-2.5 d-flex align-items-center gap-2"
                   disabled={submitting || !selectedItemId || !quantity}
                 >
                   <ArrowDownToLine size={18} />

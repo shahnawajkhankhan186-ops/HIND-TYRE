@@ -184,71 +184,71 @@ export default function CustomerPortal() {
   };
 
   return (
-    <div className="min-vh-100 bg-dark text-light d-flex flex-column" style={{ background: '#080d19' }}>
+    <div className="min-vh-100 d-flex flex-column" style={{ background: 'var(--bg-light)' }}>
       {/* Top Navigation Bar with Multi-Portal Switcher (for Admins & Staff) */}
       <Navbar />
 
       {/* Main Container */}
       <div className="container-fluid px-3 px-lg-4 py-4 flex-grow-1">
         {/* User Portal Header Banner */}
-        <div className="card glass-card border border-secondary border-opacity-20 mb-4 p-3 p-md-4 shadow-xl">
+        <div className="card-clean mb-4 p-3 p-md-4 text-white" style={{ background: 'var(--bg-black)', border: '1px solid var(--border-dark)' }}>
           <div className="d-flex flex-wrap align-items-center justify-content-between gap-3">
             <div>
               <div className="d-flex align-items-center gap-2 mb-1">
-                <span className="badge bg-info bg-opacity-15 text-info border border-info border-opacity-30 px-2.5 py-1 rounded-pill extra-small fw-semibold">
-                  <Sparkles size={13} className="me-1" /> Customer Tyre Showcase
+                <span className="badge px-2.5 py-1 rounded-pill extra-small fw-bold text-dark" style={{ background: 'var(--accent)' }}>
+                  <Sparkles size={13} className="me-1 inline" /> Customer Tyre Showcase
                 </span>
                 {user && (
-                  <span className="badge bg-success bg-opacity-15 text-success border border-success border-opacity-30 px-2.5 py-1 rounded-pill extra-small">
+                  <span className="badge bg-light text-dark px-2.5 py-1 rounded-pill extra-small border">
                     Logged in: {user.name} ({user.email})
                   </span>
                 )}
               </div>
-              <h1 className="h3 fw-bold text-white mb-1">
+              <h1 className="h3 fw-bold text-white mb-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>
                 Tyre Quality, Durability & Live Prices
               </h1>
-              <p className="text-secondary small mb-0">
+              <p className="small mb-0" style={{ color: '#A9AEB8' }}>
                 Explore 100% genuine tyres with verified road lifespan (up to 85,000+ KM), manufacturer warranty, wet grip ratings, and transparent showroom prices.
               </p>
             </div>
 
             {/* Quick Guarantees Badge */}
             <div className="d-flex flex-wrap gap-2">
-              <div className="d-flex align-items-center gap-1.5 bg-dark px-3 py-1.5 rounded-3 border border-secondary border-opacity-20">
-                <ShieldCheck size={16} className="text-success" />
-                <span className="small text-light"><strong>5 Years</strong> Warranty</span>
+              <div className="d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-3" style={{ background: 'var(--bg-card-dark)', border: '1px solid var(--border-dark)' }}>
+                <ShieldCheck size={16} style={{ color: 'var(--accent)' }} />
+                <span className="small text-white"><strong>5 Years</strong> Warranty</span>
               </div>
-              <div className="d-flex align-items-center gap-1.5 bg-dark px-3 py-1.5 rounded-3 border border-secondary border-opacity-20">
-                <Gauge size={16} className="text-info" />
-                <span className="small text-light"><strong>65,000–85,000 KM</strong> Lifespan</span>
+              <div className="d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-3" style={{ background: 'var(--bg-card-dark)', border: '1px solid var(--border-dark)' }}>
+                <Gauge size={16} style={{ color: 'var(--accent)' }} />
+                <span className="small text-white"><strong>65,000–85,000 KM</strong> Lifespan</span>
               </div>
-              <div className="d-flex align-items-center gap-1.5 bg-dark px-3 py-1.5 rounded-3 border border-secondary border-opacity-20">
-                <Wrench size={16} className="text-warning" />
-                <span className="small text-light"><strong>Free</strong> 3D Alignment & Nitrogen</span>
+              <div className="d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-3" style={{ background: 'var(--bg-card-dark)', border: '1px solid var(--border-dark)' }}>
+                <Wrench size={16} style={{ color: 'var(--accent)' }} />
+                <span className="small text-white"><strong>Free</strong> 3D Alignment & Nitrogen</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Filters & Search Control Bar */}
-        <div className="card glass-card border border-secondary border-opacity-20 p-3 mb-4 shadow-sm">
+        <div className="card-clean p-3 mb-4 bg-white">
           <div className="row g-2 align-items-center">
             {/* Search Input */}
             <div className="col-12 col-md-5">
               <div className="input-group input-group-sm">
-                <span className="input-group-text bg-dark border-secondary border-opacity-25 text-secondary">
+                <span className="input-group-text">
                   <Search size={15} />
                 </span>
                 <input
                   type="text"
-                  className="form-control bg-dark border-secondary border-opacity-25 text-white"
+                  className="form-control"
                   placeholder="Search by size (e.g. 185/65 R15), brand, or model..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
                 {searchQuery && (
                   <button
-                    className="btn btn-outline-secondary border-secondary border-opacity-25 text-secondary"
+                    className="btn btn-outline-secondary"
                     onClick={() => setSearchQuery('')}
                   >
                     <X size={14} />
@@ -260,7 +260,7 @@ export default function CustomerPortal() {
             {/* Brand Filter */}
             <div className="col-6 col-md-3">
               <select
-                className="form-select form-select-sm bg-dark border-secondary border-opacity-25 text-white"
+                className="form-select form-select-sm"
                 value={selectedBrand}
                 onChange={(e) => setSelectedBrand(e.target.value)}
               >
@@ -276,7 +276,7 @@ export default function CustomerPortal() {
             {/* Sort Options */}
             <div className="col-6 col-md-2">
               <select
-                className="form-select form-select-sm bg-dark border-secondary border-opacity-25 text-white"
+                className="form-select form-select-sm"
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
               >
@@ -290,7 +290,7 @@ export default function CustomerPortal() {
             {/* Reset Button */}
             <div className="col-12 col-md-2 text-md-end">
               <button
-                className="btn btn-sm btn-outline-secondary w-100 d-flex align-items-center justify-content-center gap-1.5"
+                className="btn btn-sm btn-outline-dark-custom w-100 d-flex align-items-center justify-content-center gap-1.5"
                 onClick={() => {
                   setSearchQuery('');
                   setSelectedCategory('ALL');
@@ -304,8 +304,8 @@ export default function CustomerPortal() {
           </div>
 
           {/* Vehicle Category Tabs */}
-          <div className="d-flex align-items-center gap-1.5 overflow-x-auto pt-3 border-top border-secondary border-opacity-20 mt-3 pb-1">
-            <span className="extra-small text-secondary fw-semibold text-uppercase me-2 d-none d-sm-inline">
+          <div className="d-flex align-items-center gap-1.5 overflow-x-auto pt-3 border-top mt-3 pb-1" style={{ borderColor: 'var(--border-light)' }}>
+            <span className="extra-small text-muted fw-bold text-uppercase me-2 d-none d-sm-inline">
               Vehicle Type:
             </span>
             {VEHICLE_CATEGORIES.map((cat) => (
@@ -313,8 +313,8 @@ export default function CustomerPortal() {
                 key={cat.id}
                 className={`btn btn-sm text-nowrap rounded-pill px-3 py-1 d-flex align-items-center gap-1.5 transition-all ${
                   selectedCategory === cat.id
-                    ? 'btn-info text-dark fw-bold shadow-sm'
-                    : 'btn-dark border border-secondary border-opacity-25 text-light hover-glass'
+                    ? 'btn-dark-solid fw-bold'
+                    : 'btn-outline-dark-custom'
                 }`}
                 onClick={() => setSelectedCategory(cat.id)}
               >
@@ -327,11 +327,11 @@ export default function CustomerPortal() {
 
         {/* Results Count Summary */}
         <div className="d-flex align-items-center justify-content-between mb-3 px-1">
-          <div className="small text-secondary">
-            Showing <span className="text-white fw-bold">{filteredTyres.length}</span> genuine tyres
+          <div className="small text-muted">
+            Showing <span className="text-dark fw-bold">{filteredTyres.length}</span> genuine tyres
             {selectedCategory !== 'ALL' && <span> for <strong>{selectedCategory}</strong></span>}
           </div>
-          <div className="small text-info d-flex align-items-center gap-1">
+          <div className="small fw-semibold d-flex align-items-center gap-1" style={{ color: 'var(--accent-dark)' }}>
             <CheckCircle2 size={14} /> 100% Original with Manufacturer GST Bill
           </div>
         </div>
@@ -346,16 +346,16 @@ export default function CustomerPortal() {
           </div>
         ) : filteredTyres.length === 0 ? (
           /* Empty State */
-          <div className="card glass-card border border-secondary border-opacity-20 text-center py-5 px-3">
-            <div className="p-3 bg-secondary bg-opacity-10 text-secondary rounded-circle d-inline-block mx-auto mb-3">
+          <div className="card-clean text-center py-5 px-3 bg-white">
+            <div className="p-3 bg-light text-muted rounded-circle d-inline-block mx-auto mb-3">
               <Disc3 size={40} />
             </div>
-            <h4 className="fw-bold text-white mb-2">No tyres found</h4>
-            <p className="text-secondary small mb-3">
+            <h4 className="fw-bold text-dark mb-2">No tyres found</h4>
+            <p className="text-muted small mb-3">
               No tyres matched your search criteria. Try selecting another vehicle category or resetting filters.
             </p>
             <button
-              className="btn btn-sm btn-info text-dark fw-bold px-4"
+              className="btn btn-sm btn-accent fw-bold px-4"
               onClick={() => {
                 setSearchQuery('');
                 setSelectedCategory('ALL');
@@ -396,95 +396,95 @@ export default function CustomerPortal() {
 
               return (
                 <div key={tyre._id} className="col-12 col-md-6 col-xl-4">
-                  <div className="card h-100 glass-card border border-secondary border-opacity-25 rounded-4 p-3.5 d-flex flex-column hover-glow position-relative">
+                  <div className="card-clean h-100 bg-white p-3.5 d-flex flex-column position-relative">
                     {/* Top Header: Brand & Vehicle Type */}
                     <div className="d-flex align-items-center justify-content-between mb-2">
                       <div className="d-flex align-items-center gap-2">
-                        <span className="badge bg-primary bg-opacity-25 text-info border border-info border-opacity-40 fw-bold px-2.5 py-1 rounded-2">
+                        <span className="badge bg-light text-dark border font-monospace fw-bold px-2.5 py-1 rounded-2">
                           {brandName}
                         </span>
-                        <span className="badge bg-dark text-secondary border border-secondary border-opacity-25 extra-small">
+                        <span className="badge bg-light text-muted border extra-small">
                           {vehicleType} • {tubeType}
                         </span>
                       </div>
 
-                      <span className="badge bg-success bg-opacity-20 text-success border border-success border-opacity-40 px-2.5 py-1 rounded-pill extra-small fw-semibold">
+                      <span className="badge-pill-success fw-semibold">
                         {qualityGrade}
                       </span>
                     </div>
 
                     {/* Tyre Size & Model Title */}
                     <div className="mb-2">
-                      <h3 className="fs-5 fw-extrabold text-white mb-0 font-monospace">
+                      <h3 className="fs-5 fw-extrabold text-dark mb-0 font-monospace">
                         {size}
                       </h3>
-                      <div className="text-info fw-semibold small">
+                      <div className="text-muted fw-semibold small">
                         {modelName}
                       </div>
                     </div>
 
                     {/* Lifespan & Durability Bar Box */}
-                    <div className="bg-dark bg-opacity-70 p-2.5 rounded-3 border border-secondary border-opacity-25 mb-3">
+                    <div className="p-2.5 rounded-3 mb-3" style={{ background: 'var(--bg-light)', border: '1px solid var(--border-light)' }}>
                       <div className="d-flex align-items-center justify-content-between mb-1">
                         <div className="d-flex align-items-center gap-1.5">
-                          <Gauge size={15} className="text-info" />
-                          <span className="small text-secondary fw-semibold">Tested Lifespan:</span>
+                          <Gauge size={15} style={{ color: '#B45309' }} />
+                          <span className="small text-muted fw-semibold">Tested Lifespan:</span>
                         </div>
-                        <span className="text-white fw-bold font-monospace small">
+                        <span className="text-dark fw-bold font-monospace small">
                           {lifespan}
                         </span>
                       </div>
-                      <div className="progress bg-secondary bg-opacity-20" style={{ height: '6px', borderRadius: '4px' }}>
+                      <div className="progress" style={{ height: '6px', borderRadius: '4px', background: '#E2E8F0' }}>
                         <div
-                          className="progress-bar bg-info"
+                          className="progress-bar"
                           role="progressbar"
-                          style={{ width: '85%' }}
+                          style={{ width: '85%', background: 'var(--accent)' }}
                         />
                       </div>
-                      <div className="d-flex justify-content-between mt-1 extra-small text-secondary">
-                        <span>High-Mileage Tread</span>
-                        <span className="text-success fw-semibold">Extended Durability</span>
+                      <div className="d-flex justify-content-between mt-1 extra-small text-muted">
+                        <span>High-Mileage Compound</span>
+                        <span className="text-dark fw-semibold">Extended Durability</span>
                       </div>
                     </div>
 
                     {/* Key Metrics: Warranty, Wet Grip, Fuel Eco, Noise */}
                     <div className="row g-2 mb-3">
                       <div className="col-6">
-                        <div className="p-2 rounded-2 bg-dark bg-opacity-50 border border-secondary border-opacity-20 d-flex align-items-center gap-1.5">
+                        <div className="p-2 rounded-2 d-flex align-items-center gap-1.5" style={{ background: 'var(--bg-light)', border: '1px solid var(--border-light)' }}>
                           <ShieldCheck size={16} className="text-success flex-shrink-0" />
                           <div>
-                            <div className="extra-small text-secondary">Warranty</div>
-                            <div className="text-white fw-bold small">{warranty} Years</div>
+                            <div className="extra-small text-muted">Warranty</div>
+                            <div className="text-dark fw-bold small">{warranty} Years</div>
                           </div>
                         </div>
                       </div>
 
                       <div className="col-6">
-                        <div className="p-2 rounded-2 bg-dark bg-opacity-50 border border-secondary border-opacity-20 d-flex align-items-center gap-1.5">
+                        <div className="p-2 rounded-2 d-flex align-items-center gap-1.5" style={{ background: 'var(--bg-light)', border: '1px solid var(--border-light)' }}>
                           <Droplets size={16} className="text-primary flex-shrink-0" />
                           <div>
-                            <div className="extra-small text-secondary">Wet Grip</div>
-                            <div className="text-white fw-bold small">{wetGrip}</div>
+                            <div className="extra-small text-muted">Wet Grip</div>
+                            <div className="text-dark fw-bold small">{wetGrip}</div>
                           </div>
                         </div>
                       </div>
 
                       <div className="col-6">
-                        <div className="p-2 rounded-2 bg-dark bg-opacity-50 border border-secondary border-opacity-20 d-flex align-items-center gap-1.5">
+                        <div className="p-2 rounded-2 d-flex align-items-center gap-1.5" style={{ background: 'var(--bg-light)', border: '1px solid var(--border-light)' }}>
                           <Fuel size={16} className="text-warning flex-shrink-0" />
                           <div>
-                            <div className="extra-small text-secondary">Fuel Economy</div>
-                            <div className="text-white fw-bold small">{fuelEco}</div>
+                            <div className="extra-small text-muted">Fuel Eco</div>
+                            <div className="text-dark fw-bold small">{fuelEco}</div>
                           </div>
                         </div>
                       </div>
 
                       <div className="col-6">
-                        <div className="p-2 rounded-2 bg-dark bg-opacity-50 border border-secondary border-opacity-20 d-flex align-items-center gap-1.5">
-                          <Volume2 size={16} className="text-info flex-shrink-0" />
+                        <div className="p-2 rounded-2 d-flex align-items-center gap-1.5" style={{ background: 'var(--bg-light)', border: '1px solid var(--border-light)' }}>
+                          <Volume2 size={16} className="text-muted flex-shrink-0" />
                           <div>
-                            <div className="extra-small text-secondary">Cabin Noise</div>
-                            <div className="text-white fw-bold small">{noise}</div>
+                            <div className="extra-small text-muted">Cabin Noise</div>
+                            <div className="text-dark fw-bold small">{noise}</div>
                           </div>
                         </div>
                       </div>
@@ -496,7 +496,7 @@ export default function CustomerPortal() {
                         {features.slice(0, 3).map((feat, idx) => (
                           <span
                             key={idx}
-                            className="badge bg-secondary bg-opacity-15 text-light border border-secondary border-opacity-25 extra-small fw-normal d-inline-flex align-items-center gap-1"
+                            className="badge bg-light text-dark border extra-small fw-normal d-inline-flex align-items-center gap-1"
                           >
                             <Check size={11} className="text-success" /> {feat}
                           </span>
@@ -505,49 +505,45 @@ export default function CustomerPortal() {
                     </div>
 
                     {/* Price and Stock Box */}
-                    <div className="mt-auto pt-3 border-top border-secondary border-opacity-20">
+                    <div className="mt-auto pt-3 border-top" style={{ borderColor: 'var(--border-light)' }}>
                       <div className="d-flex align-items-end justify-content-between mb-3">
                         <div>
-                          <div className="extra-small text-secondary text-uppercase fw-semibold">Showroom Price</div>
+                          <div className="extra-small text-muted text-uppercase fw-semibold">Showroom Price</div>
                           <div className="d-flex align-items-baseline gap-2">
-                            <span className="fs-4 fw-extrabold text-white">
+                            <span className="fs-4 fw-extrabold text-dark">
                               {formatRupees(pricePaise)}
                             </span>
                             {mrpPaise > pricePaise && (
-                              <span className="text-secondary text-decoration-line-through small">
+                              <span className="text-muted text-decoration-line-through small">
                                 {formatRupees(mrpPaise)}
                               </span>
                             )}
                           </div>
                           {mrpPaise > pricePaise && (
-                            <span className="badge bg-success bg-opacity-20 text-success extra-small">
+                            <span className="badge-pill-yellow extra-small">
                               Save {formatRupees(mrpPaise - pricePaise)}
                             </span>
                           )}
                         </div>
 
                         <div className="text-end">
-                          <span className={`badge px-2.5 py-1 ${
-                            stock > 0
-                              ? 'bg-success bg-opacity-15 text-success border border-success border-opacity-30'
-                              : 'bg-warning bg-opacity-15 text-warning border border-warning border-opacity-30'
-                          }`}>
+                          <span className={stock > 0 ? 'badge-pill-success' : 'badge-pill-warning'}>
                             {stock > 0 ? `In Stock (${stock} Ready)` : 'Available on Order'}
                           </span>
-                          <div className="extra-small text-secondary mt-1">Free Fitment Included</div>
+                          <div className="extra-small text-muted mt-1">Free Fitment Included</div>
                         </div>
                       </div>
 
                       {/* Action Buttons */}
                       <div className="d-flex gap-2">
                         <button
-                          className="btn btn-sm btn-outline-info flex-grow-1 d-flex align-items-center justify-content-center gap-1.5 py-2"
+                          className="btn btn-sm btn-outline-dark-custom flex-grow-1 d-flex align-items-center justify-content-center gap-1.5 py-2"
                           onClick={() => setSelectedTyreForDetails(tyre)}
                         >
-                          <Info size={14} /> Full Specs & Durability
+                          <Info size={14} /> Full Specs
                         </button>
                         <button
-                          className="btn btn-sm btn-info text-dark fw-bold flex-grow-1 d-flex align-items-center justify-content-center gap-1.5 py-2"
+                          className="btn btn-sm btn-accent flex-grow-1 d-flex align-items-center justify-content-center gap-1.5 py-2 fw-bold"
                           onClick={() => setBookingTyre(tyre)}
                         >
                           <Wrench size={14} /> Book Fitment
@@ -569,114 +565,114 @@ export default function CustomerPortal() {
         <div
           className="modal d-block"
           tabIndex="-1"
-          style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)', backdropFilter: 'blur(8px)', zIndex: 1060 }}
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)', zIndex: 1060 }}
           onClick={() => setSelectedTyreForDetails(null)}
         >
           <div
             className="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="modal-content glass-card border border-info border-opacity-40 shadow-2xl text-light">
-              <div className="modal-header border-secondary border-opacity-25 px-4 py-3 bg-secondary bg-opacity-10">
+            <div className="modal-content border-0 shadow-2xl" style={{ background: 'var(--bg-white)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-light)' }}>
+              <div className="modal-header border-bottom px-4 py-3" style={{ borderColor: 'var(--border-light)' }}>
                 <div className="d-flex align-items-center gap-2">
-                  <div className="p-2 rounded-3 bg-info bg-opacity-20 text-info">
-                    <Disc3 size={24} className="animate-spin-slow" />
+                  <div className="p-2 rounded-3" style={{ background: 'var(--accent-soft)', color: '#B45309' }}>
+                    <Disc3 size={24} />
                   </div>
                   <div>
-                    <h5 className="modal-title fw-bold text-white mb-0 font-monospace">
+                    <h5 className="modal-title fw-bold text-dark mb-0 font-monospace">
                       {selectedTyreForDetails.companyId?.name || selectedTyreForDetails.company?.name} — {selectedTyreForDetails.size}
                     </h5>
-                    <div className="extra-small text-info fw-semibold">
+                    <div className="extra-small text-muted fw-semibold">
                       Model: {selectedTyreForDetails.modelName || selectedTyreForDetails.pattern} • {selectedTyreForDetails.vehicleType}
                     </div>
                   </div>
                 </div>
                 <button
                   type="button"
-                  className="btn btn-sm btn-secondary-glass p-2"
+                  className="btn btn-sm text-secondary p-1"
                   onClick={() => setSelectedTyreForDetails(null)}
                 >
-                  <X size={18} />
+                  <X size={20} />
                 </button>
               </div>
 
-              <div className="modal-body px-4 py-3">
+              <div className="modal-body px-4 py-3" style={{ background: 'var(--bg-light)' }}>
                 {/* Durability Card */}
-                <div className="card bg-dark bg-opacity-80 border border-secondary border-opacity-30 p-3 mb-4 rounded-3">
+                <div className="card-clean p-3 mb-4 bg-white">
                   <div className="d-flex align-items-center justify-content-between mb-3">
                     <div className="d-flex align-items-center gap-2">
-                      <Award size={20} className="text-warning" />
-                      <span className="fw-bold text-white">Endurance & Quality Certification</span>
+                      <Award size={20} style={{ color: '#B45309' }} />
+                      <span className="fw-bold text-dark">Endurance & Quality Certification</span>
                     </div>
-                    <span className="badge bg-success bg-opacity-20 text-success border border-success border-opacity-30 px-3 py-1.5 rounded-pill fw-bold">
+                    <span className="badge-pill-success fw-bold">
                       {selectedTyreForDetails.qualityGrade || 'A+ Ultra-Endurance'}
                     </span>
                   </div>
 
                   <div className="row g-3 text-center my-1">
-                    <div className="col-4 border-end border-secondary border-opacity-25">
-                      <div className="fs-5 fw-extrabold text-info font-monospace">
+                    <div className="col-4 border-end" style={{ borderColor: 'var(--border-light)' }}>
+                      <div className="fs-5 fw-extrabold font-monospace text-dark">
                         {selectedTyreForDetails.expectedLifespanKm || '65,000 - 80,000 KM'}
                       </div>
-                      <div className="extra-small text-secondary">Tested Road Lifespan</div>
+                      <div className="extra-small text-muted">Tested Road Lifespan</div>
                     </div>
-                    <div className="col-4 border-end border-secondary border-opacity-25">
+                    <div className="col-4 border-end" style={{ borderColor: 'var(--border-light)' }}>
                       <div className="fs-5 fw-extrabold text-success font-monospace">
                         {selectedTyreForDetails.warrantyYears || 5} Years
                       </div>
-                      <div className="extra-small text-secondary">Manufacturer Warranty</div>
+                      <div className="extra-small text-muted">Manufacturer Warranty</div>
                     </div>
                     <div className="col-4">
-                      <div className="fs-5 fw-extrabold text-warning font-monospace">
+                      <div className="fs-5 fw-extrabold font-monospace text-dark">
                         {selectedTyreForDetails.wetGripRating || 'Grade A'}
                       </div>
-                      <div className="extra-small text-secondary">Wet Braking Safety</div>
+                      <div className="extra-small text-muted">Wet Braking Safety</div>
                     </div>
                   </div>
                 </div>
 
                 {/* Technical Specifications Table */}
-                <h6 className="fw-bold text-white mb-2 d-flex align-items-center gap-1.5">
-                  <Layers size={16} className="text-info" /> Detailed Specifications
+                <h6 className="fw-bold text-dark mb-2 d-flex align-items-center gap-1.5">
+                  <Layers size={16} style={{ color: 'var(--accent-dark)' }} /> Detailed Specifications
                 </h6>
-                <div className="table-responsive mb-4">
-                  <table className="table table-dark table-sm table-bordered border-secondary border-opacity-25 mb-0">
+                <div className="card-clean overflow-hidden mb-4 bg-white">
+                  <table className="table table-custom mb-0">
                     <tbody>
                       <tr>
-                        <td className="text-secondary w-50 small">Tyre Size</td>
-                        <td className="text-white fw-bold font-monospace small">{selectedTyreForDetails.size}</td>
+                        <td className="text-muted w-50 small">Tyre Size</td>
+                        <td className="text-dark fw-bold font-monospace small">{selectedTyreForDetails.size}</td>
                       </tr>
                       <tr>
-                        <td className="text-secondary small">Brand</td>
-                        <td className="text-white fw-semibold small">{selectedTyreForDetails.companyId?.name || selectedTyreForDetails.company?.name}</td>
+                        <td className="text-muted small">Brand</td>
+                        <td className="text-dark fw-semibold small">{selectedTyreForDetails.companyId?.name || selectedTyreForDetails.company?.name}</td>
                       </tr>
                       <tr>
-                        <td className="text-secondary small">Model / Pattern</td>
-                        <td className="text-white fw-semibold small">{selectedTyreForDetails.modelName || selectedTyreForDetails.pattern}</td>
+                        <td className="text-muted small">Model / Pattern</td>
+                        <td className="text-dark fw-semibold small">{selectedTyreForDetails.modelName || selectedTyreForDetails.pattern}</td>
                       </tr>
                       <tr>
-                        <td className="text-secondary small">Vehicle Category</td>
-                        <td className="text-white fw-semibold small">{selectedTyreForDetails.vehicleType}</td>
+                        <td className="text-muted small">Vehicle Category</td>
+                        <td className="text-dark fw-semibold small">{selectedTyreForDetails.vehicleType}</td>
                       </tr>
                       <tr>
-                        <td className="text-secondary small">Tube Type</td>
-                        <td className="text-white fw-semibold small">{selectedTyreForDetails.tubeType || 'Tubeless'}</td>
+                        <td className="text-muted small">Tube Type</td>
+                        <td className="text-dark fw-semibold small">{selectedTyreForDetails.tubeType || 'Tubeless'}</td>
                       </tr>
                       <tr>
-                        <td className="text-secondary small">Fuel Efficiency</td>
-                        <td className="text-white fw-semibold small">{selectedTyreForDetails.fuelEfficiency || 'Class B (Low Drag)'}</td>
+                        <td className="text-muted small">Fuel Efficiency</td>
+                        <td className="text-dark fw-semibold small">{selectedTyreForDetails.fuelEfficiency || 'Class B (Low Drag)'}</td>
                       </tr>
                       <tr>
-                        <td className="text-secondary small">Acoustic Road Noise</td>
-                        <td className="text-white fw-semibold small">{selectedTyreForDetails.noiseLevel || '68 dB Whisper Quiet'}</td>
+                        <td className="text-muted small">Acoustic Road Noise</td>
+                        <td className="text-dark fw-semibold small">{selectedTyreForDetails.noiseLevel || '68 dB Whisper Quiet'}</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
 
                 {/* Features List */}
-                <h6 className="fw-bold text-white mb-2 d-flex align-items-center gap-1.5">
-                  <Sparkles size={16} className="text-warning" /> Engineered Tyre Features
+                <h6 className="fw-bold text-dark mb-2 d-flex align-items-center gap-1.5">
+                  <Sparkles size={16} style={{ color: 'var(--accent-dark)' }} /> Engineered Tyre Features
                 </h6>
                 <div className="row g-2 mb-4">
                   {(selectedTyreForDetails.features && selectedTyreForDetails.features.length > 0
@@ -689,26 +685,26 @@ export default function CustomerPortal() {
                       ]
                   ).map((feat, idx) => (
                     <div key={idx} className="col-12 col-md-6">
-                      <div className="p-2 bg-dark bg-opacity-60 rounded-2 border border-secondary border-opacity-20 d-flex align-items-center gap-2">
+                      <div className="p-2 bg-white rounded-2 border d-flex align-items-center gap-2" style={{ borderColor: 'var(--border-light)' }}>
                         <CheckCircle2 size={15} className="text-success flex-shrink-0" />
-                        <span className="small text-light">{feat}</span>
+                        <span className="small text-dark">{feat}</span>
                       </div>
                     </div>
                   ))}
                 </div>
 
                 {/* Showroom Price Summary & Book Button */}
-                <div className="card bg-info bg-opacity-10 border border-info border-opacity-30 p-3 rounded-3">
+                <div className="p-3 rounded-3" style={{ background: 'var(--accent-soft)', border: '2px solid var(--accent)' }}>
                   <div className="d-flex align-items-center justify-content-between">
                     <div>
-                      <div className="extra-small text-info text-uppercase fw-bold">Authorized Showroom Price</div>
-                      <div className="fs-5 fw-extrabold text-white">
+                      <div className="extra-small text-dark text-uppercase fw-bold">Authorized Showroom Price</div>
+                      <div className="fs-5 fw-extrabold text-dark">
                         {formatRupees(selectedTyreForDetails.sellingPricePaise || selectedTyreForDetails.sellingPrice)}{' '}
-                        <span className="text-secondary fs-6 fw-normal">/ tyre</span>
+                        <span className="text-muted fs-6 fw-normal">/ tyre</span>
                       </div>
                     </div>
                     <button
-                      className="btn btn-info text-dark fw-bold px-4 py-2"
+                      className="btn btn-accent px-4 py-2 fw-bold"
                       onClick={() => {
                         const target = selectedTyreForDetails;
                         setSelectedTyreForDetails(null);
@@ -732,47 +728,47 @@ export default function CustomerPortal() {
         <div
           className="modal d-block"
           tabIndex="-1"
-          style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)', backdropFilter: 'blur(8px)', zIndex: 1060 }}
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)', zIndex: 1060 }}
           onClick={() => setBookingTyre(null)}
         >
           <div
             className="modal-dialog modal-dialog-centered"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="modal-content glass-card border border-info border-opacity-40 shadow-2xl text-light">
-              <div className="modal-header border-secondary border-opacity-25 px-4 py-3 bg-secondary bg-opacity-10">
+            <div className="modal-content border-0 shadow-2xl" style={{ background: 'var(--bg-white)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-light)' }}>
+              <div className="modal-header border-bottom px-4 py-3" style={{ borderColor: 'var(--border-light)' }}>
                 <div>
-                  <h5 className="modal-title fw-bold text-white mb-0">Book Showroom Fitment</h5>
-                  <div className="extra-small text-info">
+                  <h5 className="modal-title fw-bold text-dark mb-0">Book Showroom Fitment</h5>
+                  <div className="extra-small text-muted font-monospace">
                     {bookingTyre.companyId?.name || bookingTyre.company?.name} {bookingTyre.size} ({bookingTyre.modelName || bookingTyre.pattern})
                   </div>
                 </div>
                 <button
                   type="button"
-                  className="btn btn-sm btn-secondary-glass p-2"
+                  className="btn btn-sm text-secondary p-1"
                   onClick={() => setBookingTyre(null)}
                 >
-                  <X size={18} />
+                  <X size={20} />
                 </button>
               </div>
 
               <form onSubmit={handleBookingSubmit}>
-                <div className="modal-body px-4 py-3">
+                <div className="modal-body px-4 py-3" style={{ background: 'var(--bg-light)' }}>
                   {/* Summary Box */}
-                  <div className="p-3 bg-dark bg-opacity-80 rounded-3 border border-secondary border-opacity-25 mb-3">
+                  <div className="p-3 bg-white rounded-3 border mb-3" style={{ borderColor: 'var(--border-light)' }}>
                     <div className="d-flex justify-content-between align-items-center mb-1">
-                      <span className="text-secondary small">Price per Tyre:</span>
-                      <span className="text-white fw-bold">
+                      <span className="text-muted small">Price per Tyre:</span>
+                      <span className="text-dark fw-bold">
                         {formatRupees(bookingTyre.sellingPricePaise || bookingTyre.sellingPrice)}
                       </span>
                     </div>
                     <div className="d-flex justify-content-between align-items-center mb-1">
-                      <span className="text-secondary small">Total for {bookingForm.quantity} Tyres:</span>
-                      <span className="text-info fw-extrabold fs-6">
+                      <span className="text-muted small">Total for {bookingForm.quantity} Tyres:</span>
+                      <span className="fw-extrabold fs-6 text-dark font-monospace" style={{ borderBottom: '2.5px solid var(--accent)' }}>
                         {formatRupees((bookingTyre.sellingPricePaise || bookingTyre.sellingPrice) * bookingForm.quantity)}
                       </span>
                     </div>
-                    <div className="d-flex justify-content-between align-items-center text-success extra-small">
+                    <div className="d-flex justify-content-between align-items-center text-success extra-small mt-2 pt-2 border-top" style={{ borderColor: 'var(--border-light)' }}>
                       <span>Laser Alignment, Balancing & Nitrogen:</span>
                       <span className="fw-bold">100% FREE</span>
                     </div>
@@ -780,10 +776,10 @@ export default function CustomerPortal() {
 
                   {/* Form Inputs */}
                   <div className="mb-2">
-                    <label className="form-label extra-small text-secondary fw-semibold">Your Full Name *</label>
+                    <label className="form-label extra-small text-dark fw-semibold">Your Full Name *</label>
                     <input
                       type="text"
-                      className="form-control form-control-sm bg-dark border-secondary border-opacity-30 text-white"
+                      className="form-control form-control-sm"
                       required
                       placeholder="e.g. Ramesh Kumar"
                       value={bookingForm.name}
@@ -793,10 +789,10 @@ export default function CustomerPortal() {
 
                   <div className="row g-2 mb-2">
                     <div className="col-6">
-                      <label className="form-label extra-small text-secondary fw-semibold">Phone Number *</label>
+                      <label className="form-label extra-small text-dark fw-semibold">Phone Number *</label>
                       <input
                         type="tel"
-                        className="form-control form-control-sm bg-dark border-secondary border-opacity-30 text-white"
+                        className="form-control form-control-sm"
                         required
                         placeholder="10-digit number"
                         value={bookingForm.phone}
@@ -804,10 +800,10 @@ export default function CustomerPortal() {
                       />
                     </div>
                     <div className="col-6">
-                      <label className="form-label extra-small text-secondary fw-semibold">Vehicle Model</label>
+                      <label className="form-label extra-small text-dark fw-semibold">Vehicle Model</label>
                       <input
                         type="text"
-                        className="form-control form-control-sm bg-dark border-secondary border-opacity-30 text-white"
+                        className="form-control form-control-sm"
                         placeholder="e.g. Swift / Nexon"
                         value={bookingForm.vehicleModel}
                         onChange={(e) => setBookingForm({ ...bookingForm, vehicleModel: e.target.value })}
@@ -817,9 +813,9 @@ export default function CustomerPortal() {
 
                   <div className="row g-2 mb-3">
                     <div className="col-6">
-                      <label className="form-label extra-small text-secondary fw-semibold">Number of Tyres</label>
+                      <label className="form-label extra-small text-dark fw-semibold">Number of Tyres</label>
                       <select
-                        className="form-select form-select-sm bg-dark border-secondary border-opacity-30 text-white"
+                        className="form-select form-select-sm"
                         value={bookingForm.quantity}
                         onChange={(e) => setBookingForm({ ...bookingForm, quantity: Number(e.target.value) })}
                       >
@@ -830,21 +826,21 @@ export default function CustomerPortal() {
                       </select>
                     </div>
                     <div className="col-6">
-                      <label className="form-label extra-small text-secondary fw-semibold">Preferred Date</label>
+                      <label className="form-label extra-small text-dark fw-semibold">Preferred Date</label>
                       <input
                         type="date"
-                        className="form-control form-control-sm bg-dark border-secondary border-opacity-30 text-white"
+                        className="form-control form-control-sm"
                         value={bookingForm.preferredDate}
                         onChange={(e) => setBookingForm({ ...bookingForm, preferredDate: e.target.value })}
                       />
                     </div>
                   </div>
 
-                  <div className="p-2.5 bg-dark bg-opacity-40 rounded-2 border border-secondary border-opacity-20">
-                    <div className="extra-small text-secondary fw-bold text-uppercase mb-1">
+                  <div className="p-2.5 bg-white rounded-2 border" style={{ borderColor: 'var(--border-light)' }}>
+                    <div className="extra-small text-muted fw-bold text-uppercase mb-1">
                       Included Showroom Care:
                     </div>
-                    <div className="d-flex flex-column gap-1 extra-small text-light">
+                    <div className="d-flex flex-column gap-1 extra-small text-dark">
                       <div className="d-flex align-items-center gap-1.5">
                         <Check size={13} className="text-success" /> Precision 3D Laser Wheel Alignment
                       </div>
@@ -858,17 +854,17 @@ export default function CustomerPortal() {
                   </div>
                 </div>
 
-                <div className="modal-footer border-secondary border-opacity-25 px-4 py-3">
+                <div className="modal-footer border-top px-4 py-3" style={{ borderColor: 'var(--border-light)' }}>
                   <button
                     type="button"
-                    className="btn btn-sm btn-outline-secondary"
+                    className="btn btn-sm btn-outline-dark-custom"
                     onClick={() => setBookingTyre(null)}
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="btn btn-sm btn-info text-dark fw-bold px-4 d-flex align-items-center gap-1.5"
+                    className="btn btn-sm btn-accent fw-bold px-4 d-flex align-items-center gap-1.5"
                     disabled={submittingBooking}
                   >
                     {submittingBooking ? 'Confirming...' : 'Confirm Showroom Booking'}
@@ -881,20 +877,20 @@ export default function CustomerPortal() {
       )}
 
       {/* Footer */}
-      <footer className="border-top border-secondary border-opacity-20 py-4 px-3 mt-auto bg-dark bg-opacity-60">
+      <footer className="py-4 px-3 mt-auto text-white" style={{ background: 'var(--bg-black)', borderTop: '1px solid var(--border-dark)' }}>
         <div className="container-fluid px-lg-4 text-center text-md-start">
           <div className="row align-items-center">
             <div className="col-md-6 mb-2 mb-md-0">
-              <div className="fw-bold text-white fs-6">
+              <div className="fw-bold fs-6" style={{ color: 'var(--accent)', fontFamily: 'Montserrat, sans-serif' }}>
                 {shopSettings?.shopName || 'HIND TYRES & ACCESSORIES'}
               </div>
-              <div className="extra-small text-secondary">
+              <div className="extra-small" style={{ color: '#A9AEB8' }}>
                 {shopSettings?.address || 'Authorized Multi-Brand Tyre Showroom & Laser Alignment Center'}
               </div>
             </div>
             <div className="col-md-6 text-md-end">
-              <div className="extra-small text-secondary">
-                Helpline: <span className="text-info fw-semibold">{shopSettings?.phone || '+91 98765 43210'}</span> • Open 7 Days (9:00 AM – 9:00 PM)
+              <div className="extra-small" style={{ color: '#A9AEB8' }}>
+                Helpline: <span className="fw-bold" style={{ color: 'var(--accent)' }}>{shopSettings?.phone || '+91 98765 43210'}</span> • Open 7 Days (9:00 AM – 9:00 PM)
               </div>
             </div>
           </div>

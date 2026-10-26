@@ -5,7 +5,7 @@ import api from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
 
 export default function Settings() {
-  const { refreshSettings } = useAuth();
+  const { refreshSettings, setShopSettings } = useAuth();
   const [formData, setFormData] = useState({
     shopName: '',
     address: '',
@@ -47,7 +47,10 @@ export default function Settings() {
       const res = await api.put('/admin/settings', formData);
       if (res.data.success) {
         toast.success('Shop settings updated successfully!');
-        refreshSettings();
+        if (res.data.data) {
+          setShopSettings(res.data.data);
+        }
+        await refreshSettings();
       }
     } catch (err) {
       toast.error(err.response?.data?.error || 'Failed to update settings');
@@ -66,24 +69,24 @@ export default function Settings() {
 
   return (
     <div className="container-fluid p-3 p-md-4">
-      <div className="glass-panel p-4 mb-4">
-        <h3 className="text-white fw-bold m-0 brand-font">Shop Settings & GST Invoice Configuration</h3>
-        <p className="text-secondary small m-0 mt-0.5">
+      <div className="card-clean bg-white p-4 mb-4">
+        <h3 className="text-dark fw-bold m-0 brand-font">Shop Settings & GST Invoice Configuration</h3>
+        <p className="text-muted small m-0 mt-0.5">
           Configure business details, GSTIN, receipt terms & automated admin notification emails
         </p>
       </div>
 
       <div className="row justify-content-center">
         <div className="col-12 col-lg-10">
-          <div className="glass-panel p-4 p-md-5">
+          <div className="card-clean bg-white p-4 p-md-5">
             <form onSubmit={handleSubmit}>
-              <h5 className="text-white fw-bold mb-3 pb-2 border-bottom border-secondary border-opacity-25 d-flex align-items-center gap-2">
-                <Store size={18} className="text-info" /> Business Identity
+              <h5 className="text-dark fw-bold mb-3 pb-2 border-bottom d-flex align-items-center gap-2">
+                <Store size={18} style={{ color: 'var(--accent-dark)' }} /> Business Identity
               </h5>
 
               <div className="row g-3 mb-4">
                 <div className="col-12 col-md-6">
-                  <label className="form-label text-light small fw-semibold">Shop Name *</label>
+                  <label className="form-label text-dark small fw-semibold">Shop Name *</label>
                   <input
                     type="text"
                     className="form-control"
@@ -94,10 +97,10 @@ export default function Settings() {
                 </div>
 
                 <div className="col-12 col-md-6">
-                  <label className="form-label text-warning small fw-bold">GSTIN Registration Number *</label>
+                  <label className="form-label text-dark small fw-bold">GSTIN Registration Number *</label>
                   <input
                     type="text"
-                    className="form-control font-monospace border-warning"
+                    className="form-control font-monospace"
                     value={formData.gstin}
                     onChange={(e) => setFormData({ ...formData, gstin: e.target.value.toUpperCase() })}
                     required
@@ -105,7 +108,7 @@ export default function Settings() {
                 </div>
 
                 <div className="col-12 col-md-6">
-                  <label className="form-label text-light small fw-semibold">Business Phone Number *</label>
+                  <label className="form-label text-dark small fw-semibold">Business Phone Number *</label>
                   <input
                     type="text"
                     className="form-control"
@@ -116,7 +119,7 @@ export default function Settings() {
                 </div>
 
                 <div className="col-12 col-md-6">
-                  <label className="form-label text-light small fw-semibold">Public Support Email *</label>
+                  <label className="form-label text-dark small fw-semibold">Public Support Email *</label>
                   <input
                     type="email"
                     className="form-control"
@@ -127,7 +130,7 @@ export default function Settings() {
                 </div>
 
                 <div className="col-12">
-                  <label className="form-label text-light small fw-semibold">Physical Shop Address *</label>
+                  <label className="form-label text-dark small fw-semibold">Physical Shop Address *</label>
                   <input
                     type="text"
                     className="form-control"
@@ -138,13 +141,13 @@ export default function Settings() {
                 </div>
               </div>
 
-              <h5 className="text-white fw-bold mb-3 pb-2 border-bottom border-secondary border-opacity-25 d-flex align-items-center gap-2">
-                <Percent size={18} className="text-warning" /> Billing Policies & Email
+              <h5 className="text-dark fw-bold mb-3 pb-2 border-bottom d-flex align-items-center gap-2">
+                <Percent size={18} style={{ color: 'var(--accent-dark)' }} /> Billing Policies & Email
               </h5>
 
               <div className="row g-3 mb-4">
                 <div className="col-12 col-md-6">
-                  <label className="form-label text-light small fw-semibold">Admin Receipt Email (Bcc Copies) *</label>
+                  <label className="form-label text-dark small fw-semibold">Admin Receipt Email (Bcc Copies) *</label>
                   <input
                     type="email"
                     className="form-control"
@@ -152,13 +155,13 @@ export default function Settings() {
                     onChange={(e) => setFormData({ ...formData, adminReceiptEmail: e.target.value })}
                     required
                   />
-                  <small className="text-secondary extra-small">
+                  <small className="text-muted extra-small">
                     Every generated invoice PDF is automatically emailed to this administrator address.
                   </small>
                 </div>
 
                 <div className="col-12 col-md-6">
-                  <label className="form-label text-light small fw-semibold">
+                  <label className="form-label text-dark small fw-semibold">
                     Maximum Allowed Counter Discount (%)
                   </label>
                   <div className="input-group">
@@ -173,13 +176,13 @@ export default function Settings() {
                     />
                     <span className="input-group-text">%</span>
                   </div>
-                  <small className="text-secondary extra-small">
+                  <small className="text-muted extra-small">
                     Enforces strict server cap on discounts applied by counter cashiers.
                   </small>
                 </div>
 
                 <div className="col-12">
-                  <label className="form-label text-light small fw-semibold">Invoice Footer Text</label>
+                  <label className="form-label text-dark small fw-semibold">Invoice Footer Text</label>
                   <input
                     type="text"
                     className="form-control"
@@ -189,7 +192,7 @@ export default function Settings() {
                 </div>
 
                 <div className="col-12">
-                  <label className="form-label text-light small fw-semibold">Terms & Tyre Warranty Notice</label>
+                  <label className="form-label text-dark small fw-semibold">Terms & Tyre Warranty Notice</label>
                   <textarea
                     className="form-control"
                     rows="3"
@@ -199,10 +202,10 @@ export default function Settings() {
                 </div>
               </div>
 
-              <div className="d-flex justify-content-end pt-3 border-top border-secondary border-opacity-20">
+              <div className="d-flex justify-content-end pt-3 border-top">
                 <button
                   type="submit"
-                  className="btn btn-primary-glass px-4 py-2.5 d-flex align-items-center gap-2"
+                  className="btn btn-accent px-4 py-2.5 d-flex align-items-center gap-2"
                   disabled={saving}
                 >
                   <Save size={18} /> {saving ? 'Saving Changes...' : 'Save Configuration'}

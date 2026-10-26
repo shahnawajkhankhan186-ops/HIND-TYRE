@@ -9,10 +9,26 @@ export function AuthProvider({ children }) {
     return saved ? JSON.parse(saved) : null;
   });
   const [token, setToken] = useState(() => localStorage.getItem('token'));
-  const [shopSettings, setShopSettings] = useState(null);
+  const [shopSettings, setShopSettingsState] = useState(() => {
+    const saved = localStorage.getItem('shopSettings');
+    return saved ? JSON.parse(saved) : null;
+  });
   const [loading, setLoading] = useState(true);
 
+  const setShopSettings = (settings) => {
+    if (settings) {
+      try {
+        localStorage.setItem('shopSettings', JSON.stringify(settings));
+      } catch (_) {}
+    }
+    setShopSettingsState(settings);
+  };
+
   useEffect(() => {
+    // 1. Fetch live shop settings unconditionally for public visitor & admin sync
+    refreshSettings();
+
+    // 2. Load authenticated user if token exists
     async function loadUser() {
       const storedToken = localStorage.getItem('token');
       if (!storedToken) {
@@ -24,7 +40,9 @@ export function AuthProvider({ children }) {
         const res = await api.get('/auth/me');
         if (res.data.success) {
           setUser(res.data.data.user);
-          setShopSettings(res.data.data.settings);
+          if (res.data.data.settings) {
+            setShopSettings(res.data.data.settings);
+          }
           localStorage.setItem('user', JSON.stringify(res.data.data.user));
         }
       } catch (err) {
@@ -133,8 +151,9 @@ export function AuthProvider({ children }) {
     role: user?.role,
     isAdmin: user?.role === 'ADMIN',
     isCounter: user?.role === 'COUNTER' || user?.role === 'ADMIN',
-    isCustomer: user?.role === 'USER',
+    isCustomer: false,
     shopSettings,
+    setShopSettings,
     loading,
     login,
     register,
