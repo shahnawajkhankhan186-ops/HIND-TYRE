@@ -32,6 +32,8 @@ router.post('/auth/reset-password', authController.resetPassword);
 // --- Counter / Sales Portal Routes (COUNTER + ADMIN) ---
 router.get('/counter/catalog', authenticate, requireCounterOrAdmin, tyreController.getTyres);
 router.get('/counter/accessories', authenticate, requireCounterOrAdmin, accessoryController.getAccessories);
+router.get('/counter/companies', authenticate, requireCounterOrAdmin, companyController.getCompanies);
+router.get('/counter/settings', authenticate, requireCounterOrAdmin, settingsController.getSettings);
 router.get('/counter/customers/lookup', authenticate, requireCounterOrAdmin, customerController.lookupCustomer);
 router.post('/counter/sales', authenticate, requireCounterOrAdmin, saleController.createSale);
 router.get('/counter/sales', authenticate, requireCounterOrAdmin, saleController.getSales);
@@ -49,7 +51,7 @@ router.post('/sales/:id/cancel', authenticate, requireAdmin, saleController.canc
 router.get('/admin/dashboard-stats', authenticate, requireAdmin, dashboardController.getDashboardStats);
 
 // Companies
-router.get('/admin/companies', authenticate, requireAdmin, companyController.getCompanies);
+router.get('/admin/companies', authenticate, requireCounterOrAdmin, companyController.getCompanies);
 router.post('/admin/companies', authenticate, requireAdmin, companyController.createCompany);
 router.put('/admin/companies/:id', authenticate, requireAdmin, companyController.updateCompany);
 router.delete('/admin/companies/:id', authenticate, requireAdmin, companyController.archiveCompany);

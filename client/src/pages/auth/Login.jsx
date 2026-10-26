@@ -31,7 +31,7 @@ export default function Login() {
         navigate('/counter/new-sale');
       }
     } catch (err) {
-      toast.error(err.response?.data?.error || err.message || 'Invalid credentials');
+      toast.error(err.response?.data?.error || err.friendlyMessage || err.message || 'Invalid credentials');
     } finally {
       setLoading(false);
     }
@@ -48,7 +48,7 @@ export default function Login() {
         navigate('/counter/new-sale');
       }
     } catch (err) {
-      toast.error(err.response?.data?.error || err.message || 'Google Sign-In failed');
+      toast.error(err.response?.data?.error || err.friendlyMessage || err.message || 'Google Sign-In failed');
     } finally {
       setLoading(false);
     }

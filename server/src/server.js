@@ -8,8 +8,8 @@ async function startServer() {
     try {
       await connectDB(config.MONGODB_URI);
       const PORT = config.PORT || 5001;
-      app.listen(PORT, () => {
-        console.log(`[Server] HIND TYRES AND ACCESSORIES API running on http://localhost:${PORT}`);
+      app.listen(PORT, '0.0.0.0', () => {
+        console.log(`[Server] HIND TYRES AND ACCESSORIES API running on http://localhost:${PORT} (0.0.0.0)`);
       });
       return;
     } catch (error) {

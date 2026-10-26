@@ -83,11 +83,16 @@ export default function NewSale() {
 
   const fetchCompanies = async () => {
     try {
-      const res = await api.get('/admin/companies');
+      const res = await api.get('/counter/companies');
       if (res.data.success) {
         setCompanies(res.data.data);
       }
-    } catch (_) {}
+    } catch (_) {
+      try {
+        const fallback = await api.get('/admin/companies');
+        if (fallback.data.success) setCompanies(fallback.data.data);
+      } catch (_) {}
+    }
   };
 
   const fetchCatalog = async () => {
@@ -289,7 +294,8 @@ export default function NewSale() {
 
   // Filtering Tyres Catalog
   const filteredTyres = tyres.filter((t) => {
-    if (selectedCompany && t.companyId?._id !== selectedCompany) return false;
+    const tyreCompanyId = t.companyId?._id || t.companyId?.toString() || t.companyId;
+    if (selectedCompany && tyreCompanyId !== selectedCompany) return false;
     if (selectedVehicleType && t.vehicleType !== selectedVehicleType) return false;
     if (selectedSize && !t.size.toLowerCase().includes(selectedSize.toLowerCase())) return false;
     if (searchQuery.trim()) {

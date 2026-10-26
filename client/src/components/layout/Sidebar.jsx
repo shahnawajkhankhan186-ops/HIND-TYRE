@@ -56,18 +56,21 @@ export default function Sidebar({ isOpen, onClose }) {
           background: 'rgba(10, 15, 26, 0.96)',
         }}
       >
-        <div className="d-flex justify-content-between align-items-center mb-3 d-lg-none">
+        <div className="d-flex justify-content-between align-items-center mb-3 d-lg-none flex-shrink-0">
           <span className="text-white fw-bold small text-uppercase">Admin Navigation</span>
           <button className="btn btn-sm text-secondary p-1" onClick={onClose}>
             <X size={18} />
           </button>
         </div>
 
-        <div className="text-secondary extra-small text-uppercase fw-bold px-3 mb-2" style={{ letterSpacing: '0.08em', fontSize: '0.7rem' }}>
+        <div className="text-secondary extra-small text-uppercase fw-bold px-3 mb-2 flex-shrink-0" style={{ letterSpacing: '0.08em', fontSize: '0.7rem' }}>
           Management
         </div>
 
-        <div className="nav flex-column gap-1 overflow-y-auto flex-grow-1 pe-1">
+        <div
+          className="d-flex flex-column flex-nowrap gap-1 overflow-y-auto overflow-x-hidden flex-grow-1 pe-1"
+          style={{ minHeight: 0 }}
+        >
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -90,7 +93,7 @@ export default function Sidebar({ isOpen, onClose }) {
           })}
         </div>
 
-        <div className="pt-3 border-top border-secondary border-opacity-25 mt-auto">
+        <div className="pt-3 border-top border-secondary border-opacity-25 mt-auto flex-shrink-0">
           <div className="px-3 py-2 rounded-2 bg-slate-900 bg-opacity-70 border border-secondary border-opacity-15">
             <div className="extra-small text-secondary" style={{ fontSize: '0.7rem' }}>Database Status</div>
             <div className="d-flex align-items-center gap-1.5 text-success small fw-semibold mt-0.5">

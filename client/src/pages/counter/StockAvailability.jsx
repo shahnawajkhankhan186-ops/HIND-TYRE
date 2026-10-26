@@ -20,9 +20,14 @@ export default function StockAvailability() {
 
   const fetchCompanies = async () => {
     try {
-      const res = await api.get('/admin/companies');
+      const res = await api.get('/counter/companies');
       if (res.data.success) setCompanies(res.data.data);
-    } catch (_) {}
+    } catch (_) {
+      try {
+        const fallback = await api.get('/admin/companies');
+        if (fallback.data.success) setCompanies(fallback.data.data);
+      } catch (_) {}
+    }
   };
 
   const fetchStock = async () => {

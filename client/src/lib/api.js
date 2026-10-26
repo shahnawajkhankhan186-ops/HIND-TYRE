@@ -20,7 +20,7 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Intercept 401 unauthorized errors
+// Intercept response errors
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -33,6 +33,17 @@ api.interceptors.response.use(
         window.location.href = '/login?expired=true';
       }
     }
+
+    // Friendly error message when Vite proxy fails to connect to backend on port 5001
+    if (
+      !error.response ||
+      (error.response.status === 500 &&
+        (!error.response.data || typeof error.response.data !== 'object' || !error.response.data.error))
+    ) {
+      error.friendlyMessage =
+        'Backend server is not reachable on port 5001. Please make sure the backend is running (run "npm run dev").';
+    }
+
     return Promise.reject(error);
   }
 );

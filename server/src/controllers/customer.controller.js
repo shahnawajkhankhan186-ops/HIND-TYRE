@@ -7,14 +7,15 @@ const Sale = require('../models/Sale');
 async function lookupCustomer(req, res, next) {
   try {
     const { phone } = req.query;
-    if (!phone || phone.length < 10) {
+    const cleaned = String(phone || '').replace(/\D/g, '').slice(-10);
+    if (!cleaned || cleaned.length !== 10) {
       return res.status(400).json({
         success: false,
         error: 'Please provide a valid 10-digit phone number.',
       });
     }
 
-    const customer = await Customer.findOne({ phone: phone.trim() });
+    const customer = await Customer.findOne({ phone: cleaned });
     if (!customer) {
       return res.status(404).json({
         success: false,
@@ -82,8 +83,12 @@ async function getCustomerDetails(req, res, next) {
       return res.status(404).json({ success: false, error: 'Customer not found.' });
     }
 
-    const sales = await Sale.find({ 'customerSnapshot.phone': customer.phone })
-      .sort({ createdAt: -1 });
+    const sales = await Sale.find({
+      $or: [
+        { 'customerSnapshot.customerId': customer._id },
+        { 'customerSnapshot.phone': customer.phone },
+      ],
+    }).sort({ createdAt: -1 });
 
     res.json({
       success: true,

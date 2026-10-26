@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, Eye, Download, Mail, RefreshCw, Calendar, CheckCircle2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../lib/api';
@@ -10,6 +11,7 @@ import EmptyState from '../../components/common/EmptyState';
 import { useAuth } from '../../context/AuthContext';
 
 export default function TodaySales() {
+  const navigate = useNavigate();
   const [sales, setSales] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -108,7 +110,7 @@ export default function TodaySales() {
             title="No sales yet today"
             message="Sales processed through Counter POS will appear here instantly."
             actionText="Process New Sale"
-            onAction={() => (window.location.href = '/counter/new-sale')}
+            onAction={() => navigate('/counter/new-sale')}
           />
         ) : (
           <div className="table-responsive">
