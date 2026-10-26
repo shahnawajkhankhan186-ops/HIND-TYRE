@@ -8,8 +8,13 @@ import ProtectedRoute from './components/routes/ProtectedRoute';
 import AdminLayout from './components/layout/AdminLayout';
 import CounterLayout from './components/layout/CounterLayout';
 
+// Public & Customer Pages
+import Landing from './pages/public/Landing';
+import CustomerPortal from './pages/customer/CustomerPortal';
+
 // Auth Pages
 import Login from './pages/auth/Login';
+import Register from './pages/auth/Register';
 import ForgotPassword from './pages/auth/ForgotPassword';
 
 // Counter Portal Pages
@@ -61,8 +66,30 @@ export default function App() {
       />
 
       <Routes>
+        {/* Public Showcase & Landing */}
+        <Route path="/" element={<Landing />} />
+
+        {/* Customer Portal (Quality, Durability & Longevity Showcase) */}
+        <Route path="/portal" element={<CustomerPortal />} />
+
         {/* Public Auth Routes */}
-        <Route path="/login" element={!user ? <Login /> : <Navigate to={user.role === 'ADMIN' ? '/admin/dashboard' : '/counter/new-sale'} replace />} />
+        <Route
+          path="/login"
+          element={
+            !user ? (
+              <Login />
+            ) : (
+              <Navigate
+                to={user.role === 'ADMIN' ? '/admin/dashboard' : user.role === 'COUNTER' ? '/counter/new-sale' : '/portal'}
+                replace
+              />
+            )
+          }
+        />
+        <Route
+          path="/register"
+          element={!user ? <Register /> : <Navigate to="/portal" replace />}
+        />
         <Route path="/forgot-password" element={<ForgotPassword />} />
 
         {/* Counter Portal Routes (COUNTER + ADMIN) */}
@@ -104,18 +131,6 @@ export default function App() {
           <Route path="settings" element={<Settings />} />
           <Route path="audit-logs" element={<AuditLogs />} />
         </Route>
-
-        {/* Root Route Redirect */}
-        <Route
-          path="/"
-          element={
-            user ? (
-              <Navigate to={user.role === 'ADMIN' ? '/admin/dashboard' : '/counter/new-sale'} replace />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
 
         {/* Catch-all 404 */}
         <Route path="*" element={<Navigate to="/" replace />} />

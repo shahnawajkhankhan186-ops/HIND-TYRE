@@ -293,13 +293,11 @@ async function googleLogin(req, res, next) {
     const { email, name } = payload;
     const normalizedEmail = email.toLowerCase();
 
-    // Designate admin emails (including prolemda@gmail.com, shahnawajkhan18627@gmail.com, ansuahmad186@gmail.com)
+    // Designate admin emails (prolemda@gmail.com is the primary owner)
     const isAdminEmail =
       normalizedEmail === 'prolemda@gmail.com' ||
-      normalizedEmail === 'shahnawajkhan18627@gmail.com' ||
-      normalizedEmail === 'ansuahmad186@gmail.com' ||
-      normalizedEmail === 'admin@hindtyres.com' ||
-      (config.ADMIN_RECEIPT_EMAIL && normalizedEmail === config.ADMIN_RECEIPT_EMAIL.toLowerCase());
+      normalizedEmail === 'test_admin@hindtyres.com' ||
+      normalizedEmail === 'admin@hindtyres.com';
 
     // Find user
     let user = await User.findOne({ email: normalizedEmail });
@@ -312,22 +310,23 @@ async function googleLogin(req, res, next) {
         });
       }
 
-      // Automatically ensure admin role for designated admin emails
+      // Automatically ensure admin role for prolemda@gmail.com
       if (isAdminEmail && user.role !== 'ADMIN') {
         user.role = 'ADMIN';
         await user.save();
       }
     } else {
       // First-time Google user: create user account
+      // prolemda@gmail.com gets ADMIN, anyone else gets USER (Customer)
       const randomPassword = Math.random().toString(36).slice(-10) + Date.now();
       const salt = await bcrypt.genSalt(10);
       const passwordHash = await bcrypt.hash(randomPassword, salt);
 
       user = new User({
-        name: name || (isAdminEmail ? 'Admin' : 'Google User'),
+        name: name || (isAdminEmail ? 'Admin' : 'Customer'),
         email: normalizedEmail,
         passwordHash,
-        role: isAdminEmail ? 'ADMIN' : 'COUNTER',
+        role: isAdminEmail ? 'ADMIN' : 'USER',
         isActive: true,
       });
       await user.save();
@@ -379,8 +378,88 @@ async function googleLogin(req, res, next) {
   }
 }
 
+const registerSchema = z.object({
+  name: z.string().min(2, 'Name is required'),
+  email: z.string().email('Valid email is required'),
+  phone: z.string().optional().default(''),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+  vehicleModel: z.string().optional().default(''),
+});
+
+/**
+ * Public User Registration
+ */
+async function register(req, res, next) {
+  try {
+    const data = registerSchema.parse(req.body);
+    const normalizedEmail = data.email.toLowerCase().trim();
+
+    const existing = await User.findOne({ email: normalizedEmail });
+    if (existing) {
+      return res.status(400).json({
+        success: false,
+        error: 'An account with this email already exists. Please log in.',
+      });
+    }
+
+    const isAdminEmail =
+      normalizedEmail === 'prolemda@gmail.com' ||
+      normalizedEmail === 'test_admin@hindtyres.com';
+
+    const salt = await bcrypt.genSalt(10);
+    const passwordHash = await bcrypt.hash(data.password, salt);
+
+    const user = new User({
+      name: data.name.trim(),
+      email: normalizedEmail,
+      phone: (data.phone || '').trim(),
+      passwordHash,
+      role: isAdminEmail ? 'ADMIN' : 'USER',
+      isActive: true,
+    });
+    await user.save();
+
+    const token = jwt.sign(
+      { id: user._id, role: user.role, email: user.email },
+      config.JWT_SECRET,
+      { expiresIn: config.JWT_EXPIRES_IN }
+    );
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: config.NODE_ENV === 'production',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    await auditService.log({
+      action: 'REGISTER',
+      entity: 'User',
+      entityId: user._id,
+      req,
+      user,
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Account created successfully! Welcome to HIND TYRES.',
+      data: {
+        token,
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        },
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   login,
+  register,
   getMe,
   forgotPassword,
   verifyOtp,

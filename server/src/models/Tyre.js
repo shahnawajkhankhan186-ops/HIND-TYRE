@@ -88,6 +88,43 @@ const tyreSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    warrantyYears: {
+      type: Number,
+      default: 5,
+    },
+    expectedLifespanKm: {
+      type: String,
+      default: '65,000 - 80,000 KM',
+    },
+    qualityGrade: {
+      type: String,
+      default: 'A+ Ultra-Endurance Radial',
+    },
+    features: {
+      type: [String],
+      default: [
+        'High-Silica Extended Mileage Compound',
+        'Anti-Aquaplaning Dual Hydro Grooves',
+        'Triple Steel Belt Puncture Protection',
+        'Low Rolling Resistance (Fuel Saver)',
+      ],
+    },
+    wetGripRating: {
+      type: String,
+      default: 'Grade A',
+    },
+    fuelEfficiency: {
+      type: String,
+      default: 'Class B',
+    },
+    noiseLevel: {
+      type: String,
+      default: '68 dB Whisper Quiet',
+    },
+    description: {
+      type: String,
+      default: 'Engineered for exceptional road endurance, superior wet braking in Indian road conditions, and prolonged tread lifespan.',
+    },
   },
   {
     timestamps: true,
