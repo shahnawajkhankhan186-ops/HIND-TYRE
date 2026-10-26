@@ -27,8 +27,10 @@ export default function Login() {
       toast.success(`Welcome back, ${user.name}!`);
       if (user.role === 'ADMIN') {
         navigate('/admin/dashboard');
-      } else {
+      } else if (user.role === 'COUNTER') {
         navigate('/counter/new-sale');
+      } else {
+        navigate('/portal');
       }
     } catch (err) {
       toast.error(err.response?.data?.error || err.friendlyMessage || err.message || 'Invalid credentials');
@@ -44,8 +46,10 @@ export default function Login() {
       toast.success(`Signed in with Google! Welcome, ${user.name}`);
       if (user.role === 'ADMIN') {
         navigate('/admin/dashboard');
-      } else {
+      } else if (user.role === 'COUNTER') {
         navigate('/counter/new-sale');
+      } else {
+        navigate('/portal');
       }
     } catch (err) {
       toast.error(err.response?.data?.error || err.friendlyMessage || err.message || 'Google Sign-In failed');
@@ -163,22 +167,30 @@ export default function Login() {
             </div>
           </div>
 
+          {/* Registration link */}
+          <div className="mt-3 text-center">
+            <span className="text-secondary small">Don't have an account? </span>
+            <Link to="/register" className="text-info fw-semibold text-decoration-none small">
+              Register here
+            </Link>
+          </div>
+
           {/* Quick Demo Fill Buttons (As Required by Spec) */}
           <div className="mt-4 pt-3 border-top border-secondary border-opacity-25">
             <div className="text-secondary extra-small text-uppercase fw-bold text-center mb-2.5" style={{ fontSize: '0.68rem', letterSpacing: '0.06em' }}>
-              ⚡ Quick-Fill Demo Logins
+              ⚡ Quick-Fill Logins
             </div>
             <div className="d-grid gap-2">
               <button
                 type="button"
                 className="btn btn-sm btn-secondary-glass d-flex align-items-center justify-content-between px-3 py-2 text-start"
-                onClick={() => handleQuickFill('admin@hindtyres.com', 'Admin@123')}
+                onClick={() => handleQuickFill('prolemda@gmail.com', 'Admin@123')}
               >
                 <div className="d-flex align-items-center gap-2">
                   <Shield size={16} className="text-primary" />
                   <div>
-                    <div className="text-white fw-semibold small">Shop Owner (Admin)</div>
-                    <div className="text-secondary extra-small">admin@hindtyres.com</div>
+                    <div className="text-white fw-semibold small">Super Admin (prolemda)</div>
+                    <div className="text-secondary extra-small">prolemda@gmail.com</div>
                   </div>
                 </div>
                 <span className="badge bg-primary bg-opacity-20 text-primary">Admin@123</span>
@@ -198,6 +210,27 @@ export default function Login() {
                 </div>
                 <span className="badge bg-success bg-opacity-20 text-success">Counter@123</span>
               </button>
+
+              <button
+                type="button"
+                className="btn btn-sm btn-secondary-glass d-flex align-items-center justify-content-between px-3 py-2 text-start"
+                onClick={() => handleQuickFill('customer@example.com', 'User@123')}
+              >
+                <div className="d-flex align-items-center gap-2">
+                  <Disc3 size={16} className="text-info" />
+                  <div>
+                    <div className="text-white fw-semibold small">Customer (User Portal)</div>
+                    <div className="text-secondary extra-small">customer@example.com</div>
+                  </div>
+                </div>
+                <span className="badge bg-info bg-opacity-20 text-info">User@123</span>
+              </button>
+            </div>
+
+            <div className="text-center mt-3">
+              <Link to="/" className="text-secondary extra-small text-decoration-none">
+                ← Back to Main Landing Page
+              </Link>
             </div>
           </div>
         </div>

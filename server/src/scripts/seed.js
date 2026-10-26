@@ -53,7 +53,16 @@ async function seedDatabase() {
     const counterPasswordHash = await bcrypt.hash('Counter@123', salt);
 
     const adminUser = await User.create({
-      name: 'Rajesh Sharma (Owner)',
+      name: 'Super Admin (Owner)',
+      email: 'prolemda@gmail.com',
+      passwordHash: adminPasswordHash,
+      role: 'ADMIN',
+      isActive: true,
+    });
+
+    // Also keep admin@hindtyres.com for demo credentials button
+    await User.create({
+      name: 'Demo Admin',
       email: 'admin@hindtyres.com',
       passwordHash: adminPasswordHash,
       role: 'ADMIN',
@@ -65,6 +74,16 @@ async function seedDatabase() {
       email: 'counter@hindtyres.com',
       passwordHash: counterPasswordHash,
       role: 'COUNTER',
+      isActive: true,
+    });
+
+    // Demo Customer Account
+    const customerPasswordHash = await bcrypt.hash('User@123', salt);
+    await User.create({
+      name: 'Rohan Gupta (Customer)',
+      email: 'customer@example.com',
+      passwordHash: customerPasswordHash,
+      role: 'USER',
       isActive: true,
     });
 

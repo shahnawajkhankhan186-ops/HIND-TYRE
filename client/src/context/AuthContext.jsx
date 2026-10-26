@@ -84,6 +84,27 @@ export function AuthProvider({ children }) {
     throw new Error(res.data.error || 'Google login failed');
   };
 
+  const register = async (formData) => {
+    const res = await api.post('/auth/register', formData);
+    if (res.data.success) {
+      const { token: newToken, user: newUser } = res.data.data;
+      localStorage.setItem('token', newToken);
+      localStorage.setItem('user', JSON.stringify(newUser));
+      setToken(newToken);
+      setUser(newUser);
+
+      try {
+        const meRes = await api.get('/auth/me');
+        if (meRes.data.success) {
+          setShopSettings(meRes.data.data.settings);
+        }
+      } catch (_) {}
+
+      return newUser;
+    }
+    throw new Error(res.data.error || 'Registration failed');
+  };
+
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -94,11 +115,16 @@ export function AuthProvider({ children }) {
 
   const refreshSettings = async () => {
     try {
-      const res = await api.get('/admin/settings');
+      const res = await api.get('/portal/settings');
       if (res.data.success) {
         setShopSettings(res.data.data);
       }
-    } catch (_) {}
+    } catch (_) {
+      try {
+        const fallback = await api.get('/admin/settings');
+        if (fallback.data.success) setShopSettings(fallback.data.data);
+      } catch (_) {}
+    }
   };
 
   const value = {
@@ -107,9 +133,11 @@ export function AuthProvider({ children }) {
     role: user?.role,
     isAdmin: user?.role === 'ADMIN',
     isCounter: user?.role === 'COUNTER' || user?.role === 'ADMIN',
+    isCustomer: user?.role === 'USER',
     shopSettings,
     loading,
     login,
+    register,
     googleLogin,
     logout,
     refreshSettings,

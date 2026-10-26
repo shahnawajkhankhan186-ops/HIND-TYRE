@@ -22,8 +22,14 @@ export default function ProtectedRoute({ children, allowedRoles }) {
   }
 
   if (allowedRoles && !allowedRoles.includes(user.role)) {
-    toast.error('Access denied: Administrator privileges required.');
-    return <Navigate to="/counter/new-sale" replace />;
+    toast.error('Access restricted for this portal');
+    if (user.role === 'USER') {
+      return <Navigate to="/portal" replace />;
+    }
+    if (user.role === 'COUNTER') {
+      return <Navigate to="/counter/new-sale" replace />;
+    }
+    return <Navigate to="/admin/dashboard" replace />;
   }
 
   return children;

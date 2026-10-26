@@ -22,12 +22,18 @@ router.get('/health', (req, res) => {
 });
 
 // --- Auth Routes ---
+router.post('/auth/register', authController.register);
 router.post('/auth/login', authController.login);
 router.post('/auth/google', authController.googleLogin);
 router.get('/auth/me', authenticate, authController.getMe);
 router.post('/auth/forgot-password', authController.forgotPassword);
 router.post('/auth/verify-otp', authController.verifyOtp);
 router.post('/auth/reset-password', authController.resetPassword);
+
+// --- Public / Customer Portal Routes ---
+router.get('/portal/tyres', tyreController.getTyres);
+router.get('/portal/companies', companyController.getCompanies);
+router.get('/portal/settings', settingsController.getSettings);
 
 // --- Counter / Sales Portal Routes (COUNTER + ADMIN) ---
 router.get('/counter/catalog', authenticate, requireCounterOrAdmin, tyreController.getTyres);
