@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
-import { X, Download, Printer, Mail, Check, ShieldCheck } from 'lucide-react';
+import React from 'react';
+import { X, Download, Printer, Check, ShieldCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../lib/api';
 import { formatRupees, paiseToWordsINR } from '../../lib/currency';
 import { formatIST } from '../../lib/ist-date';
 
 export default function ReceiptModal({ isOpen, onClose, sale, shopSettings }) {
-  const [resending, setResending] = useState(false);
-
   if (!isOpen || !sale) return null;
 
   const handleDownloadPDF = () => {
@@ -26,22 +24,6 @@ export default function ReceiptModal({ isOpen, onClose, sale, shopSettings }) {
 
   const handlePrint = () => {
     window.print();
-  };
-
-  const handleResendEmail = async () => {
-    try {
-      setResending(true);
-      const res = await api.post(`/api/sales/${sale._id}/resend-email`);
-      if (res.data.success) {
-        toast.success(res.data.message || 'Invoice email dispatched!');
-      } else {
-        toast.error('Failed to dispatch email.');
-      }
-    } catch (err) {
-      toast.error(err.response?.data?.error || 'Email dispatch failed');
-    } finally {
-      setResending(false);
-    }
   };
 
   return (
@@ -73,13 +55,6 @@ export default function ReceiptModal({ isOpen, onClose, sale, shopSettings }) {
                 onClick={handlePrint}
               >
                 <Printer size={15} /> Print
-              </button>
-              <button
-                className="btn btn-sm btn-outline-dark-custom d-flex align-items-center gap-1"
-                onClick={handleResendEmail}
-                disabled={resending}
-              >
-                <Mail size={15} /> {resending ? 'Sending...' : 'Resend Email'}
               </button>
               <button className="btn btn-sm text-secondary p-1" onClick={onClose}>
                 <X size={20} />

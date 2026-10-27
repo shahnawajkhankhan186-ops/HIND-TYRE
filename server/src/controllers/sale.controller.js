@@ -135,88 +135,6 @@ async function createSale(req, res, next) {
     await session.commitTransaction();
     session.endSession();
 
-    // 7. Non-blocking Background PDF Generation & Email Dispatch
-    // Failures here MUST NOT rollback the committed sale!
-    setImmediate(async () => {
-      try {
-        const settings = await ShopSettings.findOne();
-        const pdfBuffer = await generateInvoicePDF({ sale, settings });
-
-        const sellerEmail = sale.soldBy?.email || req.user?.email;
-        const buyerEmail = sale.customerSnapshot?.email;
-        const centralAdminEmail = (settings?.adminReceiptEmail || process.env.ADMIN_RECEIPT_EMAIL || '').trim();
-
-        // 1. Email Customer / Buyer
-        let customerEmailResult = { success: false, error: 'No customer email provided' };
-        if (buyerEmail) {
-          customerEmailResult = await sendInvoiceEmail({
-            recipientEmail: buyerEmail,
-            recipientName: sale.customerSnapshot?.name,
-            sale,
-            pdfBuffer,
-            recipientType: 'customer',
-            sellerInfo: { name: req.user.name, email: req.user.email },
-            shopSettings: settings,
-          });
-        }
-
-        // 2. Email Seller (The Admin / Counter staff who made this sale)
-        let sellerEmailResult = { success: false, error: 'No seller email available' };
-        if (sellerEmail) {
-          sellerEmailResult = await sendInvoiceEmail({
-            recipientEmail: sellerEmail,
-            recipientName: req.user.name,
-            sale,
-            pdfBuffer,
-            recipientType: 'seller',
-            sellerInfo: { name: req.user.name, email: req.user.email },
-            shopSettings: settings,
-          });
-        }
-
-        // 3. Email Central Admin (if configured and distinct from seller & buyer)
-        let adminEmailResult = sellerEmailResult;
-        if (
-          centralAdminEmail &&
-          centralAdminEmail.toLowerCase() !== sellerEmail?.toLowerCase() &&
-          centralAdminEmail.toLowerCase() !== buyerEmail?.toLowerCase()
-        ) {
-          adminEmailResult = await sendInvoiceEmail({
-            recipientEmail: centralAdminEmail,
-            recipientName: 'Administrator',
-            sale,
-            pdfBuffer,
-            recipientType: 'admin',
-            sellerInfo: { name: req.user.name, email: req.user.email },
-            shopSettings: settings,
-          });
-        }
-
-        // 4. Update emailStatus in database
-        await Sale.findByIdAndUpdate(sale._id, {
-          emailStatus: {
-            customer: {
-              sent: Boolean(customerEmailResult.success),
-              sentAt: customerEmailResult.success ? new Date() : null,
-              error: customerEmailResult.error || '',
-            },
-            seller: {
-              sent: Boolean(sellerEmailResult.success),
-              sentAt: sellerEmailResult.success ? new Date() : null,
-              error: sellerEmailResult.error || '',
-            },
-            admin: {
-              sent: Boolean(sellerEmailResult.success || adminEmailResult.success),
-              sentAt: (sellerEmailResult.success || adminEmailResult.success) ? new Date() : null,
-              error: sellerEmailResult.error || adminEmailResult.error || '',
-            },
-          },
-        });
-      } catch (emailErr) {
-        console.error('Async receipt email processing error:', emailErr.message);
-      }
-    });
-
     res.status(201).json({
       success: true,
       message: 'Sale completed successfully.',
@@ -362,7 +280,7 @@ async function getReceiptPdf(req, res, next) {
 }
 
 /**
- * Manually resend receipt email with PDF attachment
+ * Manually resend receipt email (Disabled)
  */
 async function resendReceiptEmail(req, res, next) {
   try {
@@ -371,86 +289,9 @@ async function resendReceiptEmail(req, res, next) {
       return res.status(404).json({ success: false, error: 'Sale not found.' });
     }
 
-    const settings = await ShopSettings.findOne();
-    const pdfBuffer = await generateInvoicePDF({ sale, settings });
-
-    const sellerEmail = sale.soldBy?.email || req.user?.email;
-    const buyerEmail = sale.customerSnapshot?.email;
-    const centralAdminEmail = (settings?.adminReceiptEmail || process.env.ADMIN_RECEIPT_EMAIL || '').trim();
-
-    // 1. Email Customer / Buyer
-    let customerEmailResult = { success: false, error: 'No customer email' };
-    if (buyerEmail) {
-      customerEmailResult = await sendInvoiceEmail({
-        recipientEmail: buyerEmail,
-        recipientName: sale.customerSnapshot?.name,
-        sale,
-        pdfBuffer,
-        recipientType: 'customer',
-        sellerInfo: { name: sale.soldBy?.name || req.user.name, email: sellerEmail },
-        shopSettings: settings,
-      });
-    }
-
-    // 2. Email Seller (The Admin / Staff who created this sale)
-    let sellerEmailResult = { success: false, error: 'No seller email' };
-    if (sellerEmail) {
-      sellerEmailResult = await sendInvoiceEmail({
-        recipientEmail: sellerEmail,
-        recipientName: sale.soldBy?.name || req.user.name,
-        sale,
-        pdfBuffer,
-        recipientType: 'seller',
-        sellerInfo: { name: sale.soldBy?.name || req.user.name, email: sellerEmail },
-        shopSettings: settings,
-      });
-    }
-
-    // 3. Email Central Admin (if distinct)
-    let adminEmailResult = sellerEmailResult;
-    if (
-      centralAdminEmail &&
-      centralAdminEmail.toLowerCase() !== sellerEmail?.toLowerCase() &&
-      centralAdminEmail.toLowerCase() !== buyerEmail?.toLowerCase()
-    ) {
-      adminEmailResult = await sendInvoiceEmail({
-        recipientEmail: centralAdminEmail,
-        recipientName: 'Administrator',
-        sale,
-        pdfBuffer,
-        recipientType: 'admin',
-        sellerInfo: { name: sale.soldBy?.name || req.user.name, email: sellerEmail },
-        shopSettings: settings,
-      });
-    }
-
-    sale.emailStatus = {
-      customer: {
-        sent: Boolean(customerEmailResult.success),
-        sentAt: customerEmailResult.success ? new Date() : sale.emailStatus?.customer?.sentAt,
-        error: customerEmailResult.error || '',
-      },
-      seller: {
-        sent: Boolean(sellerEmailResult.success),
-        sentAt: sellerEmailResult.success ? new Date() : sale.emailStatus?.seller?.sentAt,
-        error: sellerEmailResult.error || '',
-      },
-      admin: {
-        sent: Boolean(sellerEmailResult.success || adminEmailResult.success),
-        sentAt: (sellerEmailResult.success || adminEmailResult.success)
-          ? new Date()
-          : sale.emailStatus?.admin?.sentAt,
-        error: sellerEmailResult.error || adminEmailResult.error || '',
-      },
-    };
-    await sale.save();
-
-    const someSuccess = customerEmailResult.success || sellerEmailResult.success;
     res.json({
       success: true,
-      message: someSuccess
-        ? 'Receipt email dispatched successfully to customer & seller!'
-        : `Email dispatch failed: ${customerEmailResult.error || sellerEmailResult.error || 'Check Brevo / SMTP configuration.'}`,
+      message: 'Receipt emailing is disabled. Please download or print the invoice PDF.',
       data: sale.emailStatus,
     });
   } catch (err) {

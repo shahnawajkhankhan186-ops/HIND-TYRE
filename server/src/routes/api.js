@@ -102,7 +102,6 @@ router.patch('/admin/users/:id/toggle-status', authenticate, requireAdmin, userC
 // Shop Settings
 router.get('/admin/settings', authenticate, requireAdmin, settingsController.getSettings);
 router.put('/admin/settings', authenticate, requireAdmin, settingsController.updateSettings);
-router.post('/admin/settings/test-email', authenticate, requireAdmin, settingsController.testEmailDelivery);
 
 // Audit Logs
 router.get('/admin/audit-logs', authenticate, requireAdmin, auditController.getAuditLogs);
