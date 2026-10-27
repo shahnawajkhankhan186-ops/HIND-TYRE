@@ -14,6 +14,9 @@ const settingsSchema = z.object({
   defaultGstPercent: z.number().min(0).max(100).default(28),
   maxDiscountPercent: z.number().min(0).max(100).default(15),
   adminReceiptEmail: z.string().email(),
+  brevoApiKey: z.string().optional().default(''),
+  brevoSenderEmail: z.string().email().optional().or(z.literal('')).default(''),
+  brevoSenderName: z.string().optional().default(''),
 });
 
 async function getSettings(req, res, next) {
@@ -63,7 +66,77 @@ async function updateSettings(req, res, next) {
   }
 }
 
+async function testEmailDelivery(req, res, next) {
+  try {
+    const targetEmail = req.body.email || req.user.email;
+    const settings = await ShopSettings.findOne();
+
+    const sampleSale = {
+      invoiceNo: 'HT-TEST-0001',
+      createdAt: new Date(),
+      paymentMode: 'UPI',
+      paymentStatus: 'PAID',
+      customerSnapshot: {
+        name: 'Test Customer',
+        phone: '9876543210',
+        email: targetEmail,
+        vehicleNumber: 'UP78-AB-1234',
+        vehicleModel: 'Hyundai Creta',
+      },
+      soldBy: {
+        name: req.user.name,
+        email: req.user.email,
+      },
+      items: [
+        {
+          name: 'MRF ZLX 195/65 R15 (Sample)',
+          size: '195/65 R15',
+          brand: 'MRF',
+          itemType: 'Tyre',
+          qty: 2,
+          unitPricePaise: 450000,
+          lineTotalPaise: 900000,
+        },
+      ],
+      subtotalPaise: 703125,
+      gstPaise: 196875,
+      discountPaise: 0,
+      totalPaise: 900000,
+    };
+
+    const { generateInvoicePDF } = require('../utils/pdfInvoice');
+    const { sendInvoiceEmail } = require('../utils/mailer');
+    const pdfBuffer = await generateInvoicePDF({ sale: sampleSale, settings });
+
+    const result = await sendInvoiceEmail({
+      recipientEmail: targetEmail,
+      recipientName: req.user.name,
+      sale: sampleSale,
+      pdfBuffer,
+      recipientType: 'seller',
+      sellerInfo: { name: req.user.name, email: req.user.email },
+      shopSettings: settings,
+    });
+
+    if (result.success) {
+      res.json({
+        success: true,
+        message: `Test email dispatched successfully to ${targetEmail} via ${result.provider || (result.mock ? 'mock preview' : 'configured mailer')}!`,
+        data: result,
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        error: result.error || 'Failed to dispatch test email',
+      });
+    }
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   getSettings,
   updateSettings,
+  testEmailDelivery,
 };
