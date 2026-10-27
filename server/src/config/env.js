@@ -24,6 +24,11 @@ const config = {
     FROM: process.env.SMTP_FROM || '"HIND TYRES & ACCESSORIES" <billing@hindtyres.com>',
   },
   ADMIN_RECEIPT_EMAIL: process.env.ADMIN_RECEIPT_EMAIL || 'admin@hindtyres.com',
+  BREVO: {
+    API_KEY: process.env.BREVO_API_KEY || '',
+    SENDER_EMAIL: process.env.BREVO_SENDER_EMAIL || process.env.SMTP_USER || '',
+    SENDER_NAME: process.env.BREVO_SENDER_NAME || 'HIND TYRES & ACCESSORIES',
+  },
   SUPABASE: {
     URL: process.env.SUPABASE_URL || '',
     ANON_KEY: process.env.SUPABASE_ANON_KEY || '',

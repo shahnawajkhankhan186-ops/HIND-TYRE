@@ -50,6 +50,18 @@ const shopSettingsSchema = new mongoose.Schema(
       type: String,
       default: 'admin@hindtyres.com',
     },
+    brevoApiKey: {
+      type: String,
+      default: '',
+    },
+    brevoSenderEmail: {
+      type: String,
+      default: '',
+    },
+    brevoSenderName: {
+      type: String,
+      default: '',
+    },
   },
   {
     timestamps: true,

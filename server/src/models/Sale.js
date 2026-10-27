@@ -138,6 +138,11 @@ const saleSchema = new mongoose.Schema(
         sentAt: { type: Date },
         error: { type: String, default: '' },
       },
+      seller: {
+        sent: { type: Boolean, default: false },
+        sentAt: { type: Date },
+        error: { type: String, default: '' },
+      },
       admin: {
         sent: { type: Boolean, default: false },
         sentAt: { type: Date },
