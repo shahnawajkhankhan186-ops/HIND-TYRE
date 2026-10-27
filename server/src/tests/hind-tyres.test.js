@@ -83,6 +83,7 @@ describe('1. Pricing Engine & Financial Calculations (Integer Paise)', () => {
       size: '185/65 R15',
       vehicleType: 'Car',
       sku: `TEST-PRICE-${Date.now()}`,
+      materialNumber: `MAT-PRICE-${Date.now()}`,
       purchasePricePaise: 300000, // ₹3,000.00
       sellingPricePaise: 400000,  // ₹4,000.00
       mrpPaise: 450000,
@@ -91,7 +92,7 @@ describe('1. Pricing Engine & Financial Calculations (Integer Paise)', () => {
     });
   });
 
-  test('should calculate subtotal, 28% GST, and total accurately in integer paise', async () => {
+  test('should calculate subtotal and total accurately in integer paise', async () => {
     const qty = 2;
     const result = await pricingService.computeSalePricing({
       items: [{ tyreId: tyreDoc._id, quantity: qty, itemType: 'Tyre' }],
@@ -99,11 +100,10 @@ describe('1. Pricing Engine & Financial Calculations (Integer Paise)', () => {
     });
 
     const expectedSubtotal = 400000 * 2; // 800000 paise (₹8,000)
-    const expectedGst = Math.round((800000 * 28) / 100); // 224000 paise (₹2,240)
-    const expectedTotal = expectedSubtotal + expectedGst; // 1024000 paise (₹10,240)
+    const expectedTotal = expectedSubtotal; // 800000 paise (₹8,000)
 
     expect(result.subtotalPaise).toBe(expectedSubtotal);
-    expect(result.gstPaise).toBe(expectedGst);
+    expect(result.gstPaise).toBe(0);
     expect(result.totalPaise).toBe(expectedTotal);
     expect(result.items[0].unitPricePaise).toBe(400000);
     expect(result.items[0].lineTotalPaise).toBe(expectedTotal);
@@ -129,7 +129,7 @@ describe('1. Pricing Engine & Financial Calculations (Integer Paise)', () => {
     });
 
     expect(result.discountPaise).toBe(validDiscountPaise);
-    expect(result.totalPaise).toBe(result.subtotalPaise + result.gstPaise - validDiscountPaise);
+    expect(result.totalPaise).toBe(result.subtotalPaise - validDiscountPaise);
   });
 });
 
@@ -144,6 +144,7 @@ describe('2. Stock Concurrency (Atomic Transactions & Over-selling Protection)',
       size: '205/55 R16',
       vehicleType: 'Car',
       sku: `CONCURRENCY-${Date.now()}-${Math.random().toString(36).substring(7)}`,
+      materialNumber: `MAT-CONCUR-${Date.now()}-${Math.random().toString(36).substring(7)}`,
       purchasePricePaise: 350000,
       sellingPricePaise: 500000,
       mrpPaise: 600000,
@@ -219,6 +220,7 @@ describe('3. Sale Cancellation & Inventory Restoration', () => {
       size: '145/80 R12',
       vehicleType: 'Car',
       sku: `RESTORE-${Date.now()}`,
+      materialNumber: `MAT-RESTORE-${Date.now()}`,
       purchasePricePaise: 180000,
       sellingPricePaise: 250000,
       mrpPaise: 300000,

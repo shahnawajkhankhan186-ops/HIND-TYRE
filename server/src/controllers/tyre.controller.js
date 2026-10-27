@@ -14,10 +14,12 @@ const tyreSchema = z.object({
   loadIndex: z.string().optional().default(''),
   speedRating: z.string().optional().default(''),
   sku: z.string().min(2, 'SKU is required'),
+  materialNumber: z.string().min(1, 'Material number is required'),
   purchasePricePaise: z.number().int().min(0, 'Purchase price must be positive'),
+  actualPricePaise: z.number().int().min(0, 'Actual price must be positive').optional(),
   sellingPricePaise: z.number().int().min(0, 'Selling price must be positive'),
-  mrpPaise: z.number().int().min(0, 'MRP must be positive'),
-  gstPercent: z.number().min(0).max(100).default(28),
+  mrpPaise: z.number().int().min(0, 'MRP must be positive').optional(),
+  gstPercent: z.number().min(0).max(100).default(0),
   quantity: z.number().int().min(0).default(0),
   lowStockThreshold: z.number().int().min(0).default(5),
   isActive: z.boolean().optional().default(true),
@@ -74,6 +76,7 @@ async function getTyres(req, res, next) {
         { modelName: { $regex: s, $options: 'i' } },
         { size: { $regex: s, $options: 'i' } },
         { sku: { $regex: s, $options: 'i' } },
+        { materialNumber: { $regex: s, $options: 'i' } },
       ];
     }
 
@@ -134,9 +137,24 @@ async function createTyre(req, res, next) {
       });
     }
 
+    const existingMat = await Tyre.findOne({ materialNumber: data.materialNumber.toUpperCase() });
+    if (existingMat) {
+      return res.status(400).json({
+        success: false,
+        error: `Tyre with Material Number "${data.materialNumber}" already exists.`,
+      });
+    }
+
+    const actualPricePaise = data.actualPricePaise !== undefined
+      ? data.actualPricePaise
+      : Math.round(data.purchasePricePaise * 0.97);
+
     const tyre = new Tyre({
       ...data,
+      actualPricePaise,
+      mrpPaise: data.mrpPaise || actualPricePaise,
       sku: data.sku.toUpperCase(),
+      materialNumber: data.materialNumber.toUpperCase(),
     });
     await tyre.save();
 
@@ -169,7 +187,30 @@ async function updateTyre(req, res, next) {
     const beforeSnapshot = tyre.toObject();
     Object.assign(tyre, data);
     if (data.sku) {
+      const existingSku = await Tyre.findOne({
+        sku: data.sku.toUpperCase(),
+        _id: { $ne: req.params.id },
+      });
+      if (existingSku) {
+        return res.status(400).json({
+          success: false,
+          error: `Tyre with SKU "${data.sku}" already exists.`,
+        });
+      }
       tyre.sku = data.sku.toUpperCase();
+    }
+    if (data.materialNumber) {
+      const existingMat = await Tyre.findOne({
+        materialNumber: data.materialNumber.toUpperCase(),
+        _id: { $ne: req.params.id },
+      });
+      if (existingMat) {
+        return res.status(400).json({
+          success: false,
+          error: `Tyre with Material Number "${data.materialNumber}" already exists.`,
+        });
+      }
+      tyre.materialNumber = data.materialNumber.toUpperCase();
     }
     await tyre.save();
 

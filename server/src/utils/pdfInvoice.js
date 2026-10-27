@@ -4,7 +4,7 @@ const { formatIST } = require('./ist-date');
 const { formatRupees, paiseToWordsINR } = require('./currency');
 
 /**
- * Generate GST Tax Invoice PDF strictly in-memory (Buffer).
+ * Generate Invoice PDF strictly in-memory (Buffer).
  * No temporary files written to disk.
  */
 async function generateInvoicePDF({ sale, settings }) {
@@ -14,9 +14,9 @@ async function generateInvoicePDF({ sale, settings }) {
         size: 'A4',
         margin: 36,
         info: {
-          Title: `Tax Invoice - ${sale.invoiceNo}`,
+          Title: `Invoice - ${sale.invoiceNo}`,
           Author: settings?.shopName || 'HIND TYRES AND ACCESSORIES',
-          Subject: 'GST Tax Invoice & Tyre Warranty Receipt',
+          Subject: 'Invoice & Tyre Warranty Receipt',
         },
       });
 
@@ -30,7 +30,6 @@ async function generateInvoicePDF({ sale, settings }) {
         invoice: sale.invoiceNo,
         date: formatIST(sale.createdAt),
         total: formatRupees(sale.totalPaise),
-        gstin: settings?.gstin || '09AAACH7409R1ZZ',
         shop: settings?.shopName || 'HIND TYRES AND ACCESSORIES',
         customer: sale.customerSnapshot?.name,
         phone: sale.customerSnapshot?.phone,
@@ -61,18 +60,18 @@ async function generateInvoicePDF({ sale, settings }) {
 
       doc.fillColor('#A9AEB8').fontSize(9).font('Helvetica');
       doc.text(
-        `${settings?.address || 'GT Road Bypass, Transport Nagar, Kanpur, UP'} | Phone: ${settings?.phone || '+91 98765 43210'}`,
+        `${settings?.address || 'GT Road Bypass, Transport Nagar, Kanpur, UP'}`,
         50,
         72
       );
       doc.text(
-        `GSTIN: ${settings?.gstin || '09AAACH7409R1ZZ'} | Email: ${settings?.email || 'contact@hindtyres.com'}`,
+        `Phone: ${settings?.phone || '+91 98765 43210'} | Email: ${settings?.email || 'contact@hindtyres.com'}`,
         50,
         86
       );
 
       doc.fillColor('#FFFFFF').fontSize(12).font('Helvetica-Bold');
-      doc.text('TAX INVOICE', 450, 48, { align: 'right', width: 95 });
+      doc.text('RETAIL INVOICE', 430, 48, { align: 'right', width: 115 });
 
       // --- Invoice Meta & Customer Details Box ---
       const detailsTop = 120;
@@ -118,12 +117,11 @@ async function generateInvoicePDF({ sale, settings }) {
 
       doc.fillColor('#FFFFFF').fontSize(9).font('Helvetica-Bold');
       doc.text('#', 44, y + 6, { width: 20 });
-      doc.text('Item Description', 70, y + 6, { width: 170 });
-      doc.text('Size / Model', 245, y + 6, { width: 95 });
-      doc.text('Qty', 345, y + 6, { width: 30, align: 'center' });
-      doc.text('Rate', 380, y + 6, { width: 55, align: 'right' });
-      doc.text('GST %', 440, y + 6, { width: 40, align: 'right' });
-      doc.text('Amount', 485, y + 6, { width: 65, align: 'right' });
+      doc.text('Item Description', 70, y + 6, { width: 195 });
+      doc.text('Size / Model', 270, y + 6, { width: 100 });
+      doc.text('Qty', 375, y + 6, { width: 30, align: 'center' });
+      doc.text('Rate (₹)', 415, y + 6, { width: 60, align: 'right' });
+      doc.text('Total (₹)', 480, y + 6, { width: 70, align: 'right' });
 
       y += 22;
 
@@ -140,14 +138,13 @@ async function generateInvoicePDF({ sale, settings }) {
         doc.text(String(index + 1), 44, y + 7, { width: 20 });
 
         doc.font('Helvetica-Bold');
-        doc.text(item.name, 70, y + 7, { width: 170 });
+        doc.text(item.name, 70, y + 7, { width: 195 });
         doc.font('Helvetica');
 
-        doc.text(item.size || '-', 245, y + 7, { width: 95 });
-        doc.text(String(item.qty), 345, y + 7, { width: 30, align: 'center' });
-        doc.text(formatRupees(item.unitPricePaise, false), 380, y + 7, { width: 55, align: 'right' });
-        doc.text(`${item.gstPercent}%`, 440, y + 7, { width: 40, align: 'right' });
-        doc.text(formatRupees(item.lineTotalPaise, false), 485, y + 7, { width: 65, align: 'right' });
+        doc.text(item.size || '-', 270, y + 7, { width: 100 });
+        doc.text(String(item.qty), 375, y + 7, { width: 30, align: 'center' });
+        doc.text(formatRupees(item.unitPricePaise, false), 415, y + 7, { width: 60, align: 'right' });
+        doc.text(formatRupees(item.lineTotalPaise, false), 480, y + 7, { width: 70, align: 'right' });
 
         y += rowHeight;
       });
@@ -161,7 +158,7 @@ async function generateInvoicePDF({ sale, settings }) {
       if (qrBuffer) {
         doc.image(qrBuffer, 48, y, { width: 85 });
         doc.fillColor('#64748b').fontSize(7.5).font('Helvetica');
-        doc.text('Scan to verify authentic invoice', 44, y + 90, { width: 100, align: 'center' });
+        doc.text('Scan to verify invoice', 44, y + 90, { width: 100, align: 'center' });
       }
 
       // Rupees in Words Box
@@ -176,7 +173,7 @@ async function generateInvoicePDF({ sale, settings }) {
 
       const calcRow = (label, valueStr, currentY, isBold = false, isHighlight = false) => {
         if (isHighlight) {
-          doc.rect(summaryLeft, currentY - 2, summaryWidth, 18).fill(accentYellow);
+          doc.rect(summaryLeft, currentY - 2, summaryWidth, 20).fill(accentYellow);
           doc.fillColor('#0A0A0C').fontSize(10).font('Helvetica-Bold');
         } else {
           doc.fillColor(isBold ? primaryColor : '#475569')
@@ -188,14 +185,13 @@ async function generateInvoicePDF({ sale, settings }) {
         doc.text(valueStr, summaryLeft + 120, currentY, { width: 105, align: 'right' });
       };
 
-      calcRow('Taxable Subtotal:', formatRupees(sale.subtotalPaise), y + 6);
-      calcRow('Total GST Output:', `+ ${formatRupees(sale.gstPaise)}`, y + 22);
+      calcRow('Subtotal:', formatRupees(sale.subtotalPaise), y + 10);
       if (sale.discountPaise > 0) {
-        calcRow('Discount Applied:', `- ${formatRupees(sale.discountPaise)}`, y + 38);
+        calcRow('Discount Applied:', `- ${formatRupees(sale.discountPaise)}`, y + 28);
       } else {
-        calcRow('Discount:', '₹0.00', y + 38);
+        calcRow('Discount:', '₹0.00', y + 28);
       }
-      calcRow('Grand Total (INR):', formatRupees(sale.totalPaise), y + 60, true, true);
+      calcRow('Grand Total (INR):', formatRupees(sale.totalPaise), y + 54, true, true);
 
       // --- Terms & Warranty Section ---
       y += 105;
@@ -203,29 +199,23 @@ async function generateInvoicePDF({ sale, settings }) {
       doc.fillColor(primaryColor).fontSize(8.5).font('Helvetica-Bold');
       doc.text('TERMS & WARRANTY CONDITIONS:', 44, y + 8);
       doc.fillColor('#64748b').fontSize(7.5).font('Helvetica');
-      doc.text(
-        settings?.termsAndConditions ||
-        '1. Manufacturer warranty applies to all tyres against manufacturing defects.\n2. Retain original invoice for claiming warranty.\n3. Damage due to cuts, punctures, or bad alignment is not covered under warranty.',
-        44,
-        y + 22,
-        { width: 334, lineGap: 2 }
-      );
+      const terms = settings?.termsAndConditions ||
+        '1. Genuine manufacturer warranty applies against defects.\n2. Original receipt must be produced for warranty claims.\n3. Wheel alignment & balancing recommended every 5,000 km.';
+      doc.text(terms, 44, y + 22, { width: 335, height: 45 });
 
-      // Shop Stamp / Signature Box
-      doc.rect(396, y, 163, 75).strokeColor(borderColor).stroke();
-      doc.fillColor(primaryColor).fontSize(8.5).font('Helvetica-Bold');
-      doc.text('FOR HIND TYRES & ACC.', 404, y + 8, { width: 147, align: 'center' });
-      doc.fillColor('#94a3b8').fontSize(7).font('Helvetica');
-      doc.text('Authorised Signatory / Cashier', 404, y + 60, { width: 147, align: 'center' });
+      // Authorized Signatory Box
+      doc.rect(395, y, 164, 75).strokeColor(borderColor).stroke();
+      doc.fillColor(primaryColor).fontSize(8).font('Helvetica-Bold');
+      doc.text(`For ${settings?.shopName || 'HIND TYRES & ACCESSORIES'}`, 402, y + 8, { width: 150, align: 'center' });
+      doc.fillColor('#64748b').fontSize(7.5).font('Helvetica');
+      doc.text('Authorised Signatory', 402, y + 58, { width: 150, align: 'center' });
 
-      // --- Footer ---
-      const pageBottom = 780;
-      doc.rect(36, pageBottom, 523, 20).fill(lightGray);
-      doc.fillColor('#475569').fontSize(8).font('Helvetica-Bold');
+      // Footer notice
+      doc.fillColor('#94a3b8').fontSize(7.5).font('Helvetica');
       doc.text(
-        settings?.invoiceFooter || 'Thank you for your business! Ride safely with genuine tyres.',
+        settings?.invoiceFooter || 'Thank you for your business! Drive safely.',
         36,
-        pageBottom + 6,
+        775,
         { width: 523, align: 'center' }
       );
 
@@ -236,4 +226,6 @@ async function generateInvoicePDF({ sale, settings }) {
   });
 }
 
-module.exports = { generateInvoicePDF };
+module.exports = {
+  generateInvoicePDF,
+};

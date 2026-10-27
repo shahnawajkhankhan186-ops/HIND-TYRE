@@ -23,7 +23,7 @@ export default function Accessories() {
     sku: '',
     purchasePriceRupees: '',
     sellingPriceRupees: '',
-    gstPercent: 18,
+    gstPercent: 0,
     quantity: 10,
     lowStockThreshold: 5,
   });
@@ -61,7 +61,7 @@ export default function Accessories() {
       sku: `ACC-${Date.now().toString().slice(-6)}`,
       purchasePriceRupees: '',
       sellingPriceRupees: '',
-      gstPercent: 18,
+      gstPercent: 0,
       quantity: 10,
       lowStockThreshold: 5,
     });
@@ -76,7 +76,7 @@ export default function Accessories() {
       sku: item.sku,
       purchasePriceRupees: (item.purchasePricePaise / 100).toString(),
       sellingPriceRupees: (item.sellingPricePaise / 100).toString(),
-      gstPercent: item.gstPercent,
+      gstPercent: 0,
       quantity: item.quantity,
       lowStockThreshold: item.lowStockThreshold,
     });
@@ -97,7 +97,7 @@ export default function Accessories() {
         sku: formData.sku.toUpperCase(),
         purchasePricePaise: rupeesToPaise(formData.purchasePriceRupees),
         sellingPricePaise: rupeesToPaise(formData.sellingPriceRupees),
-        gstPercent: Number(formData.gstPercent || 18),
+        gstPercent: 0,
         quantity: parseInt(formData.quantity || 0, 10),
         lowStockThreshold: parseInt(formData.lowStockThreshold || 5, 10),
       };
@@ -199,7 +199,6 @@ export default function Accessories() {
                   <th>Category</th>
                   <th>SKU</th>
                   <th className="text-end">Selling Rate</th>
-                  <th className="text-center">GST %</th>
                   <th className="text-center">Stock</th>
                   <th className="text-end">Actions</th>
                 </tr>
@@ -217,7 +216,6 @@ export default function Accessories() {
                     <td className="text-end font-monospace text-dark fw-bold">
                       {formatRupees(item.sellingPricePaise)}
                     </td>
-                    <td className="text-center text-muted">{item.gstPercent}%</td>
                     <td className="text-center">
                       <span className={`badge ${item.quantity <= 0 ? 'badge-pill-danger' : item.quantity <= item.lowStockThreshold ? 'badge-pill-warning' : 'badge-pill-success'} extra-small`}>
                         {item.quantity} units
@@ -323,18 +321,7 @@ export default function Accessories() {
                       />
                     </div>
 
-                    <div className="col-4">
-                      <label className="form-label text-dark small fw-semibold">GST Rate (%)</label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        value={formData.gstPercent}
-                        onChange={(e) => setFormData({ ...formData, gstPercent: e.target.value })}
-                        required
-                      />
-                    </div>
-
-                    <div className="col-4">
+                    <div className="col-6">
                       <label className="form-label text-dark small fw-semibold">Stock Qty</label>
                       <input
                         type="number"
@@ -345,7 +332,7 @@ export default function Accessories() {
                       />
                     </div>
 
-                    <div className="col-4">
+                    <div className="col-6">
                       <label className="form-label text-dark small fw-semibold">Threshold</label>
                       <input
                         type="number"

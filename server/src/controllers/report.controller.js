@@ -174,7 +174,7 @@ async function exportReportCSV(req, res, next) {
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
 
     if (type === 'sales') {
-      res.write('Invoice No,Date,Customer Name,Phone,Payment Mode,Subtotal,GST,Discount,Total\n');
+      res.write('Invoice No,Date,Customer Name,Phone,Payment Mode,Subtotal,Discount,Total\n');
       const cursor = Sale.find({ status: 'COMPLETED', ...dateFilter }).sort({ createdAt: -1 }).cursor();
       for await (const sale of cursor) {
         const row = [
@@ -184,7 +184,6 @@ async function exportReportCSV(req, res, next) {
           escapeCSV(sale.customerSnapshot.phone),
           escapeCSV(sale.paymentMode),
           paiseToRupees(sale.subtotalPaise),
-          paiseToRupees(sale.gstPaise),
           paiseToRupees(sale.discountPaise),
           paiseToRupees(sale.totalPaise),
         ].join(',');

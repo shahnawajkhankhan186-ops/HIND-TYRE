@@ -7,11 +7,11 @@ const settingsSchema = z.object({
   address: z.string().min(5),
   phone: z.string().min(8),
   email: z.string().email(),
-  gstin: z.string().min(10),
+  gstin: z.string().optional().default(''),
   logoUrl: z.string().optional().default(''),
   invoiceFooter: z.string().optional().default(''),
   termsAndConditions: z.string().optional().default(''),
-  defaultGstPercent: z.number().min(0).max(100).default(28),
+  defaultGstPercent: z.number().optional().default(0),
   maxDiscountPercent: z.number().min(0).max(100).default(15),
   adminReceiptEmail: z.string().email().optional().default('admin@hindtyres.com'),
 });

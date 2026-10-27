@@ -147,7 +147,6 @@ export default function Reports() {
                       <th>Customer</th>
                       <th>Payment</th>
                       <th className="text-end">Subtotal</th>
-                      <th className="text-end">GST Output</th>
                       <th className="text-end">Grand Total</th>
                     </tr>
                   </thead>
@@ -164,7 +163,6 @@ export default function Reports() {
                           <span className="badge bg-light text-dark border extra-small">{s.paymentMode}</span>
                         </td>
                         <td className="text-end font-monospace text-muted small">{formatRupees(s.subtotalPaise)}</td>
-                        <td className="text-end font-monospace text-muted small">+{formatRupees(s.gstPaise)}</td>
                         <td className="text-end font-monospace text-dark fw-bold">{formatRupees(s.totalPaise)}</td>
                       </tr>
                     ))}

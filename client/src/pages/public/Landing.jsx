@@ -980,13 +980,6 @@ export default function Landing() {
                     {shopSettings?.email || 'contact@hindtyres.com'}
                   </a>
                 </li>
-                {shopSettings?.gstin && (
-                  <li className="d-flex align-items-center gap-2 pt-1">
-                    <span className="badge bg-dark border text-warning font-monospace py-1 px-2" style={{ borderColor: 'var(--border-dark)', fontSize: '0.74rem' }}>
-                      GSTIN: {shopSettings.gstin}
-                    </span>
-                  </li>
-                )}
                 <li className="d-flex align-items-start gap-2">
                   <Clock size={16} style={{ color: 'var(--accent)' }} className="flex-shrink-0 mt-0.5" />
                   <div className="text-secondary">

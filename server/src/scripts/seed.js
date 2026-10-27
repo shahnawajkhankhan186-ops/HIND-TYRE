@@ -36,12 +36,12 @@ async function seedDatabase() {
       address: 'Shop No. 12-14, GT Road Bypass, Transport Nagar, Kanpur, UP - 208001',
       phone: '+91 98765 43210',
       email: 'contact@hindtyres.com',
-      gstin: '09AAACH7409R1ZZ',
+      gstin: '',
       logoUrl: '',
       invoiceFooter: 'Goods once sold cannot be returned after 7 days. Tyre warranty as per company norms.',
       termsAndConditions:
-        '1. Manufacturer warranty applies to all tyres against manufacturing defects.\n2. Original GST invoice must be produced for all warranty claims.\n3. Wheel alignment & balancing recommended every 5,000 km.\n4. Damaged or repaired tyres outside authorised centres void warranty.',
-      defaultGstPercent: 28,
+        '1. Manufacturer warranty applies to all tyres against manufacturing defects.\n2. Original invoice must be produced for all warranty claims.\n3. Wheel alignment & balancing recommended every 5,000 km.\n4. Damaged or repaired tyres outside authorised centres void warranty.',
+      defaultGstPercent: 0,
       maxDiscountPercent: 15,
       adminReceiptEmail: 'admin@hindtyres.com',
     });
@@ -704,9 +704,12 @@ async function seedDatabase() {
         quantity: 18,
         lowStockThreshold: 5,
       },
-    ];
+    const tyresWithMat = tyresData.map((t, idx) => ({
+      ...t,
+      materialNumber: t.materialNumber || `MAT-${t.sku || (100000 + idx)}`,
+    }));
 
-    const insertedTyres = await Tyre.insertMany(tyresData);
+    const insertedTyres = await Tyre.insertMany(tyresWithMat);
 
     // Initial Stock Ledger movements for tyres
     const initialTyreMovements = insertedTyres.map(tyre => ({

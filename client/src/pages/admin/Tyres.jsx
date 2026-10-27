@@ -45,10 +45,11 @@ export default function Tyres() {
     vehicleType: 'Car',
     tubeType: 'Tubeless',
     sku: '',
+    materialNumber: '',
     purchasePriceRupees: '',
+    actualPriceRupees: '',
     sellingPriceRupees: '',
-    mrpRupees: '',
-    gstPercent: 28,
+    gstPercent: 0,
     quantity: 0,
     lowStockThreshold: 5,
   });
@@ -123,10 +124,11 @@ export default function Tyres() {
       vehicleType: 'Car',
       tubeType: 'Tubeless',
       sku: `TYRE-${Date.now().toString().slice(-6)}`,
+      materialNumber: `MAT-${Date.now().toString().slice(-6)}`,
       purchasePriceRupees: '',
+      actualPriceRupees: '',
       sellingPriceRupees: '',
-      mrpRupees: '',
-      gstPercent: 28,
+      gstPercent: 0,
       quantity: 10,
       lowStockThreshold: 5,
     });
@@ -134,6 +136,11 @@ export default function Tyres() {
   };
 
   const handleOpenEdit = (t) => {
+    const purchaseRupees = (t.purchasePricePaise / 100).toString();
+    const actualRupees = t.actualPricePaise
+      ? (t.actualPricePaise / 100).toFixed(2)
+      : (Number(purchaseRupees) * 0.97).toFixed(2);
+
     setEditingTyre(t);
     setFormData({
       companyId: t.companyId?._id || t.companyId,
@@ -142,10 +149,11 @@ export default function Tyres() {
       vehicleType: t.vehicleType,
       tubeType: t.tubeType,
       sku: t.sku,
-      purchasePriceRupees: (t.purchasePricePaise / 100).toString(),
+      materialNumber: t.materialNumber || '',
+      purchasePriceRupees: purchaseRupees,
+      actualPriceRupees: actualRupees,
       sellingPriceRupees: (t.sellingPricePaise / 100).toString(),
-      mrpRupees: (t.mrpPaise / 100).toString(),
-      gstPercent: t.gstPercent,
+      gstPercent: 0,
       quantity: t.quantity,
       lowStockThreshold: t.lowStockThreshold,
     });
@@ -154,12 +162,17 @@ export default function Tyres() {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    if (!formData.companyId || !formData.modelName || !formData.size) {
-      return toast.error('Please complete all mandatory tyre specifications');
+    if (!formData.companyId || !formData.modelName || !formData.size || !formData.materialNumber?.trim()) {
+      return toast.error('Please complete all mandatory tyre specifications including Material Number');
     }
 
     try {
       setSaving(true);
+      const purchasePricePaise = rupeesToPaise(formData.purchasePriceRupees);
+      const actualPricePaise = formData.actualPriceRupees
+        ? rupeesToPaise(formData.actualPriceRupees)
+        : Math.round(purchasePricePaise * 0.97);
+
       const payload = {
         companyId: formData.companyId,
         modelName: formData.modelName,
@@ -167,10 +180,12 @@ export default function Tyres() {
         vehicleType: formData.vehicleType,
         tubeType: formData.tubeType,
         sku: formData.sku.toUpperCase(),
-        purchasePricePaise: rupeesToPaise(formData.purchasePriceRupees),
+        materialNumber: formData.materialNumber.trim().toUpperCase(),
+        purchasePricePaise,
+        actualPricePaise,
+        mrpPaise: actualPricePaise,
         sellingPricePaise: rupeesToPaise(formData.sellingPriceRupees),
-        mrpPaise: rupeesToPaise(formData.mrpRupees || formData.sellingPriceRupees),
-        gstPercent: Number(formData.gstPercent || 28),
+        gstPercent: 0,
         quantity: parseInt(formData.quantity || 0, 10),
         lowStockThreshold: parseInt(formData.lowStockThreshold || 5, 10),
       };
@@ -264,7 +279,7 @@ export default function Tyres() {
           <div>
             <h1 className="page-title">Tyre Catalog & Stock Manager</h1>
             <p className="page-subtitle">
-              Multi-company inventory, sizes, selling rates, GST & bulk price adjustment
+              Multi-company inventory, sizes, selling rates & bulk price adjustment
             </p>
           </div>
           <div className="d-flex align-items-center gap-2">
@@ -355,7 +370,7 @@ export default function Tyres() {
       {/* Catalog Table */}
       <div className="table-container-card">
         {loading ? (
-          <TableSkeleton rows={8} cols={8} />
+          <TableSkeleton rows={8} cols={9} />
         ) : tyres.length === 0 ? (
           <div className="p-5 text-center text-muted">
             No tyres found matching the criteria.
@@ -367,11 +382,11 @@ export default function Tyres() {
                 <tr>
                   <th>Brand</th>
                   <th>Model Name</th>
+                  <th>Material No</th>
                   <th>Size</th>
                   <th>Vehicle</th>
                   <th className="text-end">Cost Price</th>
                   <th className="text-end">Selling Price</th>
-                  <th className="text-center">GST %</th>
                   <th className="text-center">Stock</th>
                   <th className="text-end">Actions</th>
                 </tr>
@@ -387,19 +402,30 @@ export default function Tyres() {
                         <div className="text-dark fw-semibold small">{t.modelName}</div>
                         <div className="text-muted extra-small font-monospace">SKU: {t.sku}</div>
                       </td>
+                      <td className="font-monospace small">
+                        {t.materialNumber ? (
+                          <span className="badge bg-light text-dark border font-monospace px-2 py-1">
+                            {t.materialNumber}
+                          </span>
+                        ) : (
+                          <span className="text-muted">-</span>
+                        )}
+                      </td>
                       <td className="text-dark font-monospace fw-semibold">{t.size}</td>
                       <td>
                         <span className="badge bg-light text-dark border extra-small">
                           {t.vehicleType} ({t.tubeType})
                         </span>
                       </td>
-                      <td className="text-end text-muted font-monospace small">
-                        {formatRupees(t.purchasePricePaise)}
+                      <td className="text-end font-monospace small">
+                        <div className="text-dark fw-semibold">{formatRupees(t.purchasePricePaise)}</div>
+                        <div className="extra-small text-success">
+                          Act: {formatRupees(t.actualPricePaise || Math.round(t.purchasePricePaise * 0.97))}
+                        </div>
                       </td>
                       <td className="text-end text-dark font-monospace fw-bold fs-6">
                         {formatRupees(t.sellingPricePaise)}
                       </td>
-                      <td className="text-center text-muted small">{t.gstPercent}%</td>
                       <td className="text-center">
                         <span className={`badge ${isOut ? 'badge-pill-danger' : isLow ? 'badge-pill-warning' : 'badge-pill-success'} extra-small`}>
                           {t.quantity} units
@@ -501,7 +527,7 @@ export default function Tyres() {
                       />
                     </div>
 
-                    <div className="col-12 col-md-6">
+                    <div className="col-12 col-md-4">
                       <label className="form-label text-dark small fw-semibold">Tyre Size *</label>
                       <input
                         type="text"
@@ -513,7 +539,7 @@ export default function Tyres() {
                       />
                     </div>
 
-                    <div className="col-12 col-md-6">
+                    <div className="col-12 col-md-4">
                       <label className="form-label text-dark small fw-semibold">Unique SKU *</label>
                       <input
                         type="text"
@@ -525,7 +551,19 @@ export default function Tyres() {
                       />
                     </div>
 
-                    <div className="col-6 col-md-4">
+                    <div className="col-12 col-md-4">
+                      <label className="form-label text-dark small fw-bold">Material Number *</label>
+                      <input
+                        type="text"
+                        className="form-control font-monospace text-uppercase"
+                        placeholder="e.g. 1004523 or MAT-80100"
+                        value={formData.materialNumber}
+                        onChange={(e) => setFormData({ ...formData, materialNumber: e.target.value.toUpperCase() })}
+                        required
+                      />
+                    </div>
+
+                    <div className="col-12 col-md-6">
                       <label className="form-label text-dark small fw-semibold">Vehicle Category</label>
                       <select
                         className="form-select"
@@ -538,7 +576,7 @@ export default function Tyres() {
                       </select>
                     </div>
 
-                    <div className="col-6 col-md-4">
+                    <div className="col-12 col-md-6">
                       <label className="form-label text-dark small fw-semibold">Tube Type</label>
                       <select
                         className="form-select"
@@ -550,33 +588,49 @@ export default function Tyres() {
                       </select>
                     </div>
 
-                    <div className="col-12 col-md-4">
-                      <label className="form-label text-dark small fw-semibold">GST Rate (%)</label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        value={formData.gstPercent}
-                        onChange={(e) => setFormData({ ...formData, gstPercent: e.target.value })}
-                        required
-                      />
-                    </div>
-
                     {/* Pricing in Rupees */}
                     <div className="col-12 col-md-4">
-                      <label className="form-label text-muted small fw-semibold">Purchase Price (₹)</label>
+                      <label className="form-label text-dark small fw-semibold">Purchase Price (₹) *</label>
                       <input
                         type="number"
                         step="0.01"
                         className="form-control"
                         placeholder="0.00"
                         value={formData.purchasePriceRupees}
-                        onChange={(e) => setFormData({ ...formData, purchasePriceRupees: e.target.value })}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          const num = parseFloat(val);
+                          const autoActual = !isNaN(num) && num > 0 ? (num * 0.97).toFixed(2) : '';
+                          setFormData({
+                            ...formData,
+                            purchasePriceRupees: val,
+                            actualPriceRupees: autoActual,
+                          });
+                        }}
                         required
                       />
                     </div>
 
                     <div className="col-12 col-md-4">
-                      <label className="form-label text-dark small fw-bold">Selling Price Ex-GST (₹) *</label>
+                      <div className="d-flex justify-content-between align-items-center mb-1">
+                        <label className="form-label text-dark small fw-bold m-0">Actual Price (₹)</label>
+                        <span className="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 extra-small">
+                          -3% Less
+                        </span>
+                      </div>
+                      <input
+                        type="number"
+                        step="0.01"
+                        className="form-control font-monospace"
+                        placeholder="0.00"
+                        value={formData.actualPriceRupees}
+                        onChange={(e) => setFormData({ ...formData, actualPriceRupees: e.target.value })}
+                      />
+                      <div className="text-muted extra-small mt-1">Purchase se 3% kam (editable)</div>
+                    </div>
+
+                    <div className="col-12 col-md-4">
+                      <label className="form-label text-dark small fw-bold">Selling Price (₹) *</label>
                       <input
                         type="number"
                         step="0.01"
@@ -585,18 +639,6 @@ export default function Tyres() {
                         value={formData.sellingPriceRupees}
                         onChange={(e) => setFormData({ ...formData, sellingPriceRupees: e.target.value })}
                         required
-                      />
-                    </div>
-
-                    <div className="col-12 col-md-4">
-                      <label className="form-label text-muted small fw-semibold">Printed MRP (₹)</label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        className="form-control"
-                        placeholder="0.00"
-                        value={formData.mrpRupees}
-                        onChange={(e) => setFormData({ ...formData, mrpRupees: e.target.value })}
                       />
                     </div>
 

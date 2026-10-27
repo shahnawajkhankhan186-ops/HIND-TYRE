@@ -10,7 +10,7 @@ const accessorySchema = z.object({
   purchasePricePaise: z.number().int().min(0).default(0),
   sellingPricePaise: z.number().int().min(0, 'Selling price must be positive'),
   mrpPaise: z.number().int().min(0).default(0),
-  gstPercent: z.number().min(0).max(100).default(18),
+  gstPercent: z.number().min(0).max(100).default(0),
   quantity: z.number().int().min(0).default(0),
   lowStockThreshold: z.number().int().min(0).default(10),
   isActive: z.boolean().optional().default(true),
