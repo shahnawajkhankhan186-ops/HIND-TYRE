@@ -83,6 +83,7 @@ describe('1. Pricing Engine & Financial Calculations (Integer Paise)', () => {
       size: '185/65 R15',
       vehicleType: 'Car',
       sku: `TEST-PRICE-${Date.now()}`,
+      materialNumber: `MAT-PRICE-${Date.now()}`,
       purchasePricePaise: 300000, // ₹3,000.00
       sellingPricePaise: 400000,  // ₹4,000.00
       mrpPaise: 450000,
@@ -143,6 +144,7 @@ describe('2. Stock Concurrency (Atomic Transactions & Over-selling Protection)',
       size: '205/55 R16',
       vehicleType: 'Car',
       sku: `CONCURRENCY-${Date.now()}-${Math.random().toString(36).substring(7)}`,
+      materialNumber: `MAT-CONCUR-${Date.now()}-${Math.random().toString(36).substring(7)}`,
       purchasePricePaise: 350000,
       sellingPricePaise: 500000,
       mrpPaise: 600000,
@@ -218,6 +220,7 @@ describe('3. Sale Cancellation & Inventory Restoration', () => {
       size: '145/80 R12',
       vehicleType: 'Car',
       sku: `RESTORE-${Date.now()}`,
+      materialNumber: `MAT-RESTORE-${Date.now()}`,
       purchasePricePaise: 180000,
       sellingPricePaise: 250000,
       mrpPaise: 300000,

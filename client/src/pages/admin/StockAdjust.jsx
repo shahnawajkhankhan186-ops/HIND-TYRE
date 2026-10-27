@@ -128,7 +128,7 @@ export default function StockAdjust() {
                   {itemType === 'Tyre'
                     ? tyres.map((t) => (
                         <option key={t._id} value={t._id}>
-                          {t.companyId?.name} {t.modelName} ({t.size}) – Current Stock: {t.quantity}
+                          {t.companyId?.name} {t.modelName} ({t.size}){t.materialNumber ? ` [Mat: ${t.materialNumber}]` : ''} – Current Stock: {t.quantity}
                         </option>
                       ))
                     : accessories.map((a) => (

@@ -704,9 +704,12 @@ async function seedDatabase() {
         quantity: 18,
         lowStockThreshold: 5,
       },
-    ];
+    const tyresWithMat = tyresData.map((t, idx) => ({
+      ...t,
+      materialNumber: t.materialNumber || `MAT-${t.sku || (100000 + idx)}`,
+    }));
 
-    const insertedTyres = await Tyre.insertMany(tyresData);
+    const insertedTyres = await Tyre.insertMany(tyresWithMat);
 
     // Initial Stock Ledger movements for tyres
     const initialTyreMovements = insertedTyres.map(tyre => ({

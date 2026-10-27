@@ -45,6 +45,7 @@ export default function Tyres() {
     vehicleType: 'Car',
     tubeType: 'Tubeless',
     sku: '',
+    materialNumber: '',
     purchasePriceRupees: '',
     sellingPriceRupees: '',
     mrpRupees: '',
@@ -123,6 +124,7 @@ export default function Tyres() {
       vehicleType: 'Car',
       tubeType: 'Tubeless',
       sku: `TYRE-${Date.now().toString().slice(-6)}`,
+      materialNumber: `MAT-${Date.now().toString().slice(-6)}`,
       purchasePriceRupees: '',
       sellingPriceRupees: '',
       mrpRupees: '',
@@ -142,6 +144,7 @@ export default function Tyres() {
       vehicleType: t.vehicleType,
       tubeType: t.tubeType,
       sku: t.sku,
+      materialNumber: t.materialNumber || '',
       purchasePriceRupees: (t.purchasePricePaise / 100).toString(),
       sellingPriceRupees: (t.sellingPricePaise / 100).toString(),
       mrpRupees: (t.mrpPaise / 100).toString(),
@@ -154,8 +157,8 @@ export default function Tyres() {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    if (!formData.companyId || !formData.modelName || !formData.size) {
-      return toast.error('Please complete all mandatory tyre specifications');
+    if (!formData.companyId || !formData.modelName || !formData.size || !formData.materialNumber?.trim()) {
+      return toast.error('Please complete all mandatory tyre specifications including Material Number');
     }
 
     try {
@@ -167,6 +170,7 @@ export default function Tyres() {
         vehicleType: formData.vehicleType,
         tubeType: formData.tubeType,
         sku: formData.sku.toUpperCase(),
+        materialNumber: formData.materialNumber.trim().toUpperCase(),
         purchasePricePaise: rupeesToPaise(formData.purchasePriceRupees),
         sellingPricePaise: rupeesToPaise(formData.sellingPriceRupees),
         mrpPaise: rupeesToPaise(formData.mrpRupees || formData.sellingPriceRupees),
@@ -355,7 +359,7 @@ export default function Tyres() {
       {/* Catalog Table */}
       <div className="table-container-card">
         {loading ? (
-          <TableSkeleton rows={8} cols={8} />
+          <TableSkeleton rows={8} cols={9} />
         ) : tyres.length === 0 ? (
           <div className="p-5 text-center text-muted">
             No tyres found matching the criteria.
@@ -367,6 +371,7 @@ export default function Tyres() {
                 <tr>
                   <th>Brand</th>
                   <th>Model Name</th>
+                  <th>Material No</th>
                   <th>Size</th>
                   <th>Vehicle</th>
                   <th className="text-end">Cost Price</th>
@@ -385,6 +390,15 @@ export default function Tyres() {
                       <td>
                         <div className="text-dark fw-semibold small">{t.modelName}</div>
                         <div className="text-muted extra-small font-monospace">SKU: {t.sku}</div>
+                      </td>
+                      <td className="font-monospace small">
+                        {t.materialNumber ? (
+                          <span className="badge bg-light text-dark border font-monospace px-2 py-1">
+                            {t.materialNumber}
+                          </span>
+                        ) : (
+                          <span className="text-muted">-</span>
+                        )}
                       </td>
                       <td className="text-dark font-monospace fw-semibold">{t.size}</td>
                       <td>
@@ -499,7 +513,7 @@ export default function Tyres() {
                       />
                     </div>
 
-                    <div className="col-12 col-md-6">
+                    <div className="col-12 col-md-4">
                       <label className="form-label text-dark small fw-semibold">Tyre Size *</label>
                       <input
                         type="text"
@@ -511,7 +525,7 @@ export default function Tyres() {
                       />
                     </div>
 
-                    <div className="col-12 col-md-6">
+                    <div className="col-12 col-md-4">
                       <label className="form-label text-dark small fw-semibold">Unique SKU *</label>
                       <input
                         type="text"
@@ -519,6 +533,18 @@ export default function Tyres() {
                         placeholder="e.g. MRF-ZAP-1856515"
                         value={formData.sku}
                         onChange={(e) => setFormData({ ...formData, sku: e.target.value.toUpperCase() })}
+                        required
+                      />
+                    </div>
+
+                    <div className="col-12 col-md-4">
+                      <label className="form-label text-dark small fw-bold">Material Number *</label>
+                      <input
+                        type="text"
+                        className="form-control font-monospace text-uppercase"
+                        placeholder="e.g. 1004523 or MAT-80100"
+                        value={formData.materialNumber}
+                        onChange={(e) => setFormData({ ...formData, materialNumber: e.target.value.toUpperCase() })}
                         required
                       />
                     </div>

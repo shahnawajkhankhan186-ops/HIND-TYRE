@@ -301,7 +301,8 @@ export default function NewSale() {
       const matchSize = t.size.toLowerCase().includes(q);
       const matchBrand = t.companyId?.name?.toLowerCase().includes(q);
       const matchSku = t.sku.toLowerCase().includes(q);
-      if (!matchModel && !matchSize && !matchBrand && !matchSku) return false;
+      const matchMat = t.materialNumber?.toLowerCase().includes(q);
+      if (!matchModel && !matchSize && !matchBrand && !matchSku && !matchMat) return false;
     }
     return true;
   });
@@ -628,6 +629,11 @@ export default function NewSale() {
                             <div className="font-monospace fw-bold fs-6 mb-2" style={{ color: 'var(--text-on-light)' }}>{tyre.size}</div>
 
                             <div className="d-flex flex-wrap gap-1 mb-2">
+                              {tyre.materialNumber && (
+                                <span className="badge bg-light text-dark border font-monospace extra-small">
+                                  Mat: {tyre.materialNumber}
+                                </span>
+                              )}
                               <span className="badge bg-light text-muted border extra-small">
                                 {tyre.vehicleType}
                               </span>

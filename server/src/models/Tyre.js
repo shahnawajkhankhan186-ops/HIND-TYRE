@@ -49,6 +49,14 @@ const tyreSchema = new mongoose.Schema(
       trim: true,
       uppercase: true,
     },
+    materialNumber: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      uppercase: true,
+      index: true,
+    },
     purchasePricePaise: {
       type: Number,
       required: true,
