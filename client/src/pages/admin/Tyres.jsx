@@ -47,8 +47,8 @@ export default function Tyres() {
     sku: '',
     materialNumber: '',
     purchasePriceRupees: '',
+    actualPriceRupees: '',
     sellingPriceRupees: '',
-    mrpRupees: '',
     gstPercent: 0,
     quantity: 0,
     lowStockThreshold: 5,
@@ -126,8 +126,8 @@ export default function Tyres() {
       sku: `TYRE-${Date.now().toString().slice(-6)}`,
       materialNumber: `MAT-${Date.now().toString().slice(-6)}`,
       purchasePriceRupees: '',
+      actualPriceRupees: '',
       sellingPriceRupees: '',
-      mrpRupees: '',
       gstPercent: 0,
       quantity: 10,
       lowStockThreshold: 5,
@@ -136,6 +136,11 @@ export default function Tyres() {
   };
 
   const handleOpenEdit = (t) => {
+    const purchaseRupees = (t.purchasePricePaise / 100).toString();
+    const actualRupees = t.actualPricePaise
+      ? (t.actualPricePaise / 100).toFixed(2)
+      : (Number(purchaseRupees) * 0.97).toFixed(2);
+
     setEditingTyre(t);
     setFormData({
       companyId: t.companyId?._id || t.companyId,
@@ -145,9 +150,9 @@ export default function Tyres() {
       tubeType: t.tubeType,
       sku: t.sku,
       materialNumber: t.materialNumber || '',
-      purchasePriceRupees: (t.purchasePricePaise / 100).toString(),
+      purchasePriceRupees: purchaseRupees,
+      actualPriceRupees: actualRupees,
       sellingPriceRupees: (t.sellingPricePaise / 100).toString(),
-      mrpRupees: (t.mrpPaise / 100).toString(),
       gstPercent: 0,
       quantity: t.quantity,
       lowStockThreshold: t.lowStockThreshold,
@@ -163,6 +168,11 @@ export default function Tyres() {
 
     try {
       setSaving(true);
+      const purchasePricePaise = rupeesToPaise(formData.purchasePriceRupees);
+      const actualPricePaise = formData.actualPriceRupees
+        ? rupeesToPaise(formData.actualPriceRupees)
+        : Math.round(purchasePricePaise * 0.97);
+
       const payload = {
         companyId: formData.companyId,
         modelName: formData.modelName,
@@ -171,9 +181,10 @@ export default function Tyres() {
         tubeType: formData.tubeType,
         sku: formData.sku.toUpperCase(),
         materialNumber: formData.materialNumber.trim().toUpperCase(),
-        purchasePricePaise: rupeesToPaise(formData.purchasePriceRupees),
+        purchasePricePaise,
+        actualPricePaise,
+        mrpPaise: actualPricePaise,
         sellingPricePaise: rupeesToPaise(formData.sellingPriceRupees),
-        mrpPaise: rupeesToPaise(formData.mrpRupees || formData.sellingPriceRupees),
         gstPercent: 0,
         quantity: parseInt(formData.quantity || 0, 10),
         lowStockThreshold: parseInt(formData.lowStockThreshold || 5, 10),
@@ -406,8 +417,11 @@ export default function Tyres() {
                           {t.vehicleType} ({t.tubeType})
                         </span>
                       </td>
-                      <td className="text-end text-muted font-monospace small">
-                        {formatRupees(t.purchasePricePaise)}
+                      <td className="text-end font-monospace small">
+                        <div className="text-dark fw-semibold">{formatRupees(t.purchasePricePaise)}</div>
+                        <div className="extra-small text-success">
+                          Act: {formatRupees(t.actualPricePaise || Math.round(t.purchasePricePaise * 0.97))}
+                        </div>
                       </td>
                       <td className="text-end text-dark font-monospace fw-bold fs-6">
                         {formatRupees(t.sellingPricePaise)}
@@ -576,16 +590,43 @@ export default function Tyres() {
 
                     {/* Pricing in Rupees */}
                     <div className="col-12 col-md-4">
-                      <label className="form-label text-muted small fw-semibold">Purchase Price (₹)</label>
+                      <label className="form-label text-dark small fw-semibold">Purchase Price (₹) *</label>
                       <input
                         type="number"
                         step="0.01"
                         className="form-control"
                         placeholder="0.00"
                         value={formData.purchasePriceRupees}
-                        onChange={(e) => setFormData({ ...formData, purchasePriceRupees: e.target.value })}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          const num = parseFloat(val);
+                          const autoActual = !isNaN(num) && num > 0 ? (num * 0.97).toFixed(2) : '';
+                          setFormData({
+                            ...formData,
+                            purchasePriceRupees: val,
+                            actualPriceRupees: autoActual,
+                          });
+                        }}
                         required
                       />
+                    </div>
+
+                    <div className="col-12 col-md-4">
+                      <div className="d-flex justify-content-between align-items-center mb-1">
+                        <label className="form-label text-dark small fw-bold m-0">Actual Price (₹)</label>
+                        <span className="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 extra-small">
+                          -3% Less
+                        </span>
+                      </div>
+                      <input
+                        type="number"
+                        step="0.01"
+                        className="form-control font-monospace"
+                        placeholder="0.00"
+                        value={formData.actualPriceRupees}
+                        onChange={(e) => setFormData({ ...formData, actualPriceRupees: e.target.value })}
+                      />
+                      <div className="text-muted extra-small mt-1">Purchase se 3% kam (editable)</div>
                     </div>
 
                     <div className="col-12 col-md-4">
@@ -598,18 +639,6 @@ export default function Tyres() {
                         value={formData.sellingPriceRupees}
                         onChange={(e) => setFormData({ ...formData, sellingPriceRupees: e.target.value })}
                         required
-                      />
-                    </div>
-
-                    <div className="col-12 col-md-4">
-                      <label className="form-label text-muted small fw-semibold">Printed MRP (₹)</label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        className="form-control"
-                        placeholder="0.00"
-                        value={formData.mrpRupees}
-                        onChange={(e) => setFormData({ ...formData, mrpRupees: e.target.value })}
                       />
                     </div>
 

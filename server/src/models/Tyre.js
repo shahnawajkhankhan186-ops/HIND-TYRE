@@ -62,6 +62,13 @@ const tyreSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
+    actualPricePaise: {
+      type: Number,
+      min: 0,
+      default: function () {
+        return this.purchasePricePaise ? Math.round(this.purchasePricePaise * 0.97) : 0;
+      },
+    },
     sellingPricePaise: {
       type: Number,
       required: true,
@@ -69,7 +76,7 @@ const tyreSchema = new mongoose.Schema(
     },
     mrpPaise: {
       type: Number,
-      required: true,
+      default: 0,
       min: 0,
     },
     gstPercent: {

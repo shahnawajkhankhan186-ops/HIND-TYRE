@@ -16,8 +16,9 @@ const tyreSchema = z.object({
   sku: z.string().min(2, 'SKU is required'),
   materialNumber: z.string().min(1, 'Material number is required'),
   purchasePricePaise: z.number().int().min(0, 'Purchase price must be positive'),
+  actualPricePaise: z.number().int().min(0, 'Actual price must be positive').optional(),
   sellingPricePaise: z.number().int().min(0, 'Selling price must be positive'),
-  mrpPaise: z.number().int().min(0, 'MRP must be positive'),
+  mrpPaise: z.number().int().min(0, 'MRP must be positive').optional(),
   gstPercent: z.number().min(0).max(100).default(0),
   quantity: z.number().int().min(0).default(0),
   lowStockThreshold: z.number().int().min(0).default(5),
@@ -144,8 +145,14 @@ async function createTyre(req, res, next) {
       });
     }
 
+    const actualPricePaise = data.actualPricePaise !== undefined
+      ? data.actualPricePaise
+      : Math.round(data.purchasePricePaise * 0.97);
+
     const tyre = new Tyre({
       ...data,
+      actualPricePaise,
+      mrpPaise: data.mrpPaise || actualPricePaise,
       sku: data.sku.toUpperCase(),
       materialNumber: data.materialNumber.toUpperCase(),
     });
