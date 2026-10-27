@@ -55,13 +55,13 @@ export default function TodaySales() {
   const completedCount = sales.filter((s) => s.status === 'COMPLETED').length;
 
   return (
-    <div className="container-fluid p-3 p-md-4" style={{ minHeight: 'calc(100vh - 120px)', background: 'var(--bg-light)' }}>
+    <div className="page-container">
       {/* Header & Metrics */}
-      <div className="card-clean p-4 mb-4 bg-white">
+      <div className="page-header-card">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <div>
-            <h4 className="fw-bold m-0" style={{ color: 'var(--text-on-light)', fontFamily: 'Montserrat, sans-serif' }}>Today's Counter Invoices</h4>
-            <p className="text-muted small m-0 mt-0.5">Live transactions recorded during the current shift</p>
+            <h1 className="page-title">Today's Counter Invoices</h1>
+            <p className="page-subtitle">Live transactions recorded during the current shift</p>
           </div>
 
           <div className="d-flex align-items-center gap-3">
@@ -73,15 +73,15 @@ export default function TodaySales() {
               <div className="text-muted extra-small text-uppercase fw-semibold">Invoices</div>
               <div className="fw-bold fs-5 text-dark">{completedCount}</div>
             </div>
-            <button className="btn btn-outline-dark-custom btn-sm p-2" onClick={fetchTodaySales} title="Refresh">
-              <RefreshCw size={16} />
+            <button className="btn btn-outline-dark-custom btn-sm p-2 d-flex align-items-center justify-content-center" onClick={fetchTodaySales} title="Refresh">
+              <RefreshCw size={15} />
             </button>
           </div>
         </div>
       </div>
 
       {/* Search Bar */}
-      <div className="card-clean p-3 mb-3 bg-white">
+      <div className="filter-bar-card">
         <form onSubmit={handleSearchSubmit} className="row g-2 align-items-center">
           <div className="col-12 col-md-6 col-lg-4">
             <div className="input-group input-group-sm">
@@ -102,7 +102,7 @@ export default function TodaySales() {
       </div>
 
       {/* Table */}
-      <div className="card-clean overflow-hidden bg-white">
+      <div className="table-container-card">
         {loading ? (
           <TableSkeleton rows={5} cols={7} />
         ) : sales.length === 0 ? (

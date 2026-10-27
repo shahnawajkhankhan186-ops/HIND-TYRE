@@ -11,11 +11,11 @@ export default function CounterLayout() {
 
       {/* POS Sub-Header Navigation Bar with Yellow Active Items */}
       <div
-        className="px-3 py-2 border-bottom shadow-xs"
-        style={{ backgroundColor: 'var(--bg-charcoal)', borderColor: 'var(--border-dark)' }}
+        className="px-2 px-sm-3 py-2 border-bottom shadow-xs sticky-top"
+        style={{ backgroundColor: 'var(--bg-charcoal)', borderColor: 'var(--border-dark)', zIndex: 1030 }}
       >
         <div className="container-fluid px-0">
-          <div className="d-flex flex-wrap gap-2">
+          <div className="d-flex flex-nowrap overflow-x-auto gap-2 py-0.5 scrollbar-hidden">
             <NavLink
               to="/counter/new-sale"
               className={({ isActive }) =>

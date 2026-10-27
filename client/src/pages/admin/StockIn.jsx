@@ -96,10 +96,10 @@ export default function StockIn() {
   };
 
   return (
-    <div className="container-fluid p-3 p-md-4">
-      <div className="card-clean bg-white p-4 mb-4">
-        <h3 className="text-dark fw-bold m-0 brand-font">Stock In (Purchase Entry)</h3>
-        <p className="text-muted small m-0 mt-0.5">
+    <div className="page-container">
+      <div className="page-header-card">
+        <h1 className="page-title">Stock In (Purchase Entry)</h1>
+        <p className="page-subtitle">
           Record received tyre shipments & supplier purchases with ledger updates
         </p>
       </div>

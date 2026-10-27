@@ -57,13 +57,13 @@ export default function StockLedger() {
   };
 
   return (
-    <div className="container-fluid p-3 p-md-4">
+    <div className="page-container">
       {/* Header */}
-      <div className="card-clean bg-white p-4 mb-4">
+      <div className="page-header-card">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <div>
-            <h3 className="text-dark fw-bold m-0 brand-font">Inventory Stock Movement Ledger</h3>
-            <p className="text-muted small m-0 mt-0.5">
+            <h1 className="page-title">Inventory Stock Movement Ledger</h1>
+            <p className="page-subtitle">
               Immutable audit ledger of all stock additions, sales deductions, returns & adjustments
             </p>
           </div>
@@ -74,7 +74,7 @@ export default function StockLedger() {
       </div>
 
       {/* Filters Bar */}
-      <div className="card-clean bg-white p-3 mb-3">
+      <div className="filter-bar-card">
         <div className="row g-2 align-items-center">
           <div className="col-12 col-md-4">
             <select
@@ -111,7 +111,7 @@ export default function StockLedger() {
       </div>
 
       {/* Ledger Table */}
-      <div className="card-clean bg-white overflow-hidden mb-3">
+      <div className="table-container-card">
         {loading ? (
           <TableSkeleton rows={8} cols={7} />
         ) : movements.length === 0 ? (

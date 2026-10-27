@@ -165,7 +165,45 @@ async function getDashboardStats(req, res, next) {
         .limit(10),
     ]);
 
-    // 4. Top Selling Brands & Sizes (for Pie / Bar Charts)
+    // 4. Generate continuous 10-day sequence for Daily Revenue Graph in IST
+    const istOffsetMs = 330 * 60 * 1000;
+    const nowUTC = new Date();
+    const istNow = new Date(nowUTC.getTime() + (nowUTC.getTimezoneOffset() * 60000) + istOffsetMs);
+
+    const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    const last10DaysMap = new Map();
+    const last10DaysList = [];
+
+    for (let i = 9; i >= 0; i--) {
+      const d = new Date(istNow);
+      d.setDate(d.getDate() - i);
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      const dateKey = `${yyyy}-${mm}-${dd}`;
+      const dayLabel = `${d.getDate()} ${MONTH_NAMES[d.getMonth()]}`;
+      const dayName = i === 0 ? 'Today' : DAY_NAMES[d.getDay()];
+
+      const dayObj = {
+        date: dateKey,
+        displayDate: dayLabel,
+        dayName,
+        label: i === 0 ? `${dayLabel} (Today)` : dayLabel,
+        salesPaise: 0,
+        salesRupees: 0,
+        invoices: 0,
+      };
+      last10DaysMap.set(dateKey, dayObj);
+      last10DaysList.push(dayObj);
+    }
+
+    const startOf10DaysAgoUTC = new Date(
+      Date.UTC(istNow.getFullYear(), istNow.getMonth(), istNow.getDate() - 9, 0, 0, 0, 0) - istOffsetMs
+    );
+
+    // 5. Top Selling Brands, Sizes & 10-Day Sales Trend
     const [topBrands, topSizes, dailyTrend] = await Promise.all([
       Sale.aggregate([
         { $match: { status: 'COMPLETED' } },
@@ -195,17 +233,17 @@ async function getDashboardStats(req, res, next) {
         { $sort: { totalQty: -1 } },
         { $limit: 6 },
       ]),
-      // 7-day daily sales trend for Line Chart
+      // 10-day daily sales trend in IST timezone
       Sale.aggregate([
         {
           $match: {
             status: 'COMPLETED',
-            createdAt: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) },
+            createdAt: { $gte: startOf10DaysAgoUTC },
           },
         },
         {
           $group: {
-            _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+            _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt', timezone: '+05:30' } },
             salesPaise: { $sum: '$totalPaise' },
             invoices: { $sum: 1 },
           },
@@ -214,7 +252,17 @@ async function getDashboardStats(req, res, next) {
       ]),
     ]);
 
-    // 5. Recent Sales
+    // Populate actual revenue into last 10 days continuous map
+    dailyTrend.forEach((item) => {
+      if (last10DaysMap.has(item._id)) {
+        const entry = last10DaysMap.get(item._id);
+        entry.salesPaise = item.salesPaise;
+        entry.salesRupees = item.salesPaise / 100;
+        entry.invoices = item.invoices;
+      }
+    });
+
+    // 6. Recent Sales
     const recentSales = await Sale.find()
       .sort({ createdAt: -1 })
       .limit(6);
@@ -239,11 +287,7 @@ async function getDashboardStats(req, res, next) {
             qty: s.totalQty,
             revenuePaise: s.totalRevenuePaise,
           })),
-          dailyTrend: dailyTrend.map(d => ({
-            date: d._id,
-            salesPaise: d.salesPaise,
-            invoices: d.invoices,
-          })),
+          dailyTrend: last10DaysList,
         },
         recentSales,
       },

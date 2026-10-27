@@ -318,17 +318,17 @@ export default function NewSale() {
   });
 
   return (
-    <div className="container-fluid p-3 p-md-4" style={{ minHeight: 'calc(100vh - 120px)', background: 'var(--bg-light)' }}>
+    <div className="page-container">
       {/* Top Breadcrumb Steps Header */}
-      <div className="card-clean p-3 mb-4 bg-white">
+      <div className="page-header-card">
         <div className="d-flex flex-wrap align-items-center justify-content-between gap-3">
           <div className="d-flex align-items-center gap-2">
             <div className="p-2 rounded-3" style={{ background: 'var(--accent-soft)', color: '#B45309' }}>
               <ShoppingCart size={22} />
             </div>
             <div>
-              <h4 className="fw-bold m-0" style={{ color: 'var(--text-on-light)', fontFamily: 'Montserrat, sans-serif' }}>Counter POS Billing</h4>
-              <p className="text-muted extra-small m-0">Walk-in customer checkout & live inventory deduction</p>
+              <h1 className="page-title">Counter POS Billing</h1>
+              <p className="page-subtitle">Walk-in customer checkout & live inventory deduction</p>
             </div>
           </div>
 

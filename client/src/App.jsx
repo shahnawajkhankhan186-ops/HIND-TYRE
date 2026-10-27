@@ -40,8 +40,8 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="min-vh-100 d-flex align-items-center justify-content-center bg-dark">
-        <div className="spinner-border text-info" role="status">
+      <div className="min-vh-100 d-flex align-items-center justify-content-center" style={{ backgroundColor: '#0A0A0C' }}>
+        <div className="spinner-border text-warning" role="status">
           <span className="visually-hidden">Loading system...</span>
         </div>
       </div>

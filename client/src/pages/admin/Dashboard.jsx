@@ -18,6 +18,8 @@ import {
   Line,
   BarChart,
   Bar,
+  AreaChart,
+  Area,
   PieChart,
   Pie,
   Cell,
@@ -39,6 +41,7 @@ const PIE_COLORS = ['#FFC107', '#111318', '#6B7280', '#F59E0B', '#374151', '#FDE
 export default function Dashboard() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [chartType, setChartType] = useState('bar'); // 'bar' | 'area'
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -61,25 +64,67 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="container-fluid p-3 p-md-4" style={{ minHeight: 'calc(100vh - 120px)', background: 'var(--bg-light)' }}>
-        <h4 className="fw-bold mb-4" style={{ color: 'var(--text-on-light)', fontFamily: 'Montserrat, sans-serif' }}>Analytics & Shop Dashboard</h4>
+      <div className="page-container">
+        <h1 className="page-title mb-4">Executive Shop Dashboard</h1>
         <CardSkeleton count={4} />
       </div>
     );
   }
 
   const { today, thisMonth, stockValue, lowStockItems, outOfStockItems, charts, recentSales } = data || {};
+  const last10DaysTotalPaise = charts?.dailyTrend?.reduce((sum, d) => sum + (d.salesPaise || 0), 0) || 0;
+
+  const formatYAxisPaise = (val) => {
+    if (!val || val === 0) return '₹0';
+    const rupees = val / 100;
+    if (rupees >= 100000) {
+      return `₹${(rupees / 100000).toFixed(1)}L`;
+    }
+    if (rupees >= 1000) {
+      return `₹${(rupees / 1000).toFixed(0)}k`;
+    }
+    return `₹${rupees}`;
+  };
+
+  const CustomDailyTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const point = payload[0].payload;
+      return (
+        <div
+          className="p-2.5 bg-white shadow-lg border rounded-3"
+          style={{ borderColor: 'var(--accent)', minWidth: '170px' }}
+        >
+          <div className="fw-bold text-dark small mb-1">
+            {point.label || point.displayDate}
+          </div>
+          <div className="d-flex align-items-center justify-content-between gap-3 text-muted extra-small">
+            <span>Sales Revenue:</span>
+            <span className="fw-bold text-dark" style={{ color: '#0A0A0C' }}>
+              {formatRupees(point.salesPaise || 0)}
+            </span>
+          </div>
+          <div className="d-flex align-items-center justify-content-between gap-3 text-muted extra-small mt-0.5">
+            <span>Invoices Billed:</span>
+            <span className="fw-semibold text-secondary">
+              {point.invoices || 0} {point.invoices === 1 ? 'bill' : 'bills'}
+            </span>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
-    <div className="container-fluid p-3 p-md-4" style={{ minHeight: 'calc(100vh - 120px)', background: 'var(--bg-light)' }}>
+    <div className="page-container">
       {/* Title & Action */}
-      <div className="card-clean p-4 mb-4 bg-white">
-        <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
+      <div className="page-header-card">
+        <div className="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
           <div>
-            <h3 className="fw-bold m-0" style={{ color: 'var(--text-on-light)', fontFamily: 'Montserrat, sans-serif' }}>Executive Shop Dashboard</h3>
-            <p className="text-muted small m-0 mt-0.5">Real-time revenue, live stock valuation & sales intelligence</p>
+            <h1 className="page-title">Executive Shop Dashboard</h1>
+            <p className="page-subtitle">Real-time revenue, live stock valuation & sales intelligence</p>
           </div>
-          <div className="d-flex align-items-center gap-2">
+          <div className="d-flex flex-wrap align-items-center gap-2">
             <button className="btn btn-outline-dark-custom btn-sm d-flex align-items-center gap-1.5" onClick={fetchStats}>
               <RefreshCw size={14} /> Refresh Data
             </button>
@@ -165,42 +210,126 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Charts Section: Line Chart (Trend) & Bar Chart (Top Brands) */}
+      {/* Charts Section: 10-Day Revenue Graph & Top Brands Pie Chart */}
       <div className="row g-3 mb-4">
-        {/* 7-Day Revenue Trend Line Chart */}
+        {/* 10-Day Daily Revenue Graph */}
         <div className="col-12 col-xl-8">
           <div className="card-clean p-4 h-100 bg-white">
-            <div className="d-flex justify-content-between align-items-center mb-3">
+            <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
               <div>
-                <h5 className="fw-bold m-0 text-dark">Recent Daily Revenue Trend</h5>
-                <small className="text-muted">Gross sales generated over the last 7 active days</small>
+                <h5 className="fw-bold m-0 text-dark">Daily Revenue Graph (Last 10 Days)</h5>
+                <small className="text-muted">Day-by-day sales revenue & billing performance</small>
+              </div>
+              <div className="d-flex align-items-center gap-2">
+                <div className="d-none d-sm-flex align-items-center gap-1.5 px-2.5 py-1 rounded-pill bg-light border text-dark extra-small">
+                  <span className="text-muted">10-Day Total:</span>
+                  <span className="fw-bold text-dark">{formatRupees(last10DaysTotalPaise)}</span>
+                </div>
+                <div className="btn-group btn-group-sm p-0.5 rounded-2 bg-light border">
+                  <button
+                    type="button"
+                    className={`btn btn-sm py-0.5 px-2.5 rounded-1 extra-small fw-semibold ${
+                      chartType === 'bar' ? 'btn-accent text-dark shadow-xs' : 'btn-link text-muted text-decoration-none'
+                    }`}
+                    onClick={() => setChartType('bar')}
+                  >
+                    Bars
+                  </button>
+                  <button
+                    type="button"
+                    className={`btn btn-sm py-0.5 px-2.5 rounded-1 extra-small fw-semibold ${
+                      chartType === 'area' ? 'btn-accent text-dark shadow-xs' : 'btn-link text-muted text-decoration-none'
+                    }`}
+                    onClick={() => setChartType('area')}
+                  >
+                    Trend
+                  </button>
+                </div>
               </div>
             </div>
 
             <div style={{ width: '100%', height: 280 }}>
               {charts?.dailyTrend && charts.dailyTrend.length > 0 ? (
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={charts.dailyTrend}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                    <XAxis dataKey="date" stroke="#64748B" fontSize={11} />
-                    <YAxis
-                      stroke="#64748B"
-                      fontSize={11}
-                      tickFormatter={(v) => `₹${(v / 100000).toFixed(1)}L`}
-                    />
-                    <Tooltip
-                      contentStyle={{ backgroundColor: '#FFFFFF', borderColor: 'var(--accent)', color: '#111318', borderRadius: '8px', boxShadow: 'var(--shadow-md)' }}
-                      formatter={(val) => [formatRupees(val), 'Sales Revenue']}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="salesPaise"
-                      stroke="#FFC107"
-                      strokeWidth={3.5}
-                      dot={{ r: 4, fill: '#FFC107' }}
-                      activeDot={{ r: 6, fill: '#FFB300' }}
-                    />
-                  </LineChart>
+                  {chartType === 'bar' ? (
+                    <BarChart
+                      data={charts.dailyTrend}
+                      margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
+                      <XAxis
+                        dataKey="displayDate"
+                        stroke="#64748B"
+                        fontSize={11}
+                        tickLine={false}
+                        axisLine={{ stroke: '#E2E8F0' }}
+                      />
+                      <YAxis
+                        stroke="#64748B"
+                        fontSize={11}
+                        tickLine={false}
+                        axisLine={false}
+                        tickFormatter={formatYAxisPaise}
+                      />
+                      <Tooltip content={<CustomDailyTooltip />} cursor={{ fill: 'rgba(255, 193, 7, 0.08)' }} />
+                      <Bar
+                        dataKey="salesPaise"
+                        radius={[5, 5, 0, 0]}
+                        maxBarSize={42}
+                      >
+                        {charts.dailyTrend.map((entry, idx) => (
+                          <Cell
+                            key={`cell-${idx}`}
+                            fill={
+                              entry.salesPaise > 0
+                                ? entry.dayName === 'Today'
+                                  ? '#FFB300'
+                                  : '#FFC107'
+                                : '#E2E8F0'
+                            }
+                          />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  ) : (
+                    <AreaChart
+                      data={charts.dailyTrend}
+                      margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
+                    >
+                      <defs>
+                        <linearGradient id="revenueGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#FFC107" stopOpacity={0.4} />
+                          <stop offset="95%" stopColor="#FFC107" stopOpacity={0.0} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
+                      <XAxis
+                        dataKey="displayDate"
+                        stroke="#64748B"
+                        fontSize={11}
+                        tickLine={false}
+                        axisLine={{ stroke: '#E2E8F0' }}
+                      />
+                      <YAxis
+                        stroke="#64748B"
+                        fontSize={11}
+                        tickLine={false}
+                        axisLine={false}
+                        tickFormatter={formatYAxisPaise}
+                      />
+                      <Tooltip content={<CustomDailyTooltip />} />
+                      <Area
+                        type="monotone"
+                        dataKey="salesPaise"
+                        stroke="#FFB300"
+                        strokeWidth={3}
+                        fillOpacity={1}
+                        fill="url(#revenueGrad)"
+                        dot={{ r: 4, fill: '#FFB300', strokeWidth: 2, stroke: '#FFFFFF' }}
+                        activeDot={{ r: 6, fill: '#FF8F00', stroke: '#FFFFFF', strokeWidth: 2 }}
+                      />
+                    </AreaChart>
+                  )}
                 </ResponsiveContainer>
               ) : (
                 <div className="h-100 d-flex align-items-center justify-content-center text-muted">

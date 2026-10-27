@@ -45,12 +45,12 @@ export default function AuditLogs() {
   };
 
   return (
-    <div className="container-fluid p-3 p-md-4">
-      <div className="card-clean bg-white p-4 mb-4">
+    <div className="page-container">
+      <div className="page-header-card">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <div>
-            <h3 className="text-dark fw-bold m-0 brand-font">System Audit Logs & Compliance Ledger</h3>
-            <p className="text-muted small m-0 mt-0.5">
+            <h1 className="page-title">System Audit Logs & Compliance Ledger</h1>
+            <p className="page-subtitle">
               Rule 8: Immutable trace of every user action, state mutations & IP address logs
             </p>
           </div>
@@ -61,7 +61,7 @@ export default function AuditLogs() {
       </div>
 
       {/* Filters */}
-      <div className="card-clean bg-white p-3 mb-3">
+      <div className="filter-bar-card">
         <div className="row g-2 align-items-center">
           <div className="col-12 col-md-4">
             <select
@@ -107,7 +107,7 @@ export default function AuditLogs() {
       </div>
 
       {/* Table */}
-      <div className="card-clean bg-white overflow-hidden mb-3">
+      <div className="table-container-card">
         {loading ? (
           <TableSkeleton rows={8} cols={6} />
         ) : logs.length === 0 ? (

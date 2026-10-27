@@ -48,7 +48,7 @@ export default function ReceiptModal({ isOpen, onClose, sale, shopSettings }) {
     <div
       className="modal show d-block"
       tabIndex="-1"
-      style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)', zIndex: 1060 }}
+      style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)', backdropFilter: 'blur(4px)', zIndex: 1060 }}
     >
       <div className="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div className="modal-content border-0 shadow-2xl" style={{ background: 'var(--bg-white)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-light)' }}>

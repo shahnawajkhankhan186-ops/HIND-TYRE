@@ -257,13 +257,13 @@ export default function Tyres() {
   };
 
   return (
-    <div className="container-fluid p-3 p-md-4">
+    <div className="page-container">
       {/* Header */}
-      <div className="card-clean bg-white p-4 mb-4">
+      <div className="page-header-card">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <div>
-            <h3 className="text-dark fw-bold m-0 brand-font">Tyre Catalog & Stock Manager</h3>
-            <p className="text-muted small m-0 mt-0.5">
+            <h1 className="page-title">Tyre Catalog & Stock Manager</h1>
+            <p className="page-subtitle">
               Multi-company inventory, sizes, selling rates, GST & bulk price adjustment
             </p>
           </div>
@@ -285,7 +285,7 @@ export default function Tyres() {
       </div>
 
       {/* Search & Filters Bar */}
-      <div className="card-clean bg-white p-3 mb-3">
+      <div className="filter-bar-card">
         <form onSubmit={handleSearchSubmit} className="row g-2 align-items-center">
           <div className="col-12 col-md-4">
             <div className="input-group input-group-sm">
@@ -353,7 +353,7 @@ export default function Tyres() {
       </div>
 
       {/* Catalog Table */}
-      <div className="card-clean bg-white overflow-hidden mb-3">
+      <div className="table-container-card">
         {loading ? (
           <TableSkeleton rows={8} cols={8} />
         ) : tyres.length === 0 ? (

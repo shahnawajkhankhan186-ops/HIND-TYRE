@@ -145,6 +145,18 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const updateUser = (updatedUserData) => {
+    if (updatedUserData) {
+      setUser((prev) => {
+        const next = { ...prev, ...updatedUserData };
+        try {
+          localStorage.setItem('user', JSON.stringify(next));
+        } catch (_) {}
+        return next;
+      });
+    }
+  };
+
   const value = {
     user,
     token,
@@ -159,6 +171,7 @@ export function AuthProvider({ children }) {
     register,
     googleLogin,
     logout,
+    updateUser,
     refreshSettings,
   };
 
