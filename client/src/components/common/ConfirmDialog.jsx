@@ -39,7 +39,7 @@ export default function ConfirmDialog({
       className="modal show d-block"
       tabIndex="-1"
       role="dialog"
-      style={{ backgroundColor: 'rgba(0, 0, 0, 0.65)', zIndex: 1055 }}
+      style={{ backgroundColor: 'rgba(0, 0, 0, 0.65)', backdropFilter: 'blur(4px)', zIndex: 1055 }}
     >
       <div className="modal-dialog modal-dialog-centered" role="document">
         <div className="modal-content border-0 shadow-lg" style={{ background: 'var(--bg-white)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-light)' }}>

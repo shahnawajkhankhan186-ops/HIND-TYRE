@@ -98,6 +98,7 @@ async function login(req, res, next) {
           _id: user._id,
           name: user.name,
           email: user.email,
+          phone: user.phone || '',
           role: user.role,
         },
       },
@@ -391,6 +392,7 @@ async function googleLogin(req, res, next) {
           _id: user._id,
           name: user.name,
           email: user.email,
+          phone: user.phone || '',
           role: user.role,
         },
       },
@@ -410,12 +412,66 @@ async function register(req, res, next) {
   });
 }
 
+const updateProfileSchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters').optional(),
+  phone: z.string().optional(),
+});
+
+/**
+ * Update Profile (Name & Phone only; Email/Gmail is locked and cannot be changed)
+ */
+async function updateProfile(req, res, next) {
+  try {
+    const { name, phone } = updateProfileSchema.parse(req.body);
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'User not found.' });
+    }
+
+    if (name && name.trim()) {
+      user.name = name.trim();
+    }
+    if (phone !== undefined) {
+      user.phone = phone.trim();
+    }
+
+    // Email/Gmail is locked and never changed
+    await user.save();
+
+    await auditService.log({
+      action: 'UPDATE_PROFILE',
+      entity: 'User',
+      entityId: user._id,
+      afterSnapshot: { name: user.name, email: user.email, phone: user.phone },
+      req,
+      user: req.user,
+    });
+
+    res.json({
+      success: true,
+      message: 'Profile updated successfully',
+      data: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+        isActive: user.isActive,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   login,
   register,
   getMe,
+  updateProfile,
   forgotPassword,
   verifyOtp,
   resetPassword,
   googleLogin,
 };
+

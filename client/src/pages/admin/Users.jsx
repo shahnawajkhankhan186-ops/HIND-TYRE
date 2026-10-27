@@ -84,13 +84,13 @@ export default function Users() {
   };
 
   return (
-    <div className="container-fluid p-3 p-md-4">
+    <div className="page-container">
       {/* Header */}
-      <div className="card-clean bg-white p-4 mb-4">
+      <div className="page-header-card">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <div>
-            <h3 className="text-dark fw-bold m-0 brand-font">Administrators & Staff Accounts</h3>
-            <p className="text-muted small m-0 mt-0.5">
+            <h1 className="page-title">Administrators & Staff Accounts</h1>
+            <p className="page-subtitle">
               Add new shop admins with Gmail & phone, manage counter cashiers, and control portal privileges
             </p>
           </div>
@@ -109,7 +109,7 @@ export default function Users() {
       </div>
 
       {/* Users Table */}
-      <div className="card-clean bg-white overflow-hidden mb-4">
+      <div className="table-container-card">
         {loading ? (
           <TableSkeleton rows={4} cols={6} />
         ) : users.length === 0 ? (

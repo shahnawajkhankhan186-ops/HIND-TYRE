@@ -137,13 +137,13 @@ export default function Accessories() {
   };
 
   return (
-    <div className="container-fluid p-3 p-md-4">
+    <div className="page-container">
       {/* Header */}
-      <div className="card-clean bg-white p-4 mb-4">
+      <div className="page-header-card">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <div>
-            <h3 className="text-dark fw-bold m-0 brand-font">Accessories & Parts Catalog</h3>
-            <p className="text-muted small m-0 mt-0.5">Tubes, valves, wheel weights, alloy covers & repair kits</p>
+            <h1 className="page-title">Accessories & Parts Catalog</h1>
+            <p className="page-subtitle">Tubes, valves, wheel weights, alloy covers & repair kits</p>
           </div>
           <button className="btn btn-accent btn-sm d-flex align-items-center gap-1.5" onClick={handleOpenAdd}>
             <Plus size={16} /> Add Accessory
@@ -152,7 +152,7 @@ export default function Accessories() {
       </div>
 
       {/* Filter Bar */}
-      <div className="card-clean bg-white p-3 mb-3">
+      <div className="filter-bar-card">
         <div className="row g-2 align-items-center">
           <div className="col-12 col-md-6">
             <div className="input-group input-group-sm">
@@ -187,7 +187,7 @@ export default function Accessories() {
       </div>
 
       {/* Table */}
-      <div className="card-clean bg-white overflow-hidden mb-4">
+      <div className="table-container-card">
         {loading ? (
           <TableSkeleton rows={6} cols={6} />
         ) : (

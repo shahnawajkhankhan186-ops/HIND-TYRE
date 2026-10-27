@@ -63,13 +63,13 @@ export default function Reports() {
   };
 
   return (
-    <div className="container-fluid p-3 p-md-4">
+    <div className="page-container">
       {/* Header */}
-      <div className="card-clean bg-white p-4 mb-4">
+      <div className="page-header-card">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <div>
-            <h3 className="text-dark fw-bold m-0 brand-font">Business Reports & Data Exports</h3>
-            <p className="text-muted small m-0 mt-0.5">
+            <h1 className="page-title">Business Reports & Data Exports</h1>
+            <p className="page-subtitle">
               Comprehensive valuation, company performance, profit margins & streaming CSV exports
             </p>
           </div>
@@ -82,7 +82,7 @@ export default function Reports() {
       </div>
 
       {/* Tabs & Date Filter Bar */}
-      <div className="card-clean bg-white p-3 mb-3">
+      <div className="filter-bar-card">
         <div className="d-flex flex-wrap align-items-center justify-content-between gap-3">
           {/* Tabs */}
           <div className="btn-group p-1 rounded-pill bg-light border flex-wrap">

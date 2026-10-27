@@ -57,16 +57,16 @@ export default function StockAvailability() {
   };
 
   return (
-    <div className="container-fluid p-3 p-md-4" style={{ minHeight: 'calc(100vh - 120px)', background: 'var(--bg-light)' }}>
-      <div className="card-clean p-4 mb-4 bg-white">
-        <h4 className="fw-bold m-0" style={{ color: 'var(--text-on-light)', fontFamily: 'Montserrat, sans-serif' }}>Live Inventory & Stock Lookup</h4>
-        <p className="text-muted small m-0 mt-1">
+    <div className="page-container">
+      <div className="page-header-card">
+        <h1 className="page-title">Live Inventory & Stock Lookup</h1>
+        <p className="page-subtitle">
           Instant stock check for customer queries on size, brand, price & quantity
         </p>
       </div>
 
       {/* Filters */}
-      <div className="card-clean p-3 mb-3 bg-white">
+      <div className="filter-bar-card">
         <form onSubmit={handleSearch} className="row g-2 align-items-center">
           <div className="col-12 col-md-5">
             <div className="input-group input-group-sm">
@@ -111,7 +111,7 @@ export default function StockAvailability() {
       </div>
 
       {/* Grid of Results */}
-      <div className="card-clean overflow-hidden bg-white">
+      <div className="table-container-card">
         {loading ? (
           <TableSkeleton rows={8} cols={6} />
         ) : tyres.length === 0 ? (

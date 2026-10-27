@@ -74,10 +74,10 @@ export default function StockAdjust() {
   };
 
   return (
-    <div className="container-fluid p-3 p-md-4">
-      <div className="card-clean bg-white p-4 mb-4">
-        <h3 className="text-dark fw-bold m-0 brand-font">Manual Stock Adjustment</h3>
-        <p className="text-muted small m-0 mt-0.5">
+    <div className="page-container">
+      <div className="page-header-card">
+        <h1 className="page-title">Manual Stock Adjustment</h1>
+        <p className="page-subtitle">
           Audited inventory corrections (physical audit recount, damaged goods, or showroom display)
         </p>
       </div>

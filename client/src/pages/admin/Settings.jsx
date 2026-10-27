@@ -61,17 +61,17 @@ export default function Settings() {
 
   if (loading) {
     return (
-      <div className="container-fluid p-3 p-md-4">
-        <div className="glass-panel p-5 text-center text-secondary">Loading shop settings...</div>
+      <div className="page-container">
+        <div className="card-clean p-5 text-center text-secondary">Loading shop settings...</div>
       </div>
     );
   }
 
   return (
-    <div className="container-fluid p-3 p-md-4">
-      <div className="card-clean bg-white p-4 mb-4">
-        <h3 className="text-dark fw-bold m-0 brand-font">Shop Settings & GST Invoice Configuration</h3>
-        <p className="text-muted small m-0 mt-0.5">
+    <div className="page-container">
+      <div className="page-header-card">
+        <h1 className="page-title">Shop Settings & GST Invoice Configuration</h1>
+        <p className="page-subtitle">
           Configure business details, GSTIN, receipt terms & automated admin notification emails
         </p>
       </div>

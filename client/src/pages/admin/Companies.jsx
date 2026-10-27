@@ -93,16 +93,16 @@ export default function Companies() {
   };
 
   return (
-    <div className="container-fluid p-3 p-md-4">
+    <div className="page-container">
       {/* Header */}
-      <div className="card-clean bg-white p-4 mb-4">
+      <div className="page-header-card">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <div>
-            <h3 className="text-dark fw-bold m-0 brand-font">Tyre Companies & Brands</h3>
-            <p className="text-muted small m-0 mt-0.5">Manage partner manufacturers and brand status</p>
+            <h1 className="page-title">Tyre Companies & Brands</h1>
+            <p className="page-subtitle">Manage partner manufacturers and brand status</p>
           </div>
           <div className="d-flex align-items-center gap-2">
-            <button className="btn btn-outline-dark-custom btn-sm" onClick={fetchCompanies}>
+            <button className="btn btn-outline-dark-custom btn-sm d-flex align-items-center gap-1.5" onClick={fetchCompanies}>
               <RefreshCw size={14} /> Refresh
             </button>
             <button className="btn btn-accent btn-sm d-flex align-items-center gap-1.5" onClick={handleOpenAdd}>
@@ -113,7 +113,7 @@ export default function Companies() {
       </div>
 
       {/* Table */}
-      <div className="card-clean bg-white overflow-hidden mb-4">
+      <div className="table-container-card">
         {loading ? (
           <TableSkeleton rows={6} cols={4} />
         ) : (
