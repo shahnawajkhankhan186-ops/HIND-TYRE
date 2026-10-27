@@ -105,7 +105,7 @@ export default function Login() {
             JOURNEY
           </h1>
           <p className="fs-6 text-light opacity-80 mb-0" style={{ maxWidth: '420px' }}>
-            Multi-brand stock inventory, instant GST counter billing, and genuine customer tyre durability warranty hub.
+            Multi-brand stock inventory, instant counter billing, and genuine customer tyre durability warranty hub.
           </p>
         </div>
 

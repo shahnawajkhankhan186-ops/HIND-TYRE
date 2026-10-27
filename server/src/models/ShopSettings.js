@@ -23,8 +23,7 @@ const shopSettingsSchema = new mongoose.Schema(
     },
     gstin: {
       type: String,
-      default: '09AAACH7409R1ZZ',
-      required: true,
+      default: '',
     },
     logoUrl: {
       type: String,
@@ -36,11 +35,11 @@ const shopSettingsSchema = new mongoose.Schema(
     },
     termsAndConditions: {
       type: String,
-      default: '1. All tyre warranties are subject to manufacturer inspection and approval.\n2. Original GST invoice must be produced for all warranty claims.\n3. Wheel balancing and alignment recommended every 5,000 km.',
+      default: '1. All tyre warranties are subject to manufacturer inspection and approval.\n2. Original invoice must be produced for all warranty claims.\n3. Wheel balancing and alignment recommended every 5,000 km.',
     },
     defaultGstPercent: {
       type: Number,
-      default: 28,
+      default: 0,
     },
     maxDiscountPercent: {
       type: Number,

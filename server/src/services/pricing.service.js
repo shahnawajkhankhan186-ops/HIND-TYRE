@@ -22,7 +22,6 @@ class PricingService {
     const maxDiscountPercent = settings.maxDiscountPercent || 15;
 
     let subtotalPaise = 0;
-    let totalGstPaise = 0;
     const computedItems = [];
 
     for (const item of items) {
@@ -70,14 +69,9 @@ class PricingService {
       }
 
       const unitPricePaise = Math.round(doc.sellingPricePaise);
-      const gstPercent = Number(doc.gstPercent || 28);
+      const lineTotalPaise = unitPricePaise * qty;
 
-      const itemSubtotalPaise = unitPricePaise * qty;
-      const itemGstPaise = Math.round((itemSubtotalPaise * gstPercent) / 100);
-      const lineTotalPaise = itemSubtotalPaise + itemGstPaise;
-
-      subtotalPaise += itemSubtotalPaise;
-      totalGstPaise += itemGstPaise;
+      subtotalPaise += lineTotalPaise;
 
       computedItems.push({
         itemType,
@@ -87,8 +81,8 @@ class PricingService {
         size,
         qty,
         unitPricePaise,
-        gstPercent,
-        gstPaise: itemGstPaise,
+        gstPercent: 0,
+        gstPaise: 0,
         lineTotalPaise,
       });
     }
@@ -104,12 +98,12 @@ class PricingService {
       throw error;
     }
 
-    const totalPaise = Math.max(0, subtotalPaise + totalGstPaise - requestedDiscountPaise);
+    const totalPaise = Math.max(0, subtotalPaise - requestedDiscountPaise);
 
     return {
       items: computedItems,
       subtotalPaise,
-      gstPaise: totalGstPaise,
+      gstPaise: 0,
       discountPaise: requestedDiscountPaise,
       totalPaise,
       maxDiscountAllowedPaise,

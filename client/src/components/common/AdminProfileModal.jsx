@@ -133,7 +133,7 @@ export default function AdminProfileModal({ show, onClose }) {
               </div>
 
               {/* Shop Affiliation */}
-              <div className="col-12 col-sm-6">
+              <div className="col-12">
                 <div className="p-2.5 rounded-3 bg-black bg-opacity-40 border border-secondary border-opacity-15">
                   <div className="extra-small text-secondary d-flex align-items-center gap-1.5 mb-1">
                     <Building2 size={13} style={{ color: '#f59e0b' }} />
@@ -141,19 +141,6 @@ export default function AdminProfileModal({ show, onClose }) {
                   </div>
                   <div className="small fw-semibold text-white text-truncate">
                     {shopSettings?.shopName || 'HIND TYRES AND ACCESSORIES'}
-                  </div>
-                </div>
-              </div>
-
-              {/* GSTIN */}
-              <div className="col-12 col-sm-6">
-                <div className="p-2.5 rounded-3 bg-black bg-opacity-40 border border-secondary border-opacity-15">
-                  <div className="extra-small text-secondary d-flex align-items-center gap-1.5 mb-1">
-                    <FileText size={13} style={{ color: '#f59e0b' }} />
-                    <span>GSTIN Registration</span>
-                  </div>
-                  <div className="small fw-bold font-monospace text-warning">
-                    {shopSettings?.gstin || '09AAACH7409R1ZZ'}
                   </div>
                 </div>
               </div>

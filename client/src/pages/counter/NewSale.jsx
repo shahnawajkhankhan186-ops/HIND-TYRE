@@ -187,7 +187,7 @@ export default function NewSale() {
         company: type === 'Tyre' ? item.companyId?.name : item.category,
         size: type === 'Tyre' ? item.size : '-',
         unitPricePaise: item.sellingPricePaise,
-        gstPercent: item.gstPercent,
+        gstPercent: 0,
         quantity: 1,
         stockQuantity: availableStock,
       };
@@ -224,10 +224,7 @@ export default function NewSale() {
 
   // Client-side visual calculations (authoritative calculation happens strictly on the server!)
   const subtotalPaise = cart.reduce((sum, item) => sum + item.unitPricePaise * item.quantity, 0);
-  const gstPaise = cart.reduce(
-    (sum, item) => sum + Math.round((item.unitPricePaise * item.quantity * item.gstPercent) / 100),
-    0
-  );
+  const gstPaise = 0;
   const maxDiscountPercent = shopSettings?.maxDiscountPercent || 15;
   const maxDiscountAllowedPaise = Math.floor((subtotalPaise * maxDiscountPercent) / 100);
 
@@ -236,7 +233,7 @@ export default function NewSale() {
     Math.max(0, Math.round(Number(discountRupees || 0) * 100))
   );
 
-  const grandTotalPaise = Math.max(0, subtotalPaise + gstPaise - discountPaise);
+  const grandTotalPaise = Math.max(0, subtotalPaise - discountPaise);
 
   // Step 3: Confirm Sale (Triggers ACID MongoDB Transaction on Server)
   const handleConfirmSale = async () => {
@@ -646,7 +643,6 @@ export default function NewSale() {
                               <div className="fw-bold font-monospace fs-6 text-dark">
                                 {formatRupees(tyre.sellingPricePaise)}
                               </div>
-                              <div className="text-muted extra-small">+ {tyre.gstPercent}% GST</div>
                             </div>
 
                             <button
@@ -695,7 +691,6 @@ export default function NewSale() {
                               <div className="fw-bold font-monospace fs-6 text-dark">
                                 {formatRupees(acc.sellingPricePaise)}
                               </div>
-                              <div className="text-muted extra-small">+ {acc.gstPercent}% GST</div>
                             </div>
 
                             <button
@@ -797,7 +792,6 @@ export default function NewSale() {
                           <div className="text-dark fw-bold font-monospace small">
                             {formatRupees(item.unitPricePaise * item.quantity)}
                           </div>
-                          <div className="text-muted extra-small">+{item.gstPercent}% GST</div>
                         </div>
                       </div>
                     </div>
@@ -808,18 +802,14 @@ export default function NewSale() {
               {/* Financial Summary */}
               {cart.length > 0 && (
                 <div className="pt-2 border-top" style={{ borderColor: 'var(--border-light)' }}>
-                  <div className="d-flex justify-content-between text-muted small mb-1">
-                    <span>Taxable Subtotal:</span>
-                    <span className="font-monospace text-dark fw-semibold">{formatRupees(subtotalPaise)}</span>
-                  </div>
                   <div className="d-flex justify-content-between text-muted small mb-2">
-                    <span>Estimated GST:</span>
-                    <span className="font-monospace text-dark fw-semibold">+ {formatRupees(gstPaise)}</span>
+                    <span>Subtotal:</span>
+                    <span className="font-monospace text-dark fw-semibold">{formatRupees(subtotalPaise)}</span>
                   </div>
                   <div className="d-flex justify-content-between align-items-center py-2 border-top mb-3" style={{ borderColor: 'var(--border-light)' }}>
                     <span className="text-dark fw-bold">Est. Total:</span>
                     <span className="fw-bold font-monospace fs-5 text-dark" style={{ borderBottom: '3.5px solid var(--accent)' }}>
-                      {formatRupees(subtotalPaise + gstPaise)}
+                      {formatRupees(subtotalPaise)}
                     </span>
                   </div>
 
@@ -845,7 +835,7 @@ export default function NewSale() {
                 <div>
                   <h4 className="fw-bold m-0" style={{ color: 'var(--text-on-light)' }}>Step 3: Review Invoice & Confirm Sale</h4>
                   <p className="text-muted small m-0 mt-1">
-                    Zero-trust server calculation will verify stock and generate sequential GST invoice
+                    Server calculation will verify stock and generate sequential retail invoice
                   </p>
                 </div>
                 <button className="btn btn-outline-dark-custom btn-sm" onClick={() => setStep(2)}>
@@ -871,8 +861,7 @@ export default function NewSale() {
                     <div className="text-muted small">
                       Vehicle: <span className="badge bg-dark text-white font-monospace">{customer.vehicleNumber || 'Walk-in / None'}</span> {customer.vehicleModel && `(${customer.vehicleModel})`}
                     </div>
-                    <div className="text-muted small mt-1">Shop GSTIN: <span className="fw-bold" style={{ color: '#B45309' }}>{shopSettings?.gstin || '09AAACH7409R1ZZ'}</span></div>
-                    <div className="text-muted small">Invoice Series: <span className="text-dark font-monospace fw-semibold">HT-YYYYMMDD-XXXX</span></div>
+                    <div className="text-muted small mt-1">Invoice Series: <span className="text-dark font-monospace fw-semibold">HT-YYYYMMDD-XXXX</span></div>
                   </div>
                 </div>
               </div>
@@ -887,14 +876,12 @@ export default function NewSale() {
                       <th>Size</th>
                       <th className="text-center">Qty</th>
                       <th className="text-end">Rate (₹)</th>
-                      <th className="text-end">GST %</th>
                       <th className="text-end">Line Total (₹)</th>
                     </tr>
                   </thead>
                   <tbody>
                     {cart.map((item, idx) => {
                       const lineSubtotal = item.unitPricePaise * item.quantity;
-                      const lineGst = Math.round((lineSubtotal * item.gstPercent) / 100);
                       return (
                         <tr key={idx}>
                           <td className="text-muted">{idx + 1}</td>
@@ -902,8 +889,7 @@ export default function NewSale() {
                           <td className="text-muted font-monospace">{item.size}</td>
                           <td className="text-center text-dark fw-bold">{item.quantity}</td>
                           <td className="text-end font-monospace">{formatRupees(item.unitPricePaise, false)}</td>
-                          <td className="text-end font-monospace text-muted">{item.gstPercent}%</td>
-                          <td className="text-end font-monospace text-dark fw-bold">{formatRupees(lineSubtotal + lineGst, false)}</td>
+                          <td className="text-end font-monospace text-dark fw-bold">{formatRupees(lineSubtotal, false)}</td>
                         </tr>
                       );
                     })}
@@ -967,12 +953,8 @@ export default function NewSale() {
                 <div className="col-12 col-md-6">
                   <div className="p-3.5 rounded-3 bg-white" style={{ border: '1px solid var(--border-light)' }}>
                     <div className="d-flex justify-content-between py-1.5 small border-bottom" style={{ borderColor: 'var(--border-light)' }}>
-                      <span className="text-muted">Taxable Subtotal:</span>
+                      <span className="text-muted">Subtotal:</span>
                       <span className="font-monospace text-dark fw-semibold">{formatRupees(subtotalPaise)}</span>
-                    </div>
-                    <div className="d-flex justify-content-between py-1.5 small border-bottom" style={{ borderColor: 'var(--border-light)' }}>
-                      <span className="text-muted">Total GST Output:</span>
-                      <span className="font-monospace text-dark fw-semibold">+ {formatRupees(gstPaise)}</span>
                     </div>
                     {discountPaise > 0 && (
                       <div className="d-flex justify-content-between py-1.5 small border-bottom text-danger" style={{ borderColor: 'var(--border-light)' }}>
@@ -1005,7 +987,7 @@ export default function NewSale() {
                     </>
                   ) : (
                     <>
-                      <CheckCircle2 size={18} /> Confirm Sale & Generate GST Receipt
+                      <CheckCircle2 size={18} /> Confirm Sale & Generate Receipt
                     </>
                   )}
                 </button>

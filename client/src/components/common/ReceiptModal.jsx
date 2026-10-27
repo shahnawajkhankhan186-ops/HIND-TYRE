@@ -9,17 +9,14 @@ export default function ReceiptModal({ isOpen, onClose, sale, shopSettings }) {
   if (!isOpen || !sale) return null;
 
   const handleDownloadPDF = () => {
-    const token = localStorage.getItem('token');
     const url = `/api/sales/${sale._id}/receipt.pdf`;
-    
-    // Trigger download
     const link = document.createElement('a');
     link.href = url;
     link.setAttribute('download', `Invoice_${sale.invoiceNo}.pdf`);
     document.body.appendChild(link);
     link.click();
     link.remove();
-    toast.success('Downloading official GST Tax Invoice PDF...');
+    toast.success('Downloading Invoice PDF...');
   };
 
   const handlePrint = () => {
@@ -39,7 +36,7 @@ export default function ReceiptModal({ isOpen, onClose, sale, shopSettings }) {
             <div className="d-flex align-items-center gap-2">
               <ShieldCheck style={{ color: 'var(--accent)' }} size={24} />
               <div>
-                <h5 className="modal-title m-0 fw-bold" style={{ color: 'var(--text-on-light)' }}>GST Tax Invoice & Warranty</h5>
+                <h5 className="modal-title m-0 fw-bold" style={{ color: 'var(--text-on-light)' }}>Invoice & Warranty Receipt</h5>
                 <small className="text-muted font-monospace">{sale.invoiceNo}</small>
               </div>
             </div>
@@ -77,13 +74,10 @@ export default function ReceiptModal({ isOpen, onClose, sale, shopSettings }) {
                   <p className="text-secondary small m-0" style={{ color: '#A9AEB8' }}>
                     Phone: <span className="text-white">{shopSettings?.phone || '+91 98765 43210'}</span> | Email: <span className="text-white">{shopSettings?.email || 'contact@hindtyres.com'}</span>
                   </p>
-                  <p className="small m-0 mt-1">
-                    GSTIN: <span className="fw-bold" style={{ color: 'var(--accent)' }}>{shopSettings?.gstin || '09AAACH7409R1ZZ'}</span>
-                  </p>
                 </div>
                 <div className="text-end">
                   <span className="badge px-3 py-1.5 mb-2 fw-bold text-dark" style={{ background: 'var(--accent)' }}>
-                    TAX INVOICE
+                    RETAIL INVOICE
                   </span>
                   <div className="text-white fw-bold font-monospace">{sale.invoiceNo}</div>
                   <div className="small" style={{ color: '#A9AEB8' }}>{formatIST(sale.createdAt)}</div>
@@ -98,8 +92,8 @@ export default function ReceiptModal({ isOpen, onClose, sale, shopSettings }) {
                   <div className="small text-uppercase fw-bold mb-2" style={{ color: 'var(--text-muted)' }}>Billed To (Customer)</div>
                   <div className="fw-bold fs-6" style={{ color: 'var(--text-on-light)' }}>{sale.customerSnapshot.name}</div>
                   <div className="small text-muted">Phone: <span className="text-dark fw-medium font-monospace">{sale.customerSnapshot.phone}</span></div>
-                  <div className="small text-muted">Email: <span className="text-dark fw-medium">{sale.customerSnapshot.email}</span></div>
-                  <div className="small text-muted">Address: <span className="text-dark">{sale.customerSnapshot.address}</span></div>
+                  <div className="small text-muted">Email: <span className="text-dark fw-medium">{sale.customerSnapshot.email || '-'}</span></div>
+                  <div className="small text-muted">Address: <span className="text-dark">{sale.customerSnapshot.address || '-'}</span></div>
                   {sale.customerSnapshot.vehicleNumber && (
                     <div className="small mt-1 text-muted">
                       Vehicle: <span className="badge bg-dark text-white font-monospace">{sale.customerSnapshot.vehicleNumber}</span> {sale.customerSnapshot.vehicleModel && `(${sale.customerSnapshot.vehicleModel})`}
@@ -126,7 +120,7 @@ export default function ReceiptModal({ isOpen, onClose, sale, shopSettings }) {
                     </span>
                   </div>
                   <div className="d-flex justify-content-between py-1 small">
-                    <span className="text-muted">Billed By:</span>
+                    <span className="text-muted">Cashier:</span>
                     <span className="text-dark fw-medium">{sale.soldBy?.name || 'Counter Staff'}</span>
                   </div>
                 </div>
@@ -143,7 +137,6 @@ export default function ReceiptModal({ isOpen, onClose, sale, shopSettings }) {
                     <th>Size</th>
                     <th className="text-center">Qty</th>
                     <th className="text-end">Unit Rate</th>
-                    <th className="text-end">GST %</th>
                     <th className="text-end">Line Total</th>
                   </tr>
                 </thead>
@@ -158,7 +151,6 @@ export default function ReceiptModal({ isOpen, onClose, sale, shopSettings }) {
                       <td className="text-muted font-monospace small">{item.size || '-'}</td>
                       <td className="text-center fw-bold text-dark">{item.qty}</td>
                       <td className="text-end font-monospace">{formatRupees(item.unitPricePaise)}</td>
-                      <td className="text-end font-monospace text-muted">{item.gstPercent}%</td>
                       <td className="text-end font-monospace fw-bold text-dark">{formatRupees(item.lineTotalPaise)}</td>
                     </tr>
                   ))}
@@ -185,12 +177,8 @@ export default function ReceiptModal({ isOpen, onClose, sale, shopSettings }) {
               <div className="col-12 col-md-5">
                 <div className="card-clean p-3 bg-white">
                   <div className="d-flex justify-content-between py-1 small border-bottom" style={{ borderColor: 'var(--border-light)' }}>
-                    <span className="text-muted">Taxable Subtotal:</span>
+                    <span className="text-muted">Subtotal:</span>
                     <span className="font-monospace text-dark">{formatRupees(sale.subtotalPaise)}</span>
-                  </div>
-                  <div className="d-flex justify-content-between py-1 small border-bottom" style={{ borderColor: 'var(--border-light)' }}>
-                    <span className="text-muted">GST Total:</span>
-                    <span className="font-monospace text-dark">+ {formatRupees(sale.gstPaise)}</span>
                   </div>
                   {sale.discountPaise > 0 && (
                     <div className="d-flex justify-content-between py-1 small border-bottom text-danger" style={{ borderColor: 'var(--border-light)' }}>

@@ -23,7 +23,7 @@ export default function Settings() {
     logoUrl: '',
     invoiceFooter: '',
     termsAndConditions: '',
-    defaultGstPercent: 28,
+    defaultGstPercent: 0,
     maxDiscountPercent: 15,
     adminReceiptEmail: '',
   });
@@ -78,9 +78,9 @@ export default function Settings() {
   return (
     <div className="page-container">
       <div className="page-header-card">
-        <h1 className="page-title">Shop Settings & GST Invoice Configuration</h1>
+        <h1 className="page-title">Shop Settings & Invoice Configuration</h1>
         <p className="page-subtitle">
-          Configure business details, GSTIN, receipt terms & store information
+          Configure business details, receipt terms & store information
         </p>
       </div>
 
@@ -93,7 +93,7 @@ export default function Settings() {
               </h5>
 
               <div className="row g-3 mb-4">
-                <div className="col-12 col-md-6">
+                <div className="col-12 col-md-4">
                   <label className="form-label text-dark small fw-semibold">Shop Name *</label>
                   <input
                     type="text"
@@ -104,18 +104,7 @@ export default function Settings() {
                   />
                 </div>
 
-                <div className="col-12 col-md-6">
-                  <label className="form-label text-dark small fw-bold">GSTIN Registration Number *</label>
-                  <input
-                    type="text"
-                    className="form-control font-monospace"
-                    value={formData.gstin}
-                    onChange={(e) => setFormData({ ...formData, gstin: e.target.value.toUpperCase() })}
-                    required
-                  />
-                </div>
-
-                <div className="col-12 col-md-6">
+                <div className="col-12 col-md-4">
                   <label className="form-label text-dark small fw-semibold">Business Phone Number *</label>
                   <input
                     type="text"
@@ -126,7 +115,7 @@ export default function Settings() {
                   />
                 </div>
 
-                <div className="col-12 col-md-6">
+                <div className="col-12 col-md-4">
                   <label className="form-label text-dark small fw-semibold">Public Support Email *</label>
                   <input
                     type="email"
@@ -150,7 +139,7 @@ export default function Settings() {
               </div>
 
               <h5 className="text-dark fw-bold mb-3 pb-2 border-bottom d-flex align-items-center gap-2">
-                <Percent size={18} style={{ color: 'var(--accent-dark)' }} /> Billing Policies & GST Configuration
+                <Percent size={18} style={{ color: 'var(--accent-dark)' }} /> Billing Policies & Counter Configuration
               </h5>
 
               <div className="row g-3 mb-4">
@@ -173,22 +162,6 @@ export default function Settings() {
                   <small className="text-muted extra-small">
                     Enforces strict server cap on discounts applied by counter cashiers.
                   </small>
-                </div>
-
-                <div className="col-12 col-md-6">
-                  <label className="form-label text-dark small fw-semibold">Default GST Rate (%)</label>
-                  <div className="input-group">
-                    <input
-                      type="number"
-                      min="0"
-                      max="100"
-                      className="form-control"
-                      value={formData.defaultGstPercent}
-                      onChange={(e) => setFormData({ ...formData, defaultGstPercent: Number(e.target.value) })}
-                      required
-                    />
-                    <span className="input-group-text">%</span>
-                  </div>
                 </div>
 
                 <div className="col-12">

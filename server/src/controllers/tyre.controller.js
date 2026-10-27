@@ -17,7 +17,7 @@ const tyreSchema = z.object({
   purchasePricePaise: z.number().int().min(0, 'Purchase price must be positive'),
   sellingPricePaise: z.number().int().min(0, 'Selling price must be positive'),
   mrpPaise: z.number().int().min(0, 'MRP must be positive'),
-  gstPercent: z.number().min(0).max(100).default(28),
+  gstPercent: z.number().min(0).max(100).default(0),
   quantity: z.number().int().min(0).default(0),
   lowStockThreshold: z.number().int().min(0).default(5),
   isActive: z.boolean().optional().default(true),

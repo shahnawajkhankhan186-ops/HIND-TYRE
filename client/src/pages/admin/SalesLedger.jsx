@@ -114,7 +114,7 @@ export default function SalesLedger() {
       <div className="page-header-card">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <div>
-            <h1 className="page-title">Sales & GST Invoices Ledger</h1>
+            <h1 className="page-title">Sales & Invoices Ledger</h1>
             <p className="page-subtitle">
               Complete invoice records, customer details, PDF receipts, and audited cancellation
             </p>

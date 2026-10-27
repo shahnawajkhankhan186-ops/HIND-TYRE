@@ -332,7 +332,7 @@ export default function CustomerPortal() {
             {selectedCategory !== 'ALL' && <span> for <strong>{selectedCategory}</strong></span>}
           </div>
           <div className="small fw-semibold d-flex align-items-center gap-1" style={{ color: 'var(--accent-dark)' }}>
-            <CheckCircle2 size={14} /> 100% Original with Manufacturer GST Bill
+            <CheckCircle2 size={14} /> 100% Original with Official Invoice & Warranty
           </div>
         </div>
 

@@ -91,7 +91,7 @@ describe('1. Pricing Engine & Financial Calculations (Integer Paise)', () => {
     });
   });
 
-  test('should calculate subtotal, 28% GST, and total accurately in integer paise', async () => {
+  test('should calculate subtotal and total accurately in integer paise', async () => {
     const qty = 2;
     const result = await pricingService.computeSalePricing({
       items: [{ tyreId: tyreDoc._id, quantity: qty, itemType: 'Tyre' }],
@@ -99,11 +99,10 @@ describe('1. Pricing Engine & Financial Calculations (Integer Paise)', () => {
     });
 
     const expectedSubtotal = 400000 * 2; // 800000 paise (₹8,000)
-    const expectedGst = Math.round((800000 * 28) / 100); // 224000 paise (₹2,240)
-    const expectedTotal = expectedSubtotal + expectedGst; // 1024000 paise (₹10,240)
+    const expectedTotal = expectedSubtotal; // 800000 paise (₹8,000)
 
     expect(result.subtotalPaise).toBe(expectedSubtotal);
-    expect(result.gstPaise).toBe(expectedGst);
+    expect(result.gstPaise).toBe(0);
     expect(result.totalPaise).toBe(expectedTotal);
     expect(result.items[0].unitPricePaise).toBe(400000);
     expect(result.items[0].lineTotalPaise).toBe(expectedTotal);
@@ -129,7 +128,7 @@ describe('1. Pricing Engine & Financial Calculations (Integer Paise)', () => {
     });
 
     expect(result.discountPaise).toBe(validDiscountPaise);
-    expect(result.totalPaise).toBe(result.subtotalPaise + result.gstPaise - validDiscountPaise);
+    expect(result.totalPaise).toBe(result.subtotalPaise - validDiscountPaise);
   });
 });
 

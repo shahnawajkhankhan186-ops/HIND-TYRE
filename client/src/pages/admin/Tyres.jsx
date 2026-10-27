@@ -48,7 +48,7 @@ export default function Tyres() {
     purchasePriceRupees: '',
     sellingPriceRupees: '',
     mrpRupees: '',
-    gstPercent: 28,
+    gstPercent: 0,
     quantity: 0,
     lowStockThreshold: 5,
   });
@@ -126,7 +126,7 @@ export default function Tyres() {
       purchasePriceRupees: '',
       sellingPriceRupees: '',
       mrpRupees: '',
-      gstPercent: 28,
+      gstPercent: 0,
       quantity: 10,
       lowStockThreshold: 5,
     });
@@ -145,7 +145,7 @@ export default function Tyres() {
       purchasePriceRupees: (t.purchasePricePaise / 100).toString(),
       sellingPriceRupees: (t.sellingPricePaise / 100).toString(),
       mrpRupees: (t.mrpPaise / 100).toString(),
-      gstPercent: t.gstPercent,
+      gstPercent: 0,
       quantity: t.quantity,
       lowStockThreshold: t.lowStockThreshold,
     });
@@ -170,7 +170,7 @@ export default function Tyres() {
         purchasePricePaise: rupeesToPaise(formData.purchasePriceRupees),
         sellingPricePaise: rupeesToPaise(formData.sellingPriceRupees),
         mrpPaise: rupeesToPaise(formData.mrpRupees || formData.sellingPriceRupees),
-        gstPercent: Number(formData.gstPercent || 28),
+        gstPercent: 0,
         quantity: parseInt(formData.quantity || 0, 10),
         lowStockThreshold: parseInt(formData.lowStockThreshold || 5, 10),
       };
@@ -264,7 +264,7 @@ export default function Tyres() {
           <div>
             <h1 className="page-title">Tyre Catalog & Stock Manager</h1>
             <p className="page-subtitle">
-              Multi-company inventory, sizes, selling rates, GST & bulk price adjustment
+              Multi-company inventory, sizes, selling rates & bulk price adjustment
             </p>
           </div>
           <div className="d-flex align-items-center gap-2">
@@ -371,7 +371,6 @@ export default function Tyres() {
                   <th>Vehicle</th>
                   <th className="text-end">Cost Price</th>
                   <th className="text-end">Selling Price</th>
-                  <th className="text-center">GST %</th>
                   <th className="text-center">Stock</th>
                   <th className="text-end">Actions</th>
                 </tr>
@@ -399,7 +398,6 @@ export default function Tyres() {
                       <td className="text-end text-dark font-monospace fw-bold fs-6">
                         {formatRupees(t.sellingPricePaise)}
                       </td>
-                      <td className="text-center text-muted small">{t.gstPercent}%</td>
                       <td className="text-center">
                         <span className={`badge ${isOut ? 'badge-pill-danger' : isLow ? 'badge-pill-warning' : 'badge-pill-success'} extra-small`}>
                           {t.quantity} units
@@ -525,7 +523,7 @@ export default function Tyres() {
                       />
                     </div>
 
-                    <div className="col-6 col-md-4">
+                    <div className="col-12 col-md-6">
                       <label className="form-label text-dark small fw-semibold">Vehicle Category</label>
                       <select
                         className="form-select"
@@ -538,7 +536,7 @@ export default function Tyres() {
                       </select>
                     </div>
 
-                    <div className="col-6 col-md-4">
+                    <div className="col-12 col-md-6">
                       <label className="form-label text-dark small fw-semibold">Tube Type</label>
                       <select
                         className="form-select"
@@ -548,17 +546,6 @@ export default function Tyres() {
                         <option value="Tubeless">Tubeless</option>
                         <option value="Tube-type">Tube-type</option>
                       </select>
-                    </div>
-
-                    <div className="col-12 col-md-4">
-                      <label className="form-label text-dark small fw-semibold">GST Rate (%)</label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        value={formData.gstPercent}
-                        onChange={(e) => setFormData({ ...formData, gstPercent: e.target.value })}
-                        required
-                      />
                     </div>
 
                     {/* Pricing in Rupees */}
@@ -576,7 +563,7 @@ export default function Tyres() {
                     </div>
 
                     <div className="col-12 col-md-4">
-                      <label className="form-label text-dark small fw-bold">Selling Price Ex-GST (₹) *</label>
+                      <label className="form-label text-dark small fw-bold">Selling Price (₹) *</label>
                       <input
                         type="number"
                         step="0.01"
