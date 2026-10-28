@@ -704,6 +704,8 @@ async function seedDatabase() {
         quantity: 18,
         lowStockThreshold: 5,
       },
+    ];
+
     const tyresWithMat = tyresData.map((t, idx) => ({
       ...t,
       materialNumber: t.materialNumber || `MAT-${t.sku || (100000 + idx)}`,

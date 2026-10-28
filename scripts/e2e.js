@@ -33,7 +33,7 @@ async function runE2E() {
 
     // 2. FIND A TYRE FOR E2E TEST
     console.log('\n[Step 2] Finding test tyre in catalog...');
-    const tyre = await Tyre.findOne({ isArchived: false, isActive: true });
+    const tyre = await Tyre.findOne({ isArchived: false, isActive: true }).lean();
     if (!tyre) throw new Error('No active tyre found. Run npm run seed first.');
     const initialStock = tyre.quantity;
     console.log(`✅ Selected tyre: "${tyre.modelName} ${tyre.size}" (Current Stock: ${initialStock})`);
