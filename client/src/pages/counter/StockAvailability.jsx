@@ -195,7 +195,7 @@ export default function StockAvailability() {
           </div>
         ) : (
           <div className="table-responsive">
-            <table className="table table-custom mb-0">
+            <table className="table table-custom mb-0 text-nowrap">
               <thead>
                 <tr>
                   <th>Brand</th>

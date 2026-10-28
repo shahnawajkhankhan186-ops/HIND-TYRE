@@ -161,7 +161,7 @@ export default function AuditLogs() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="d-flex justify-content-between align-items-center card-clean bg-white p-2 px-3">
+        <div className="pagination-container card-clean bg-white mb-3">
           <small className="text-muted">
             Page <strong className="text-dark">{page}</strong> of <strong className="text-dark">{totalPages}</strong> ({totalCount} total events)
           </small>

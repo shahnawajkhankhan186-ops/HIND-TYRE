@@ -101,7 +101,7 @@ export default function StockAdjust() {
 
       <div className="row justify-content-center">
         <div className="col-12 col-lg-8">
-          <div className="card-clean bg-white p-4 p-md-5">
+          <div className="card-clean bg-white p-3 p-sm-4 p-md-5">
             <form onSubmit={handleSubmit}>
               {/* Type Switcher */}
               <div className="mb-4">

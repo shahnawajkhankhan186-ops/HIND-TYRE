@@ -156,11 +156,11 @@ export default function ForgotPassword() {
 
       {/* Right Form Container */}
       <div
-        className="col-12 col-lg-6 d-flex align-items-center justify-content-center p-4 p-md-5"
+        className="col-12 col-lg-6 d-flex align-items-center justify-content-center p-3 p-sm-4 p-md-5"
         style={{ backgroundColor: 'var(--bg-light)' }}
       >
         <div className="w-100" style={{ maxWidth: '440px' }}>
-          <div className="card-clean p-4 p-sm-5 bg-white shadow-md">
+          <div className="card-clean p-3.5 p-sm-5 bg-white shadow-md">
             <h3 className="fw-black text-dark mb-1">Reset Password</h3>
             <p className="text-muted small mb-4">Follow the 3-step verification to restore access</p>
 

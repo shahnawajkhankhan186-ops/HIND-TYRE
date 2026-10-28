@@ -306,73 +306,130 @@ export default function Finance() {
         ) : overview.cashiers.length === 0 ? (
           <div className="py-4 text-center text-muted">No cashier activity recorded yet.</div>
         ) : (
-          <div className="table-responsive">
-            <table className="table table-hover table-custom mb-0">
-              <thead>
-                <tr>
-                  <th>Cashier / Staff</th>
-                  <th>Role</th>
-                  <th className="text-center">Today Invoices</th>
-                  <th className="text-end">Today's Revenue</th>
-                  <th className="text-end">Today's Profit</th>
-                  <th className="text-center">Total Invoices</th>
-                  <th className="text-end">Total Revenue</th>
-                  <th className="text-end">Total Profit</th>
-                  <th className="text-center">Profit Margin</th>
-                  <th className="text-end">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {overview.cashiers.map((c) => {
-                  const isSelected = selectedCashier === String(c.userId);
-                  return (
-                    <tr key={String(c.userId)} className={isSelected ? 'table-warning' : ''}>
-                      <td>
+          <>
+            {/* Mobile Card Layout */}
+            <div className="d-flex flex-column gap-2 d-md-none">
+              {overview.cashiers.map((c) => {
+                const isSelected = selectedCashier === String(c.userId);
+                return (
+                  <div
+                    key={String(c.userId)}
+                    className={`p-3 rounded-3 border ${isSelected ? 'border-warning bg-warning bg-opacity-10' : 'bg-light'}`}
+                  >
+                    <div className="d-flex justify-content-between align-items-center mb-2">
+                      <div>
                         <div className="fw-bold text-dark">{c.name}</div>
                         <small className="text-muted font-monospace">{c.email}</small>
-                      </td>
-                      <td>
-                        <span className={`badge ${c.role === 'ADMIN' ? 'bg-primary bg-opacity-10 text-primary' : 'bg-secondary bg-opacity-10 text-secondary'} extra-small`}>
-                          {c.role}
-                        </span>
-                      </td>
-                      <td className="text-center fw-bold">{c.todayInvoices}</td>
-                      <td className="text-end font-monospace fw-semibold">{formatRupees(c.todayRevenuePaise)}</td>
-                      <td className="text-end font-monospace fw-bold text-success">
-                        {formatRupees(c.todayProfitPaise)}
-                      </td>
-                      <td className="text-center fw-bold">{c.totalInvoices}</td>
-                      <td className="text-end font-monospace fw-semibold">{formatRupees(c.totalRevenuePaise)}</td>
-                      <td className="text-end font-monospace fw-bold text-success">
-                        {formatRupees(c.totalProfitPaise)}
-                      </td>
-                      <td className="text-center">
-                        <span className="badge bg-success bg-opacity-10 text-success fw-bold extra-small">
-                          +{c.marginPercent}%
-                        </span>
-                      </td>
-                      <td className="text-end">
-                        <button
-                          type="button"
-                          className={`btn btn-sm ${isSelected ? 'btn-dark-solid' : 'btn-outline-dark-custom'} py-1 px-2.5 extra-small`}
-                          onClick={() => {
-                            if (isSelected) {
-                              setSelectedCashier('');
-                            } else {
-                              setSelectedCashier(String(c.userId));
-                              setPage(1);
-                            }
-                          }}
-                        >
-                          {isSelected ? 'Clear Filter' : 'View Sales'}
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                      </div>
+                      <span className={`badge ${c.role === 'ADMIN' ? 'bg-primary bg-opacity-10 text-primary' : 'bg-secondary bg-opacity-10 text-secondary'} extra-small`}>
+                        {c.role}
+                      </span>
+                    </div>
+
+                    <div className="row g-2 mb-2 pt-2 border-top extra-small">
+                      <div className="col-6">
+                        <span className="text-muted">Today Rev:</span>
+                        <div className="font-monospace fw-bold text-dark">{formatRupees(c.todayRevenuePaise)}</div>
+                        <span className="text-success fw-semibold">+{formatRupees(c.todayProfitPaise)} profit</span>
+                      </div>
+                      <div className="col-6 text-end">
+                        <span className="text-muted">Total Rev:</span>
+                        <div className="font-monospace fw-bold text-dark">{formatRupees(c.totalRevenuePaise)}</div>
+                        <span className="text-success fw-semibold">+{formatRupees(c.totalProfitPaise)} (+{c.marginPercent}%)</span>
+                      </div>
+                    </div>
+
+                    <div className="d-flex justify-content-between align-items-center pt-2 border-top">
+                      <span className="text-muted extra-small">Invoices: {c.todayInvoices} today / {c.totalInvoices} all</span>
+                      <button
+                        type="button"
+                        className={`btn btn-sm ${isSelected ? 'btn-dark-solid' : 'btn-outline-dark-custom'} py-1 px-2.5 extra-small`}
+                        onClick={() => {
+                          if (isSelected) {
+                            setSelectedCashier('');
+                          } else {
+                            setSelectedCashier(String(c.userId));
+                            setPage(1);
+                          }
+                        }}
+                      >
+                        {isSelected ? 'Clear Filter' : 'View Sales'}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Desktop Table View */}
+            <div className="table-responsive d-none d-md-block">
+              <table className="table table-hover table-custom mb-0 text-nowrap">
+                <thead>
+                  <tr>
+                    <th>Cashier / Staff</th>
+                    <th>Role</th>
+                    <th className="text-center">Today Invoices</th>
+                    <th className="text-end">Today's Revenue</th>
+                    <th className="text-end">Today's Profit</th>
+                    <th className="text-center">Total Invoices</th>
+                    <th className="text-end">Total Revenue</th>
+                    <th className="text-end">Total Profit</th>
+                    <th className="text-center">Profit Margin</th>
+                    <th className="text-end">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {overview.cashiers.map((c) => {
+                    const isSelected = selectedCashier === String(c.userId);
+                    return (
+                      <tr key={String(c.userId)} className={isSelected ? 'table-warning' : ''}>
+                        <td>
+                          <div className="fw-bold text-dark">{c.name}</div>
+                          <small className="text-muted font-monospace">{c.email}</small>
+                        </td>
+                        <td>
+                          <span className={`badge ${c.role === 'ADMIN' ? 'bg-primary bg-opacity-10 text-primary' : 'bg-secondary bg-opacity-10 text-secondary'} extra-small`}>
+                            {c.role}
+                          </span>
+                        </td>
+                        <td className="text-center fw-bold">{c.todayInvoices}</td>
+                        <td className="text-end font-monospace fw-semibold">{formatRupees(c.todayRevenuePaise)}</td>
+                        <td className="text-end font-monospace fw-bold text-success">
+                          {formatRupees(c.todayProfitPaise)}
+                        </td>
+                        <td className="text-center fw-bold">{c.totalInvoices}</td>
+                        <td className="text-end font-monospace fw-semibold">{formatRupees(c.totalRevenuePaise)}</td>
+                        <td className="text-end font-monospace fw-bold text-success">
+                          {formatRupees(c.totalProfitPaise)}
+                        </td>
+                        <td className="text-center">
+                          <span className="badge bg-success bg-opacity-10 text-success fw-bold extra-small">
+                            +{c.marginPercent}%
+                          </span>
+                        </td>
+                        <td className="text-end">
+                          <button
+                            type="button"
+                            className={`btn btn-sm ${isSelected ? 'btn-dark-solid' : 'btn-outline-dark-custom'} py-1 px-2.5 extra-small`}
+                            onClick={() => {
+                              if (isSelected) {
+                                setSelectedCashier('');
+                              } else {
+                                setSelectedCashier(String(c.userId));
+                                setPage(1);
+                              }
+                            }}
+                          >
+                            {isSelected ? 'Clear Filter' : 'View Sales'}
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
 
@@ -528,14 +585,14 @@ export default function Finance() {
       </div>
 
       {/* Filtered Summary Ribbon */}
-      <div className="card-clean p-2.5 px-3 bg-white mb-3 d-flex flex-wrap align-items-center justify-content-between gap-3 border" style={{ borderColor: 'var(--border-light)' }}>
+      <div className="card-clean p-2.5 px-3 bg-white mb-3 d-flex flex-wrap align-items-center justify-content-between gap-2 gap-sm-3 border" style={{ borderColor: 'var(--border-light)' }}>
         <div className="d-flex align-items-center gap-2">
           <span className="badge bg-dark extra-small">Filtered Results</span>
           <small className="text-muted">
             Showing <strong className="text-dark">{totalCount}</strong> matching transactions ({filteredSummary.completedCount} completed)
           </small>
         </div>
-        <div className="d-flex align-items-center gap-4">
+        <div className="d-flex align-items-center gap-2 gap-sm-4 flex-wrap">
           <div>
             <span className="text-muted extra-small text-uppercase">Selling Revenue: </span>
             <strong className="font-monospace text-dark">{formatRupees(filteredSummary.revenuePaise)}</strong>
@@ -564,7 +621,7 @@ export default function Finance() {
           </div>
         ) : (
           <div className="table-responsive">
-            <table className="table table-custom mb-0">
+            <table className="table table-custom mb-0 text-nowrap">
               <thead>
                 <tr>
                   <th>Invoice No</th>

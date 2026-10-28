@@ -19,7 +19,7 @@ export default function CounterLayout() {
             <NavLink
               to="/counter/new-sale"
               className={({ isActive }) =>
-                `btn d-flex align-items-center gap-2 py-2 px-3.5 fw-bold rounded-pill text-decoration-none transition-all ${
+                `btn d-flex align-items-center gap-1.5 gap-sm-2 py-1.5 py-sm-2 px-2.5 px-sm-3.5 fw-bold rounded-pill text-decoration-none transition-all extra-small flex-shrink-0 ${
                   isActive
                     ? 'btn-accent text-dark'
                     : 'text-light'
@@ -31,14 +31,14 @@ export default function CounterLayout() {
                   : { backgroundColor: 'rgba(255, 255, 255, 0.08)', border: '1px solid var(--border-dark)' }
               }
             >
-              <ShoppingCart size={18} />
+              <ShoppingCart size={16} />
               <span>+ New Sale Billing</span>
             </NavLink>
 
             <NavLink
               to="/counter/today-sales"
               className={({ isActive }) =>
-                `btn d-flex align-items-center gap-2 py-2 px-3.5 fw-bold rounded-pill text-decoration-none transition-all ${
+                `btn d-flex align-items-center gap-1.5 gap-sm-2 py-1.5 py-sm-2 px-2.5 px-sm-3.5 fw-bold rounded-pill text-decoration-none transition-all extra-small flex-shrink-0 ${
                   isActive
                     ? 'btn-accent text-dark'
                     : 'text-light'
@@ -50,14 +50,14 @@ export default function CounterLayout() {
                   : { backgroundColor: 'rgba(255, 255, 255, 0.08)', border: '1px solid var(--border-dark)' }
               }
             >
-              <Calendar size={18} />
+              <Calendar size={16} />
               <span>Today's Invoices</span>
             </NavLink>
 
             <NavLink
               to="/counter/stock-lookup"
               className={({ isActive }) =>
-                `btn d-flex align-items-center gap-2 py-2 px-3.5 fw-bold rounded-pill text-decoration-none transition-all ${
+                `btn d-flex align-items-center gap-1.5 gap-sm-2 py-1.5 py-sm-2 px-2.5 px-sm-3.5 fw-bold rounded-pill text-decoration-none transition-all extra-small flex-shrink-0 ${
                   isActive
                     ? 'btn-accent text-dark'
                     : 'text-light'
@@ -69,7 +69,7 @@ export default function CounterLayout() {
                   : { backgroundColor: 'rgba(255, 255, 255, 0.08)', border: '1px solid var(--border-dark)' }
               }
             >
-              <Search size={18} />
+              <Search size={16} />
               <span>Stock Availability</span>
             </NavLink>
           </div>

@@ -349,7 +349,7 @@ export default function Accessories() {
       {/* Add / Edit Modal */}
       {showModal && (
         <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0, 0, 0, 0.65)', zIndex: 1055 }}>
-          <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div className="modal-content border-0 shadow-lg" style={{ borderRadius: 'var(--radius-md)', background: '#FFFFFF' }}>
               <div className="modal-header border-bottom pb-3">
                 <h5 className="modal-title text-dark fw-bold m-0">

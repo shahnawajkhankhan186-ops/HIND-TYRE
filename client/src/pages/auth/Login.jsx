@@ -135,7 +135,7 @@ export default function Login() {
       >
         <div className="w-100" style={{ maxWidth: '440px' }}>
           <div
-            className="card-clean p-4 p-sm-4 bg-white shadow-lg rounded-4"
+            className="card-clean p-3.5 p-sm-4 bg-white shadow-lg rounded-4"
             style={{ border: '1px solid var(--border-light)' }}
           >
             {/* Header */}

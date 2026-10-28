@@ -96,16 +96,16 @@ export default function Reports() {
 
       {/* Tabs & Date Filter Bar */}
       <div className="filter-bar-card">
-        <div className="d-flex flex-wrap align-items-center justify-content-between gap-3">
-          {/* Tabs */}
-          <div className="btn-group p-1 rounded-pill bg-light border flex-wrap">
+        <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 gap-sm-3">
+          {/* Tabs - horizontal swipeable carousel on mobile */}
+          <div className="d-flex flex-nowrap overflow-x-auto scrollbar-hidden gap-1 p-1 rounded-pill bg-light border w-100 w-xl-auto">
             {REPORT_TABS.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
               return (
                 <button
                   key={tab.id}
-                  className={`btn btn-sm rounded-pill px-3 py-1.5 d-flex align-items-center gap-1.5 ${
+                  className={`btn btn-sm rounded-pill px-3 py-1.5 d-flex align-items-center gap-1.5 flex-shrink-0 ${
                     isActive ? 'btn-accent' : 'btn-link text-muted text-decoration-none'
                   }`}
                   onClick={() => setActiveTab(tab.id)}
@@ -118,13 +118,14 @@ export default function Reports() {
           </div>
 
           {/* Date Filter */}
-          <div className="d-flex align-items-center gap-2">
+          <div className="d-flex align-items-center gap-2 flex-wrap w-100 w-xl-auto mt-2 mt-xl-0">
             <input
               type="date"
               className="form-control form-control-sm"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
               placeholder="From"
+              style={{ minWidth: '130px' }}
             />
             <span className="text-muted small">to</span>
             <input
@@ -133,8 +134,9 @@ export default function Reports() {
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
               placeholder="To"
+              style={{ minWidth: '130px' }}
             />
-            <button className="btn btn-outline-dark-custom btn-sm" onClick={fetchReport}>
+            <button className="btn btn-outline-dark-custom btn-sm ms-auto ms-sm-0" onClick={fetchReport}>
               Apply
             </button>
           </div>
@@ -152,7 +154,7 @@ export default function Reports() {
             {/* 1. SALES REPORT */}
             {activeTab === 'sales' && Array.isArray(reportData) && (
               <div className="table-responsive">
-                <table className="table table-custom mb-0">
+                <table className="table table-custom mb-0 text-nowrap">
                   <thead>
                     <tr>
                       <th>Invoice No</th>
@@ -187,7 +189,7 @@ export default function Reports() {
             {/* 2. VALUATION REPORT */}
             {activeTab === 'valuation' && (
               <div className="table-responsive">
-                <table className="table table-custom mb-0">
+                <table className="table table-custom mb-0 text-nowrap">
                   <thead>
                     <tr>
                       <th>Type</th>
@@ -253,7 +255,7 @@ export default function Reports() {
             {/* 3. LOW STOCK REPORT */}
             {activeTab === 'low-stock' && (
               <div className="table-responsive">
-                <table className="table table-custom mb-0">
+                <table className="table table-custom mb-0 text-nowrap">
                   <thead>
                     <tr>
                       <th>Category</th>
@@ -313,7 +315,7 @@ export default function Reports() {
             {/* 4. COMPANY-WISE SALES REPORT */}
             {activeTab === 'company-sales' && Array.isArray(reportData) && (
               <div className="table-responsive">
-                <table className="table table-custom mb-0">
+                <table className="table table-custom mb-0 text-nowrap">
                   <thead>
                     <tr>
                       <th>Tyre Manufacturer</th>
@@ -341,7 +343,7 @@ export default function Reports() {
             {/* 5. PROFIT REPORT */}
             {activeTab === 'profit' && Array.isArray(reportData) && (
               <div className="table-responsive">
-                <table className="table table-custom mb-0">
+                <table className="table table-custom mb-0 text-nowrap">
                   <thead>
                     <tr>
                       <th>Invoice No</th>

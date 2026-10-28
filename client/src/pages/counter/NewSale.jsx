@@ -53,6 +53,7 @@ export default function NewSale() {
 
   // Step 2: Catalog & Selection
   const [tab, setTab] = useState('tyres'); // 'tyres' | 'accessories'
+  const [mobileStep2View, setMobileStep2View] = useState('catalog'); // 'catalog' | 'cart'
   const [tyres, setTyres] = useState([]);
   const [accessories, setAccessories] = useState([]);
   const [companies, setCompanies] = useState([]);
@@ -381,6 +382,7 @@ export default function NewSale() {
     setPaymentMode('CASH');
     setCompletedSale(null);
     setFoundExistingCustomer(false);
+    setMobileStep2View('catalog');
     setStep(1);
     fetchCatalog(); // Refresh live stock
   };
@@ -427,9 +429,9 @@ export default function NewSale() {
           </div>
 
           {/* Stepper Progress (4 states) */}
-          <div className="d-flex align-items-center gap-2 flex-wrap">
+          <div className="d-flex align-items-center gap-1.5 flex-nowrap overflow-x-auto scrollbar-hidden pb-1 w-100 w-md-auto">
             <div
-              className="d-flex align-items-center px-3 py-1.5 rounded-pill small"
+              className="d-flex align-items-center px-2.5 px-sm-3 py-1.5 rounded-pill small flex-shrink-0"
               style={
                 step > 1
                   ? { background: 'var(--accent)', color: '#000', fontWeight: '700' }
@@ -442,10 +444,10 @@ export default function NewSale() {
               1. Customer
             </div>
 
-            <span className="text-muted">→</span>
+            <span className="text-muted flex-shrink-0">→</span>
 
             <div
-              className="d-flex align-items-center px-3 py-1.5 rounded-pill small"
+              className="d-flex align-items-center px-2.5 px-sm-3 py-1.5 rounded-pill small flex-shrink-0"
               style={
                 step > 2
                   ? { background: 'var(--accent)', color: '#000', fontWeight: '700' }
@@ -458,10 +460,10 @@ export default function NewSale() {
               2. Tyres & Cart ({cart.length})
             </div>
 
-            <span className="text-muted">→</span>
+            <span className="text-muted flex-shrink-0">→</span>
 
             <div
-              className="d-flex align-items-center px-3 py-1.5 rounded-pill small"
+              className="d-flex align-items-center px-2.5 px-sm-3 py-1.5 rounded-pill small flex-shrink-0"
               style={
                 step > 3
                   ? { background: 'var(--accent)', color: '#000', fontWeight: '700' }
@@ -481,7 +483,7 @@ export default function NewSale() {
       {step === 1 && (
         <div className="row justify-content-center">
           <div className="col-12 col-lg-8">
-            <div className="card-clean p-4 p-md-5 bg-white">
+            <div className="card-clean p-3 p-sm-4 p-md-5 bg-white">
               <div className="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom" style={{ borderColor: 'var(--border-light)' }}>
                 <div>
                   <h4 className="fw-bold m-0" style={{ color: 'var(--text-on-light)' }}>Step 1: Customer Information</h4>
@@ -623,8 +625,38 @@ export default function NewSale() {
       {/* STEP 2: SELECT TYRES & ACCESSORIES */}
       {step === 2 && (
         <div className="row g-3">
+          {/* Mobile Switcher between Catalog and Cart */}
+          <div className="col-12 d-lg-none">
+            <div className="btn-group w-100 p-1 rounded-pill bg-white shadow-xs border">
+              <button
+                type="button"
+                className={`btn btn-sm rounded-pill fw-bold py-2 ${
+                  mobileStep2View === 'catalog'
+                    ? 'btn-dark-solid text-white'
+                    : 'btn-link text-muted text-decoration-none'
+                }`}
+                onClick={() => setMobileStep2View('catalog')}
+              >
+                <Search size={14} className="me-1" />
+                Browse Catalog ({tab === 'tyres' ? filteredTyres.length : filteredAccessories.length})
+              </button>
+              <button
+                type="button"
+                className={`btn btn-sm rounded-pill fw-bold py-2 ${
+                  mobileStep2View === 'cart'
+                    ? 'btn-accent text-dark'
+                    : 'btn-link text-muted text-decoration-none'
+                }`}
+                onClick={() => setMobileStep2View('cart')}
+              >
+                <ShoppingCart size={14} className="me-1" />
+                Bill Items ({cart.length}) {cart.length > 0 ? `• ₹${paiseToRupees(subtotalPaise)}` : ''}
+              </button>
+            </div>
+          </div>
+
           {/* Left Column: Catalog & Search */}
-          <div className="col-12 col-lg-8">
+          <div className={`col-12 col-lg-8 ${mobileStep2View === 'catalog' ? 'd-block' : 'd-none d-lg-block'}`}>
             <div className="card-clean p-3 mb-3 bg-white">
               {/* Type Switcher & Search Bar */}
               <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
@@ -862,18 +894,27 @@ export default function NewSale() {
           </div>
 
           {/* Right Column: Live Billing Cart */}
-          <div className="col-12 col-lg-4">
+          <div className={`col-12 col-lg-4 ${mobileStep2View === 'cart' ? 'd-block' : 'd-none d-lg-block'}`}>
             <div className="card-clean p-3 h-100 d-flex flex-column bg-white">
               <div className="d-flex align-items-center justify-content-between pb-2 mb-3 border-bottom" style={{ borderColor: 'var(--border-light)' }}>
                 <div className="d-flex align-items-center gap-2">
                   <ShoppingCart size={18} style={{ color: 'var(--accent-dark)' }} />
                   <h5 className="fw-bold m-0 text-dark">Bill Items ({cart.length})</h5>
                 </div>
-                {cart.length > 0 && (
-                  <button className="btn btn-sm text-danger p-0 extra-small fw-semibold" onClick={() => setCart([])}>
-                    Clear all
+                <div className="d-flex align-items-center gap-2">
+                  {cart.length > 0 && (
+                    <button className="btn btn-sm text-danger p-0 extra-small fw-semibold" onClick={() => setCart([])}>
+                      Clear all
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-outline-secondary d-lg-none py-0.5 px-2 extra-small"
+                    onClick={() => setMobileStep2View('catalog')}
+                  >
+                    + Add More
                   </button>
-                )}
+                </div>
               </div>
 
               {/* Customer quick info */}
@@ -1004,6 +1045,29 @@ export default function NewSale() {
               )}
             </div>
           </div>
+
+          {/* Floating Mobile Cart Bar when viewing catalog */}
+          {cart.length > 0 && mobileStep2View === 'catalog' && (
+            <div className="mobile-floating-cart-bar d-lg-none animate-fadeIn">
+              <div className="d-flex align-items-center gap-2 text-white">
+                <div className="p-1.5 rounded-circle bg-warning text-dark">
+                  <ShoppingCart size={16} />
+                </div>
+                <div>
+                  <div className="extra-small text-muted lh-1">{cart.length} {cart.length === 1 ? 'item' : 'items'} in bill</div>
+                  <div className="fw-bold font-monospace text-warning fs-6 lh-1 mt-0.5">{formatRupees(subtotalPaise)}</div>
+                </div>
+              </div>
+              <button
+                type="button"
+                className="btn btn-sm btn-accent fw-bold px-3 py-2 d-flex align-items-center gap-1.5 rounded-pill shadow-sm"
+                onClick={() => setMobileStep2View('cart')}
+              >
+                <span>View Bill ({cart.length})</span>
+                <ArrowRight size={15} />
+              </button>
+            </div>
+          )}
         </div>
       )}
 
@@ -1011,7 +1075,7 @@ export default function NewSale() {
       {step === 3 && (
         <div className="row justify-content-center">
           <div className="col-12 col-lg-9">
-            <div className="card-clean p-4 p-md-5 bg-white">
+            <div className="card-clean p-3 p-sm-4 p-md-5 bg-white">
               <div className="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom" style={{ borderColor: 'var(--border-light)' }}>
                 <div>
                   <h4 className="fw-bold m-0" style={{ color: 'var(--text-on-light)' }}>Step 3: Review Invoice & Confirm Sale</h4>
@@ -1049,39 +1113,41 @@ export default function NewSale() {
 
               {/* Items Table */}
               <div className="card-clean overflow-hidden mb-4 bg-white">
-                <table className="table table-custom mb-0">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Item Description</th>
-                      <th>Size</th>
-                      <th>Warehouse</th>
-                      <th className="text-center">Qty</th>
-                      <th className="text-end">Rate (₹)</th>
-                      <th className="text-end">Line Total (₹)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {cart.map((item, idx) => {
-                      const lineSubtotal = item.unitPricePaise * item.quantity;
-                      return (
-                        <tr key={idx}>
-                          <td className="text-muted">{idx + 1}</td>
-                          <td className="text-dark fw-semibold">{item.name}</td>
-                          <td className="text-muted font-monospace">{item.size}</td>
-                          <td>
-                            <span className="badge bg-light text-dark border font-monospace extra-small">
-                              {getGodownName(item.godown)}
-                            </span>
-                          </td>
-                          <td className="text-center text-dark fw-bold">{item.quantity}</td>
-                          <td className="text-end font-monospace">{formatRupees(item.unitPricePaise, false)}</td>
-                          <td className="text-end font-monospace text-dark fw-bold">{formatRupees(lineSubtotal, false)}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+                <div className="table-responsive">
+                  <table className="table table-custom mb-0 text-nowrap">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Item Description</th>
+                        <th>Size</th>
+                        <th>Warehouse</th>
+                        <th className="text-center">Qty</th>
+                        <th className="text-end">Rate (₹)</th>
+                        <th className="text-end">Line Total (₹)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {cart.map((item, idx) => {
+                        const lineSubtotal = item.unitPricePaise * item.quantity;
+                        return (
+                          <tr key={idx}>
+                            <td className="text-muted">{idx + 1}</td>
+                            <td className="text-dark fw-semibold">{item.name}</td>
+                            <td className="text-muted font-monospace">{item.size}</td>
+                            <td>
+                              <span className="badge bg-light text-dark border font-monospace extra-small">
+                                {getGodownName(item.godown)}
+                              </span>
+                            </td>
+                            <td className="text-center text-dark fw-bold">{item.quantity}</td>
+                            <td className="text-end font-monospace">{formatRupees(item.unitPricePaise, false)}</td>
+                            <td className="text-end font-monospace text-dark fw-bold">{formatRupees(lineSubtotal, false)}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
               </div>
 
               {/* Payment Mode Selection & Discount */}
@@ -1207,7 +1273,7 @@ export default function NewSale() {
       {step === 4 && completedSale && (
         <div className="row justify-content-center">
           <div className="col-12 col-lg-8">
-            <div className="card-clean p-4 p-md-5 text-center bg-white shadow-lg">
+            <div className="card-clean p-3 p-sm-4 p-md-5 text-center bg-white shadow-lg">
               <div className="d-inline-flex p-3 rounded-circle mb-3" style={{ background: 'var(--accent-soft)', color: '#16A34A', border: '2px solid var(--accent)' }}>
                 <CheckCircle2 size={48} />
               </div>
