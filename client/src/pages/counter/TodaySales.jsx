@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Eye, Download, Mail, RefreshCw, Calendar, CheckCircle2 } from 'lucide-react';
+import { Search, Eye, Download, Mail, RefreshCw, Calendar, CheckCircle2, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../lib/api';
 import { formatRupees } from '../../lib/currency';
@@ -17,19 +17,19 @@ export default function TodaySales() {
   const [search, setSearch] = useState('');
   const [selectedSale, setSelectedSale] = useState(null);
   const [showReceipt, setShowReceipt] = useState(false);
-  const { shopSettings } = useAuth();
+  const { user, shopSettings } = useAuth();
 
   useEffect(() => {
     fetchTodaySales();
   }, []);
 
-  const fetchTodaySales = async () => {
+  const fetchTodaySales = async (targetSearch = search) => {
     try {
       setLoading(true);
       const res = await api.get('/counter/sales', {
         params: {
           date: 'today',
-          search,
+          search: targetSearch?.trim() || undefined,
           limit: 50,
         },
       });
@@ -44,8 +44,13 @@ export default function TodaySales() {
   };
 
   const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    fetchTodaySales();
+    if (e) e.preventDefault();
+    fetchTodaySales(search);
+  };
+
+  const handleClearSearch = () => {
+    setSearch('');
+    fetchTodaySales('');
   };
 
   const totalTodayPaise = sales
@@ -65,12 +70,16 @@ export default function TodaySales() {
           </div>
 
           <div className="d-flex align-items-center gap-3">
+            {user?.role === 'ADMIN' && (
+              <div className="p-2.5 px-3 rounded-3 text-end" style={{ background: 'var(--bg-light)', border: '1px solid var(--border-light)' }}>
+                <div className="text-muted extra-small text-uppercase fw-semibold">Today's Revenue</div>
+                <div className="fw-bold font-monospace fs-5" style={{ color: 'var(--text-on-light)' }}>{formatRupees(totalTodayPaise)}</div>
+              </div>
+            )}
             <div className="p-2.5 px-3 rounded-3 text-end" style={{ background: 'var(--bg-light)', border: '1px solid var(--border-light)' }}>
-              <div className="text-muted extra-small text-uppercase fw-semibold">Today's Revenue</div>
-              <div className="fw-bold font-monospace fs-5" style={{ color: 'var(--text-on-light)' }}>{formatRupees(totalTodayPaise)}</div>
-            </div>
-            <div className="p-2.5 px-3 rounded-3 text-end" style={{ background: 'var(--bg-light)', border: '1px solid var(--border-light)' }}>
-              <div className="text-muted extra-small text-uppercase fw-semibold">Invoices</div>
+              <div className="text-muted extra-small text-uppercase fw-semibold">
+                {user?.role === 'ADMIN' ? 'Total Invoices' : 'My Invoices Today'}
+              </div>
               <div className="fw-bold fs-5 text-dark">{completedCount}</div>
             </div>
             <button className="btn btn-outline-dark-custom btn-sm p-2 d-flex align-items-center justify-content-center" onClick={fetchTodaySales} title="Refresh">
@@ -83,21 +92,55 @@ export default function TodaySales() {
       {/* Search Bar */}
       <div className="filter-bar-card">
         <form onSubmit={handleSearchSubmit} className="row g-2 align-items-center">
-          <div className="col-12 col-md-6 col-lg-4">
+          <div className="col-12 col-md-6 col-lg-5">
             <div className="input-group input-group-sm">
-              <span className="input-group-text"><Search size={15} /></span>
+              <button
+                type="submit"
+                className="input-group-text bg-white text-muted border-end-0"
+                style={{ cursor: 'pointer' }}
+                title="Click to search"
+              >
+                <Search size={15} />
+              </button>
               <input
                 type="text"
-                className="form-control"
+                className="form-control border-start-0"
                 placeholder="Search invoice number, customer phone or name..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
+              {search && (
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary btn-sm px-2"
+                  onClick={handleClearSearch}
+                  title="Clear search text"
+                >
+                  <X size={14} />
+                </button>
+              )}
+              <button
+                type="submit"
+                className="btn btn-accent btn-sm fw-bold d-flex align-items-center gap-1.5 px-3"
+                title="Search today sales"
+              >
+                <Search size={14} />
+                <span>Search</span>
+              </button>
             </div>
           </div>
-          <div className="col-auto">
-            <button type="submit" className="btn btn-accent btn-sm fw-bold">Search</button>
-          </div>
+          {search && (
+            <div className="col-auto">
+              <button
+                type="button"
+                className="btn btn-outline-dark-custom btn-sm d-flex align-items-center gap-1"
+                onClick={handleClearSearch}
+                title="Reset search"
+              >
+                <RefreshCw size={13} /> Reset
+              </button>
+            </div>
+          )}
         </form>
       </div>
 

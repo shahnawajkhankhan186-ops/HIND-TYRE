@@ -13,7 +13,8 @@ import {
   Sliders,
   DollarSign,
   Eye,
-  Check
+  Check,
+  X
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../lib/api';
@@ -55,6 +56,7 @@ export default function Tyres() {
     materialNumber: '',
     purchasePriceRupees: '',
     actualPriceRupees: '',
+    minSellingPriceRupees: '',
     sellingPriceRupees: '',
     gstPercent: 0,
     g1Stock: 0,
@@ -93,16 +95,16 @@ export default function Tyres() {
     } catch (_) {}
   };
 
-  const fetchTyres = async () => {
+  const fetchTyres = async (targetPage = page, targetSearch = search) => {
     try {
       setLoading(true);
       const res = await api.get('/admin/tyres', {
         params: {
-          page,
+          page: targetPage,
           limit: 15,
-          search,
-          companyId,
-          vehicleType,
+          search: targetSearch?.trim() || undefined,
+          companyId: companyId || undefined,
+          vehicleType: vehicleType || undefined,
           inStockGodown: inStockGodown || undefined,
           lowStock: lowStock ? 'true' : 'false',
         },
@@ -120,9 +122,40 @@ export default function Tyres() {
   };
 
   const handleSearchSubmit = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setPage(1);
-    fetchTyres();
+    fetchTyres(1, search);
+  };
+
+  const handleClearSearch = () => {
+    setSearch('');
+    setPage(1);
+    fetchTyres(1, '');
+  };
+
+  const handleResetFilters = () => {
+    setSearch('');
+    setCompanyId('');
+    setVehicleType('');
+    setInStockGodown('');
+    setLowStock(false);
+    setPage(1);
+    (async () => {
+      try {
+        setLoading(true);
+        const res = await api.get('/admin/tyres', {
+          params: { page: 1, limit: 15 },
+        });
+        if (res.data.success) {
+          setTyres(res.data.data.tyres);
+          setTotalPages(res.data.data.pages);
+          setTotalCount(res.data.data.total);
+        }
+      } catch (_) {
+      } finally {
+        setLoading(false);
+      }
+    })();
   };
 
   const handleOpenAdd = () => {
@@ -137,6 +170,7 @@ export default function Tyres() {
       materialNumber: `MAT-${Date.now().toString().slice(-6)}`,
       purchasePriceRupees: '',
       actualPriceRupees: '',
+      minSellingPriceRupees: '',
       sellingPriceRupees: '',
       gstPercent: 0,
       g1Stock: 5,
@@ -152,6 +186,9 @@ export default function Tyres() {
     const actualRupees = t.actualPricePaise
       ? (t.actualPricePaise / 100).toFixed(2)
       : (Number(purchaseRupees) * 0.97).toFixed(2);
+    const minSellingRupees = t.minSellingPricePaise
+      ? (t.minSellingPricePaise / 100).toString()
+      : actualRupees;
 
     const g1Stock = t.godownStock?.G1 ?? 0;
     const g2Stock = t.godownStock?.G2 ?? 0;
@@ -167,6 +204,7 @@ export default function Tyres() {
       materialNumber: t.materialNumber || '',
       purchasePriceRupees: purchaseRupees,
       actualPriceRupees: actualRupees,
+      minSellingPriceRupees: minSellingRupees,
       sellingPriceRupees: (t.sellingPricePaise / 100).toString(),
       gstPercent: 0,
       g1Stock,
@@ -189,6 +227,9 @@ export default function Tyres() {
       const actualPricePaise = formData.actualPriceRupees
         ? rupeesToPaise(formData.actualPriceRupees)
         : Math.round(purchasePricePaise * 0.97);
+      const minSellingPricePaise = formData.minSellingPriceRupees
+        ? rupeesToPaise(formData.minSellingPriceRupees)
+        : actualPricePaise;
 
       const g1Stock = Math.max(0, parseInt(formData.g1Stock || 0, 10));
       const g2Stock = Math.max(0, parseInt(formData.g2Stock || 0, 10));
@@ -204,6 +245,7 @@ export default function Tyres() {
         materialNumber: formData.materialNumber.trim().toUpperCase(),
         purchasePricePaise,
         actualPricePaise,
+        minSellingPricePaise,
         mrpPaise: actualPricePaise,
         sellingPricePaise: rupeesToPaise(formData.sellingPriceRupees),
         gstPercent: 0,
@@ -327,19 +369,44 @@ export default function Tyres() {
       {/* Search & Filters Bar */}
       <div className="filter-bar-card">
         <form onSubmit={handleSearchSubmit} className="row g-2 align-items-center">
-          <div className="col-12 col-md-4">
+          <div className="col-12 col-lg-5 col-md-6">
             <div className="input-group input-group-sm">
-              <span className="input-group-text"><Search size={15} /></span>
+              <button
+                type="submit"
+                className="input-group-text bg-white text-muted border-end-0"
+                style={{ cursor: 'pointer' }}
+                title="Click to search"
+              >
+                <Search size={15} />
+              </button>
               <input
                 type="text"
-                className="form-control"
-                placeholder="Search model, size (e.g. 185/65), or SKU..."
+                className="form-control border-start-0"
+                placeholder="Search model, size (e.g. 185/65), SKU, material no..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
+              {search && (
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary btn-sm px-2"
+                  onClick={handleClearSearch}
+                  title="Clear search text"
+                >
+                  <X size={14} />
+                </button>
+              )}
+              <button
+                type="submit"
+                className="btn btn-accent btn-sm fw-bold d-flex align-items-center gap-1.5 px-3"
+                title="Search tyres"
+              >
+                <Search size={14} />
+                <span>Search</span>
+              </button>
             </div>
           </div>
-          <div className="col-6 col-md-2.5">
+          <div className="col-6 col-lg-2 col-md-3">
             <select
               className="form-select form-select-sm"
               value={companyId}
@@ -354,7 +421,7 @@ export default function Tyres() {
               ))}
             </select>
           </div>
-          <div className="col-6 col-md-2.5">
+          <div className="col-6 col-lg-2 col-md-3">
             <select
               className="form-select form-select-sm"
               value={vehicleType}
@@ -369,7 +436,7 @@ export default function Tyres() {
               ))}
             </select>
           </div>
-          <div className="col-6 col-md-2">
+          <div className="col-6 col-lg-2 col-md-4">
             <select
               className="form-select form-select-sm"
               value={inStockGodown}
@@ -383,7 +450,7 @@ export default function Tyres() {
               <option value="G2">In Stock in {getGodownName('G2')}</option>
             </select>
           </div>
-          <div className="col-6 col-md-2 d-flex align-items-center">
+          <div className="col-6 col-lg-auto col-md-4 d-flex align-items-center">
             <div className="form-check form-switch m-0">
               <input
                 className="form-check-input"
@@ -395,14 +462,24 @@ export default function Tyres() {
                   setPage(1);
                 }}
               />
-              <label className="form-check-label text-dark small fw-semibold ms-1" htmlFor="lowStockToggle">
+              <label className="form-check-label text-dark small fw-semibold ms-1 text-nowrap" htmlFor="lowStockToggle">
                 Low Stock Only
               </label>
             </div>
           </div>
-          <div className="col-6 col-md-1">
-            <button type="submit" className="btn btn-outline-dark-custom btn-sm w-100">Filter</button>
-          </div>
+          {(search || companyId || vehicleType || inStockGodown || lowStock) && (
+            <div className="col-auto">
+              <button
+                type="button"
+                className="btn btn-outline-dark-custom btn-sm d-flex align-items-center gap-1"
+                onClick={handleResetFilters}
+                title="Reset all filters"
+              >
+                <RefreshCw size={13} />
+                <span>Reset</span>
+              </button>
+            </div>
+          )}
         </form>
       </div>
 
@@ -464,8 +541,11 @@ export default function Tyres() {
                           Act: {formatRupees(t.actualPricePaise || Math.round(t.purchasePricePaise * 0.97))}
                         </div>
                       </td>
-                      <td className="text-end text-dark font-monospace fw-bold fs-6">
-                        {formatRupees(t.sellingPricePaise)}
+                      <td className="text-end text-dark font-monospace">
+                        <div className="fw-bold fs-6">{formatRupees(t.sellingPricePaise)}</div>
+                        <div className="extra-small text-danger fw-semibold" title="Minimum Floor Selling Price">
+                          Min: {formatRupees(t.minSellingPricePaise || t.actualPricePaise || t.sellingPricePaise)}
+                        </div>
                       </td>
                       <td className="text-center font-monospace">
                         <span className={`badge ${t.godownStock?.G1 > 0 ? 'bg-light text-dark border' : 'bg-light text-muted opacity-50 border'} px-2 py-1`}>
@@ -537,9 +617,9 @@ export default function Tyres() {
       {/* Add / Edit Tyre Modal */}
       {showModal && (
         <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0, 0, 0, 0.65)', zIndex: 1055 }}>
-          <div className="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-            <div className="modal-content border-0 shadow-lg" style={{ borderRadius: 'var(--radius-md)', background: '#FFFFFF' }}>
-              <div className="modal-header border-bottom py-3">
+          <div className="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" style={{ maxHeight: 'calc(100vh - 40px)' }}>
+            <div className="modal-content border-0 shadow-lg d-flex flex-column" style={{ borderRadius: 'var(--radius-md)', background: '#FFFFFF', maxHeight: 'calc(100vh - 60px)', overflow: 'hidden' }}>
+              <div className="modal-header border-bottom py-3 flex-shrink-0">
                 <h5 className="modal-title text-dark fw-bold m-0">
                   {editingTyre ? 'Edit Tyre & Price' : 'Add New Tyre to Inventory'}
                 </h5>
@@ -548,8 +628,8 @@ export default function Tyres() {
                 </button>
               </div>
 
-              <form onSubmit={handleSave}>
-                <div className="modal-body py-3">
+              <form onSubmit={handleSave} className="d-flex flex-column flex-grow-1" style={{ minHeight: 0, overflow: 'hidden' }}>
+                <div className="modal-body py-3 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 180px)' }}>
                   <div className="row g-3">
                     <div className="col-12 col-md-6">
                       <label className="form-label text-dark small fw-semibold">Company / Brand *</label>
@@ -640,7 +720,7 @@ export default function Tyres() {
                     </div>
 
                     {/* Pricing in Rupees */}
-                    <div className="col-12 col-md-4">
+                    <div className="col-12 col-md-3">
                       <label className="form-label text-dark small fw-semibold">Purchase Price (₹) *</label>
                       <input
                         type="number"
@@ -656,13 +736,14 @@ export default function Tyres() {
                             ...formData,
                             purchasePriceRupees: val,
                             actualPriceRupees: autoActual,
+                            minSellingPriceRupees: formData.minSellingPriceRupees || autoActual,
                           });
                         }}
                         required
                       />
                     </div>
 
-                    <div className="col-12 col-md-4">
+                    <div className="col-12 col-md-3">
                       <div className="d-flex justify-content-between align-items-center mb-1">
                         <label className="form-label text-dark small fw-bold m-0">Actual Price (₹)</label>
                         <span className="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 extra-small">
@@ -679,7 +760,7 @@ export default function Tyres() {
                       />
                     </div>
 
-                    <div className="col-12 col-md-4">
+                    <div className="col-12 col-md-3">
                       <label className="form-label text-dark small fw-bold">Selling Price (₹) *</label>
                       <input
                         type="number"
@@ -687,9 +768,35 @@ export default function Tyres() {
                         className="form-control"
                         placeholder="0.00"
                         value={formData.sellingPriceRupees}
-                        onChange={(e) => setFormData({ ...formData, sellingPriceRupees: e.target.value })}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setFormData({
+                            ...formData,
+                            sellingPriceRupees: val,
+                            minSellingPriceRupees: formData.minSellingPriceRupees || val,
+                          });
+                        }}
                         required
                       />
+                    </div>
+
+                    <div className="col-12 col-md-3">
+                      <div className="d-flex justify-content-between align-items-center mb-1">
+                        <label className="form-label text-dark small fw-bold m-0">Min Selling Price (₹) *</label>
+                        <span className="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 extra-small">
+                          Floor Rate
+                        </span>
+                      </div>
+                      <input
+                        type="number"
+                        step="0.01"
+                        className="form-control font-monospace border-warning"
+                        placeholder="0.00"
+                        value={formData.minSellingPriceRupees}
+                        onChange={(e) => setFormData({ ...formData, minSellingPriceRupees: e.target.value })}
+                        required
+                      />
+                      <div className="form-text extra-small text-muted">Cashier cannot sell below this</div>
                     </div>
 
                     {/* Quantity & Threshold */}
@@ -763,12 +870,27 @@ export default function Tyres() {
                   </div>
                 </div>
 
-                <div className="modal-footer border-top py-3">
-                  <button type="button" className="btn btn-outline-dark-custom" onClick={() => setShowModal(false)}>
+                <div className="modal-footer border-top py-3 bg-white flex-shrink-0 d-flex justify-content-end gap-2">
+                  <button type="button" className="btn btn-outline-dark-custom px-3" onClick={() => setShowModal(false)}>
                     Cancel
                   </button>
-                  <button type="submit" className="btn btn-accent" disabled={saving}>
-                    {saving ? 'Saving Tyre...' : 'Save Tyre Specification'}
+                  <button type="submit" className="btn btn-accent fw-bold px-4 d-flex align-items-center gap-1.5" disabled={saving}>
+                    {saving ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
+                        <span>{editingTyre ? 'Updating Tyre...' : 'Saving Tyre...'}</span>
+                      </>
+                    ) : editingTyre ? (
+                      <>
+                        <Check size={16} />
+                        <span>Confirm Edit</span>
+                      </>
+                    ) : (
+                      <>
+                        <Plus size={16} />
+                        <span>Save Tyre Specification</span>
+                      </>
+                    )}
                   </button>
                 </div>
               </form>

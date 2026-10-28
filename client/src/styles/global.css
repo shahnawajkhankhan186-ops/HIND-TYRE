@@ -277,6 +277,21 @@ h1, h2, h3, h4, h5, h6, .brand-font {
   color: var(--text-muted) !important;
 }
 
+.input-group-sm > .btn {
+  font-size: 0.85rem !important;
+  padding: 0.45rem 0.85rem !important;
+}
+
+.input-group > :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
+.input-group > :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu):not(.form-floating) {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
 .form-label-custom {
   font-size: 0.8rem;
   font-weight: 600;

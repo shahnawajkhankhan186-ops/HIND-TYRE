@@ -29,6 +29,7 @@ import StockIn from './pages/admin/StockIn';
 import StockAdjust from './pages/admin/StockAdjust';
 import StockLedger from './pages/admin/StockLedger';
 import SalesLedger from './pages/admin/SalesLedger';
+import Finance from './pages/admin/Finance';
 import Customers from './pages/admin/Customers';
 import Reports from './pages/admin/Reports';
 import Users from './pages/admin/Users';
@@ -123,6 +124,7 @@ export default function App() {
           <Route path="stock-adjust" element={<StockAdjust />} />
           <Route path="stock-ledger" element={<StockLedger />} />
           <Route path="sales" element={<SalesLedger />} />
+          <Route path="finance" element={<Finance />} />
           <Route path="customers" element={<Customers />} />
           <Route path="reports" element={<Reports />} />
           <Route path="users" element={<Users />} />

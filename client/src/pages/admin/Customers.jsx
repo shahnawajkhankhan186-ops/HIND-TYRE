@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Search, RefreshCw, Car, Eye, Phone, Mail, MapPin } from 'lucide-react';
+import { Users, Search, RefreshCw, Car, Eye, Phone, Mail, MapPin, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../lib/api';
 import { formatRupees } from '../../lib/currency';
@@ -24,11 +24,11 @@ export default function Customers() {
     fetchCustomers();
   }, [page]);
 
-  const fetchCustomers = async () => {
+  const fetchCustomers = async (targetPage = page, targetSearch = search) => {
     try {
       setLoading(true);
       const res = await api.get('/admin/customers', {
-        params: { page, limit: 15, search },
+        params: { page: targetPage, limit: 15, search: targetSearch?.trim() || undefined },
       });
       if (res.data.success) {
         setCustomers(res.data.data.customers);
@@ -43,9 +43,15 @@ export default function Customers() {
   };
 
   const handleSearchSubmit = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setPage(1);
-    fetchCustomers();
+    fetchCustomers(1, search);
+  };
+
+  const handleClearSearch = () => {
+    setSearch('');
+    setPage(1);
+    fetchCustomers(1, '');
   };
 
   const handleViewHistory = async (cust) => {
@@ -84,21 +90,55 @@ export default function Customers() {
       {/* Search Bar */}
       <div className="filter-bar-card">
         <form onSubmit={handleSearchSubmit} className="row g-2 align-items-center">
-          <div className="col-12 col-md-5">
+          <div className="col-12 col-md-6 col-lg-5">
             <div className="input-group input-group-sm">
-              <span className="input-group-text"><Search size={15} /></span>
+              <button
+                type="submit"
+                className="input-group-text bg-white text-muted border-end-0"
+                style={{ cursor: 'pointer' }}
+                title="Click to search"
+              >
+                <Search size={15} />
+              </button>
               <input
                 type="text"
-                className="form-control"
+                className="form-control border-start-0"
                 placeholder="Search by customer name, 10-digit phone, or vehicle number..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
+              {search && (
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary btn-sm px-2"
+                  onClick={handleClearSearch}
+                  title="Clear search text"
+                >
+                  <X size={14} />
+                </button>
+              )}
+              <button
+                type="submit"
+                className="btn btn-accent btn-sm fw-bold d-flex align-items-center gap-1.5 px-3"
+                title="Search customers"
+              >
+                <Search size={14} />
+                <span>Search</span>
+              </button>
             </div>
           </div>
-          <div className="col-12 col-md-2">
-            <button type="submit" className="btn btn-outline-dark-custom btn-sm w-100">Search</button>
-          </div>
+          {search && (
+            <div className="col-auto">
+              <button
+                type="button"
+                className="btn btn-outline-dark-custom btn-sm d-flex align-items-center gap-1"
+                onClick={handleClearSearch}
+                title="Reset search"
+              >
+                <RefreshCw size={13} /> Reset
+              </button>
+            </div>
+          )}
         </form>
       </div>
 
