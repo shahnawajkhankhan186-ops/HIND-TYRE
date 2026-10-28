@@ -626,7 +626,6 @@ export default function Tyres() {
                         value={formData.actualPriceRupees}
                         onChange={(e) => setFormData({ ...formData, actualPriceRupees: e.target.value })}
                       />
-                      <div className="text-muted extra-small mt-1">Purchase se 3% kam (editable)</div>
                     </div>
 
                     <div className="col-12 col-md-4">
