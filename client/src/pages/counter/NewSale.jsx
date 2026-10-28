@@ -27,7 +27,7 @@ import {
   X
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import api from '../../lib/api';
+import api, { getReceiptPdfUrl } from '../../lib/api';
 import { formatRupees, paiseToRupees } from '../../lib/currency';
 import { formatIST } from '../../lib/ist-date';
 import ReceiptModal from '../../components/common/ReceiptModal';
@@ -1317,8 +1317,10 @@ export default function NewSale() {
                   <Printer size={16} /> View & Print Receipt
                 </button>
                 <a
-                  href={`/api/sales/${completedSale._id}/receipt.pdf`}
+                  href={getReceiptPdfUrl(completedSale._id)}
                   download={`Invoice_${completedSale.invoiceNo}.pdf`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="btn btn-accent d-flex align-items-center gap-1.5"
                 >
                   <Download size={16} /> Download Receipt (PDF)
