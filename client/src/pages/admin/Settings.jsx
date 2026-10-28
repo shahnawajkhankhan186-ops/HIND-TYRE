@@ -99,7 +99,7 @@ export default function Settings() {
 
       <div className="row justify-content-center">
         <div className="col-12 col-lg-10">
-          <div className="card-clean bg-white p-4 p-md-5">
+          <div className="card-clean bg-white p-3 p-sm-4 p-md-5">
             <form onSubmit={handleSubmit}>
               <h5 className="text-dark fw-bold mb-3 pb-2 border-bottom d-flex align-items-center gap-2">
                 <Store size={18} style={{ color: 'var(--accent-dark)' }} /> Business Identity

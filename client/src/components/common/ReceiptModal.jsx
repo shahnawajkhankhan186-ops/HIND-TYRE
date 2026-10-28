@@ -40,29 +40,31 @@ export default function ReceiptModal({ isOpen, onClose, sale, shopSettings }) {
                 <small className="text-muted font-monospace">{sale.invoiceNo}</small>
               </div>
             </div>
-            <div className="d-flex align-items-center gap-2">
+            <div className="d-flex align-items-center gap-1.5 gap-sm-2">
               <button
-                className="btn btn-sm btn-accent d-flex align-items-center gap-1"
+                className="btn btn-sm btn-accent d-flex align-items-center gap-1 px-2 px-sm-3"
                 onClick={handleDownloadPDF}
+                title="Download Receipt PDF"
               >
-                <Download size={15} /> Download PDF
+                <Download size={15} /> <span className="d-none d-sm-inline">Download PDF</span>
               </button>
               <button
-                className="btn btn-sm btn-outline-dark-custom d-flex align-items-center gap-1"
+                className="btn btn-sm btn-outline-dark-custom d-flex align-items-center gap-1 px-2 px-sm-3"
                 onClick={handlePrint}
+                title="Print Receipt"
               >
-                <Printer size={15} /> Print
+                <Printer size={15} /> <span className="d-none d-sm-inline">Print</span>
               </button>
-              <button className="btn btn-sm text-secondary p-1" onClick={onClose}>
+              <button className="btn btn-sm text-secondary p-1" onClick={onClose} title="Close">
                 <X size={20} />
               </button>
             </div>
           </div>
 
           {/* Modal Body / Printable Receipt Canvas */}
-          <div className="modal-body p-4" id="printable-receipt-canvas" style={{ background: 'var(--bg-light)' }}>
+          <div className="modal-body p-2.5 p-sm-4" id="printable-receipt-canvas" style={{ background: 'var(--bg-light)' }}>
             {/* Shop Brand Header */}
-            <div className="p-4 rounded-3 mb-3 text-white" style={{ background: 'var(--bg-black)', border: '1px solid var(--border-dark)' }}>
+            <div className="p-3 p-sm-4 rounded-3 mb-3 text-white" style={{ background: 'var(--bg-black)', border: '1px solid var(--border-dark)' }}>
               <div className="d-flex flex-wrap justify-content-between align-items-start gap-3">
                 <div>
                   <h3 className="fw-bold m-0" style={{ color: 'var(--accent)', fontFamily: 'Montserrat, sans-serif', letterSpacing: '-0.5px' }}>
@@ -129,33 +131,35 @@ export default function ReceiptModal({ isOpen, onClose, sale, shopSettings }) {
 
             {/* Items Table */}
             <div className="card-clean overflow-hidden mb-3 bg-white">
-              <table className="table table-custom mb-0">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Item Description</th>
-                    <th>Size</th>
-                    <th className="text-center">Qty</th>
-                    <th className="text-end">Unit Rate</th>
-                    <th className="text-end">Line Total</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {sale.items.map((item, idx) => (
-                    <tr key={idx}>
-                      <td className="text-muted">{idx + 1}</td>
-                      <td>
-                        <span className="fw-semibold text-dark">{item.name}</span>
-                        {item.company && <div className="text-muted small">{item.company}</div>}
-                      </td>
-                      <td className="text-muted font-monospace small">{item.size || '-'}</td>
-                      <td className="text-center fw-bold text-dark">{item.qty}</td>
-                      <td className="text-end font-monospace">{formatRupees(item.unitPricePaise)}</td>
-                      <td className="text-end font-monospace fw-bold text-dark">{formatRupees(item.lineTotalPaise)}</td>
+              <div className="table-responsive">
+                <table className="table table-custom mb-0 text-nowrap">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Item Description</th>
+                      <th>Size</th>
+                      <th className="text-center">Qty</th>
+                      <th className="text-end">Unit Rate</th>
+                      <th className="text-end">Line Total</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {sale.items.map((item, idx) => (
+                      <tr key={idx}>
+                        <td className="text-muted">{idx + 1}</td>
+                        <td>
+                          <span className="fw-semibold text-dark">{item.name}</span>
+                          {item.company && <div className="text-muted small">{item.company}</div>}
+                        </td>
+                        <td className="text-muted font-monospace small">{item.size || '-'}</td>
+                        <td className="text-center fw-bold text-dark">{item.qty}</td>
+                        <td className="text-end font-monospace">{formatRupees(item.unitPricePaise)}</td>
+                        <td className="text-end font-monospace fw-bold text-dark">{formatRupees(item.lineTotalPaise)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
 
             {/* Calculations & Words Breakdown */}

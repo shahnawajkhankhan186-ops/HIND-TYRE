@@ -139,7 +139,7 @@ export default function Dashboard() {
       <div className="row g-3 mb-4">
         {/* Today's Sales */}
         <div className="col-12 col-sm-6 col-xl-3">
-          <div className="card-clean p-3.5 h-100 bg-white">
+          <div className="card-clean p-3 p-sm-3.5 h-100 bg-white">
             <div className="d-flex justify-content-between align-items-center mb-2">
               <span className="text-muted small fw-semibold text-uppercase">Today's Sales</span>
               <div className="p-2 rounded-circle" style={{ background: 'var(--accent-soft)', color: '#B45309' }}>
@@ -156,7 +156,7 @@ export default function Dashboard() {
 
         {/* This Month's Sales */}
         <div className="col-12 col-sm-6 col-xl-3">
-          <div className="card-clean p-3.5 h-100 bg-white">
+          <div className="card-clean p-3 p-sm-3.5 h-100 bg-white">
             <div className="d-flex justify-content-between align-items-center mb-2">
               <span className="text-muted small fw-semibold text-uppercase">This Month</span>
               <div className="p-2 rounded-circle" style={{ background: 'var(--accent-soft)', color: '#B45309' }}>
@@ -173,7 +173,7 @@ export default function Dashboard() {
 
         {/* Stock Valuation (Selling Value) */}
         <div className="col-12 col-sm-6 col-xl-3">
-          <div className="card-clean p-3.5 h-100 bg-white">
+          <div className="card-clean p-3 p-sm-3.5 h-100 bg-white">
             <div className="d-flex justify-content-between align-items-center mb-2">
               <span className="text-muted small fw-semibold text-uppercase">Stock Value (Retail)</span>
               <div className="p-2 rounded-circle" style={{ background: '#DCFCE7', color: '#16A34A' }}>
@@ -190,7 +190,7 @@ export default function Dashboard() {
 
         {/* Inventory Health Alerts */}
         <div className="col-12 col-sm-6 col-xl-3">
-          <div className="card-clean p-3.5 h-100" style={{ background: (stockValue?.outOfStockCount || 0) > 0 ? '#FEF2F2' : '#FFFBEB', border: (stockValue?.outOfStockCount || 0) > 0 ? '1px solid #FCA5A5' : '1px solid #FDE68A' }}>
+          <div className="card-clean p-3 p-sm-3.5 h-100" style={{ background: (stockValue?.outOfStockCount || 0) > 0 ? '#FEF2F2' : '#FFFBEB', border: (stockValue?.outOfStockCount || 0) > 0 ? '1px solid #FCA5A5' : '1px solid #FDE68A' }}>
             <div className="d-flex justify-content-between align-items-center mb-2">
               <span className="small fw-semibold text-uppercase" style={{ color: (stockValue?.outOfStockCount || 0) > 0 ? '#991B1B' : '#92400E' }}>Stock Alerts</span>
               <div className="p-2 rounded-circle" style={{ background: (stockValue?.outOfStockCount || 0) > 0 ? '#FEE2E2' : '#FEF3C7', color: (stockValue?.outOfStockCount || 0) > 0 ? '#DC2626' : '#D97706' }}>
@@ -277,7 +277,7 @@ export default function Dashboard() {
       <div className="row g-3 mb-4">
         {/* 10-Day Daily Revenue Graph */}
         <div className="col-12 col-xl-8">
-          <div className="card-clean p-4 h-100 bg-white">
+          <div className="card-clean p-3 p-sm-4 h-100 bg-white">
             <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
               <div>
                 <h5 className="fw-bold m-0 text-dark">Daily Revenue Graph (Last 10 Days)</h5>
@@ -405,7 +405,7 @@ export default function Dashboard() {
 
         {/* Top Selling Brands Pie Chart */}
         <div className="col-12 col-xl-4">
-          <div className="card-clean p-4 h-100 bg-white">
+          <div className="card-clean p-3 p-sm-4 h-100 bg-white">
             <h5 className="fw-bold mb-1 text-dark">Top Selling Brands</h5>
             <small className="text-muted d-block mb-3">Revenue share by manufacturer</small>
 
@@ -448,7 +448,7 @@ export default function Dashboard() {
       <div className="row g-3">
         {/* Critical Low Stock Warning Table */}
         <div className="col-12 col-xl-6">
-          <div className="card-clean p-4 h-100 bg-white">
+          <div className="card-clean p-3 p-sm-4 h-100 bg-white">
             <div className="d-flex justify-content-between align-items-center mb-3">
               <div className="d-flex align-items-center gap-2">
                 <AlertTriangle size={18} style={{ color: '#B45309' }} />
@@ -468,7 +468,7 @@ export default function Dashboard() {
               </div>
             ) : (
               <div className="table-responsive">
-                <table className="table table-custom mb-0">
+                <table className="table table-custom mb-0 text-nowrap">
                   <thead>
                     <tr>
                       <th>Tyre Model</th>
@@ -502,7 +502,7 @@ export default function Dashboard() {
 
         {/* Recent Invoices Feed */}
         <div className="col-12 col-xl-6">
-          <div className="card-clean p-4 h-100 bg-white">
+          <div className="card-clean p-3 p-sm-4 h-100 bg-white">
             <div className="d-flex justify-content-between align-items-center mb-3">
               <div className="d-flex align-items-center gap-2">
                 <Receipt size={18} style={{ color: 'var(--accent-dark)' }} />
@@ -522,7 +522,7 @@ export default function Dashboard() {
               </div>
             ) : (
               <div className="table-responsive">
-                <table className="table table-custom mb-0">
+                <table className="table table-custom mb-0 text-nowrap">
                   <thead>
                     <tr>
                       <th>Invoice No</th>

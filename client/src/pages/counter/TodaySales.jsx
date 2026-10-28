@@ -69,18 +69,18 @@ export default function TodaySales() {
             <p className="page-subtitle">Live transactions recorded during the current shift</p>
           </div>
 
-          <div className="d-flex align-items-center gap-3">
+          <div className="d-flex align-items-center gap-2 gap-sm-3 flex-wrap">
             {user?.role === 'ADMIN' && (
-              <div className="p-2.5 px-3 rounded-3 text-end" style={{ background: 'var(--bg-light)', border: '1px solid var(--border-light)' }}>
+              <div className="p-2 p-sm-2.5 px-2.5 px-sm-3 rounded-3 text-end" style={{ background: 'var(--bg-light)', border: '1px solid var(--border-light)' }}>
                 <div className="text-muted extra-small text-uppercase fw-semibold">Today's Revenue</div>
-                <div className="fw-bold font-monospace fs-5" style={{ color: 'var(--text-on-light)' }}>{formatRupees(totalTodayPaise)}</div>
+                <div className="fw-bold font-monospace fs-6 fs-sm-5" style={{ color: 'var(--text-on-light)' }}>{formatRupees(totalTodayPaise)}</div>
               </div>
             )}
-            <div className="p-2.5 px-3 rounded-3 text-end" style={{ background: 'var(--bg-light)', border: '1px solid var(--border-light)' }}>
+            <div className="p-2 p-sm-2.5 px-2.5 px-sm-3 rounded-3 text-end" style={{ background: 'var(--bg-light)', border: '1px solid var(--border-light)' }}>
               <div className="text-muted extra-small text-uppercase fw-semibold">
                 {user?.role === 'ADMIN' ? 'Total Invoices' : 'My Invoices Today'}
               </div>
-              <div className="fw-bold fs-5 text-dark">{completedCount}</div>
+              <div className="fw-bold fs-6 fs-sm-5 text-dark">{completedCount}</div>
             </div>
             <button className="btn btn-outline-dark-custom btn-sm p-2 d-flex align-items-center justify-content-center" onClick={fetchTodaySales} title="Refresh">
               <RefreshCw size={15} />
@@ -157,7 +157,7 @@ export default function TodaySales() {
           />
         ) : (
           <div className="table-responsive">
-            <table className="table table-custom mb-0">
+            <table className="table table-custom mb-0 text-nowrap">
               <thead>
                 <tr>
                   <th>Invoice No</th>

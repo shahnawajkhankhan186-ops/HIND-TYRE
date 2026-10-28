@@ -38,11 +38,12 @@ export default function AdminProfileModal({ show, onClose }) {
         style={{ maxWidth: '520px', zIndex: 1075 }}
       >
         <div
-          className="rounded-4 border shadow-2xl overflow-hidden animate-fadeIn"
+          className="rounded-4 border shadow-2xl overflow-y-auto animate-fadeIn"
           style={{
             backgroundColor: 'var(--bg-card-dark, #131418)',
             borderColor: 'rgba(245, 158, 11, 0.35)',
-            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.7)'
+            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.7)',
+            maxHeight: 'calc(100vh - 40px)',
           }}
         >
           {/* Header Banner */}
