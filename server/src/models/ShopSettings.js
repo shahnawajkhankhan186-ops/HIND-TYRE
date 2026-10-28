@@ -49,6 +49,26 @@ const shopSettingsSchema = new mongoose.Schema(
       type: String,
       default: 'admin@hindtyres.com',
     },
+    godowns: {
+      type: [
+        {
+          code: {
+            type: String,
+            required: true,
+            enum: ['G1', 'G2'],
+          },
+          name: {
+            type: String,
+            required: true,
+            trim: true,
+          },
+        },
+      ],
+      default: [
+        { code: 'G1', name: 'Godown 1' },
+        { code: 'G2', name: 'Godown 2' },
+      ],
+    },
   },
   {
     timestamps: true,

@@ -26,6 +26,9 @@ const createSaleSchema = z.object({
       tyreId: z.string().optional(),
       itemType: z.enum(['Tyre', 'Accessory']).default('Tyre'),
       quantity: z.number().int().positive('Quantity must be greater than zero'),
+      godown: z.enum(['G1', 'G2'], {
+        errorMap: () => ({ message: 'Godown selection is required and must be G1 or G2' }),
+      }).default('G1'),
     })
   ).min(1, 'Sale must include at least one item'),
   paymentMode: z.enum(['CASH', 'UPI', 'CARD', 'CREDIT']).default('CASH'),
@@ -43,9 +46,30 @@ async function createSale(req, res, next) {
     const validatedData = createSaleSchema.parse(req.body);
     const { customer, items, paymentMode, discountPaise } = validatedData;
 
+    // Merge identical item + godown if repeated in the same checkout request
+    const mergedMap = new Map();
+    for (const it of items) {
+      const id = it.itemId || it.tyreId;
+      const type = it.itemType === 'Accessory' ? 'Accessory' : 'Tyre';
+      const godown = it.godown || 'G1';
+      const key = `${id}_${type}_${godown}`;
+      if (mergedMap.has(key)) {
+        mergedMap.get(key).quantity += Number(it.quantity);
+      } else {
+        mergedMap.set(key, {
+          ...it,
+          itemId: id,
+          itemType: type,
+          godown,
+          quantity: Number(it.quantity),
+        });
+      }
+    }
+    const normalizedItems = Array.from(mergedMap.values());
+
     // 1. Authoritative Server-Side Pricing Calculation (Zero client trust)
     const pricingResult = await pricingService.computeSalePricing({
-      items,
+      items: normalizedItems,
       discountPaise,
       session,
     });

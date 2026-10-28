@@ -21,6 +21,10 @@ const tyreSchema = z.object({
   mrpPaise: z.number().int().min(0, 'MRP must be positive').optional(),
   gstPercent: z.number().min(0).max(100).default(0),
   quantity: z.number().int().min(0).default(0),
+  godownStock: z.object({
+    G1: z.number().int().min(0).default(0),
+    G2: z.number().int().min(0).default(0),
+  }).optional(),
   lowStockThreshold: z.number().int().min(0).default(5),
   isActive: z.boolean().optional().default(true),
 });
@@ -37,6 +41,8 @@ async function getTyres(req, res, next) {
       companyId,
       vehicleType,
       size,
+      godown,
+      inStockGodown,
       lowStock = 'false',
       outOfStock = 'false',
       includeArchived = 'false',
@@ -62,6 +68,13 @@ async function getTyres(req, res, next) {
       query.size = { $regex: size, $options: 'i' };
     }
 
+    const targetGodown = inStockGodown || godown;
+    if (targetGodown === 'G1') {
+      query['godownStock.G1'] = { $gt: 0 };
+    } else if (targetGodown === 'G2') {
+      query['godownStock.G2'] = { $gt: 0 };
+    }
+
     if (lowStock === 'true') {
       query.$expr = { $lte: ['$quantity', '$lowStockThreshold'] };
     }
@@ -84,12 +97,19 @@ async function getTyres(req, res, next) {
     sortObj[sort] = order === 'desc' ? -1 : 1;
 
     const skip = (parseInt(page, 10) - 1) * parseInt(limit, 10);
+    let tyreQuery = Tyre.find(query)
+      .populate('companyId', 'name logoUrl')
+      .sort(sortObj)
+      .skip(skip)
+      .limit(parseInt(limit, 10));
+
+    // Public /api/portal/tyres: show only total availability; do NOT expose godown details or purchase costs publicly
+    if (!req.user) {
+      tyreQuery = tyreQuery.select('-godownStock -purchasePricePaise -actualPricePaise');
+    }
+
     const [tyres, totalCount] = await Promise.all([
-      Tyre.find(query)
-        .populate('companyId', 'name logoUrl')
-        .sort(sortObj)
-        .skip(skip)
-        .limit(parseInt(limit, 10)),
+      tyreQuery,
       Tyre.countDocuments(query),
     ]);
 
@@ -112,7 +132,11 @@ async function getTyres(req, res, next) {
  */
 async function getTyreById(req, res, next) {
   try {
-    const tyre = await Tyre.findById(req.params.id).populate('companyId');
+    let query = Tyre.findById(req.params.id).populate('companyId');
+    if (!req.user) {
+      query = query.select('-godownStock -purchasePricePaise -actualPricePaise');
+    }
+    const tyre = await query;
     if (!tyre) {
       return res.status(404).json({ success: false, error: 'Tyre not found.' });
     }

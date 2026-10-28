@@ -9,6 +9,7 @@
     "dev:server": "npm run dev --prefix server",
     "dev:client": "npm run dev --prefix client",
     "seed": "npm run seed --prefix server",
+    "migrate:godowns": "npm run migrate:godowns --prefix server",
     "test": "npm test --prefix server",
     "e2e": "node scripts/e2e.js",
     "build": "npm run build --prefix client",

@@ -210,6 +210,69 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* Per-Godown Inventory Valuation Cards */}
+      <div className="row g-3 mb-4">
+        {/* Godown 1 Card */}
+        <div className="col-12 col-md-6">
+          <div className="card-clean p-3.5 h-100 bg-white border-start border-4 border-warning">
+            <div className="d-flex justify-content-between align-items-center mb-2">
+              <div>
+                <span className="badge bg-light text-dark border font-monospace extra-small mb-1">WAREHOUSE 1</span>
+                <h6 className="fw-bold m-0 text-dark">{stockValue?.godowns?.G1?.name || 'Godown 1'}</h6>
+              </div>
+              <div className="text-end">
+                <span className="text-muted extra-small text-uppercase">On-Hand Stock</span>
+                <div className="text-dark fw-bold fs-5 font-monospace">{stockValue?.godowns?.G1?.units || 0} units</div>
+              </div>
+            </div>
+            <div className="row g-2 mt-2 pt-2 border-top" style={{ borderColor: 'var(--border-light)' }}>
+              <div className="col-6">
+                <span className="text-muted extra-small">Purchase Cost Valuation</span>
+                <div className="text-dark fw-bold font-monospace small">
+                  {formatRupees(stockValue?.godowns?.G1?.purchaseValuationPaise || 0)}
+                </div>
+              </div>
+              <div className="col-6 text-end">
+                <span className="text-muted extra-small">Retail Selling Valuation</span>
+                <div className="text-success fw-bold font-monospace small">
+                  {formatRupees(stockValue?.godowns?.G1?.sellingValuationPaise || 0)}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Godown 2 Card */}
+        <div className="col-12 col-md-6">
+          <div className="card-clean p-3.5 h-100 bg-white border-start border-4 border-primary">
+            <div className="d-flex justify-content-between align-items-center mb-2">
+              <div>
+                <span className="badge bg-light text-dark border font-monospace extra-small mb-1">WAREHOUSE 2</span>
+                <h6 className="fw-bold m-0 text-dark">{stockValue?.godowns?.G2?.name || 'Godown 2'}</h6>
+              </div>
+              <div className="text-end">
+                <span className="text-muted extra-small text-uppercase">On-Hand Stock</span>
+                <div className="text-dark fw-bold fs-5 font-monospace">{stockValue?.godowns?.G2?.units || 0} units</div>
+              </div>
+            </div>
+            <div className="row g-2 mt-2 pt-2 border-top" style={{ borderColor: 'var(--border-light)' }}>
+              <div className="col-6">
+                <span className="text-muted extra-small">Purchase Cost Valuation</span>
+                <div className="text-dark fw-bold font-monospace small">
+                  {formatRupees(stockValue?.godowns?.G2?.purchaseValuationPaise || 0)}
+                </div>
+              </div>
+              <div className="col-6 text-end">
+                <span className="text-muted extra-small">Retail Selling Valuation</span>
+                <div className="text-success fw-bold font-monospace small">
+                  {formatRupees(stockValue?.godowns?.G2?.sellingValuationPaise || 0)}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Charts Section: 10-Day Revenue Graph & Top Brands Pie Chart */}
       <div className="row g-3 mb-4">
         {/* 10-Day Daily Revenue Graph */}

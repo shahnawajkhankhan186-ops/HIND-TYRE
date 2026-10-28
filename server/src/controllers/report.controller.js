@@ -174,34 +174,44 @@ async function exportReportCSV(req, res, next) {
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
 
     if (type === 'sales') {
-      res.write('Invoice No,Date,Customer Name,Phone,Payment Mode,Subtotal,Discount,Total\n');
+      res.write('Invoice No,Date,Customer Name,Phone,Payment Mode,Item Name,Size,Godown,Quantity,Line Total (INR),Invoice Total (INR)\n');
       const cursor = Sale.find({ status: 'COMPLETED', ...dateFilter }).sort({ createdAt: -1 }).cursor();
       for await (const sale of cursor) {
-        const row = [
-          escapeCSV(sale.invoiceNo),
-          escapeCSV(formatIST(sale.createdAt)),
-          escapeCSV(sale.customerSnapshot.name),
-          escapeCSV(sale.customerSnapshot.phone),
-          escapeCSV(sale.paymentMode),
-          paiseToRupees(sale.subtotalPaise),
-          paiseToRupees(sale.discountPaise),
-          paiseToRupees(sale.totalPaise),
-        ].join(',');
-        res.write(row + '\n');
+        for (const item of sale.items) {
+          const godownCode = item.godown?.code || item.godown || 'G1';
+          const row = [
+            escapeCSV(sale.invoiceNo),
+            escapeCSV(formatIST(sale.createdAt)),
+            escapeCSV(sale.customerSnapshot.name),
+            escapeCSV(sale.customerSnapshot.phone),
+            escapeCSV(sale.paymentMode),
+            escapeCSV(item.name),
+            escapeCSV(item.size || '-'),
+            escapeCSV(godownCode),
+            item.qty,
+            paiseToRupees(item.lineTotalPaise),
+            paiseToRupees(sale.totalPaise),
+          ].join(',');
+          res.write(row + '\n');
+        }
       }
       return res.end();
     }
 
     if (type === 'valuation') {
-      res.write('Type,Brand/Category,Model/Name,Size,SKU,Quantity,Purchase Rate (INR),Selling Rate (INR),Purchase Valuation (INR),Selling Valuation (INR)\n');
+      res.write('Type,Brand/Category,Model/Name,Size,SKU,Godown 1 (G1),Godown 2 (G2),Total Quantity,Purchase Rate (INR),Selling Rate (INR),Purchase Valuation (INR),Selling Valuation (INR)\n');
       const tyres = await Tyre.find({ isArchived: false, isActive: true }).populate('companyId', 'name');
       for (const t of tyres) {
+        const g1 = t.godownStock?.G1 || 0;
+        const g2 = t.godownStock?.G2 || 0;
         const row = [
           'Tyre',
           escapeCSV(t.companyId?.name || 'Tyre'),
           escapeCSV(t.modelName),
           escapeCSV(t.size),
           escapeCSV(t.sku),
+          g1,
+          g2,
           t.quantity,
           paiseToRupees(t.purchasePricePaise),
           paiseToRupees(t.sellingPricePaise),
@@ -213,12 +223,16 @@ async function exportReportCSV(req, res, next) {
 
       const accessories = await Accessory.find({ isArchived: false, isActive: true });
       for (const a of accessories) {
+        const g1 = a.godownStock?.G1 || 0;
+        const g2 = a.godownStock?.G2 || 0;
         const row = [
           'Accessory',
           escapeCSV(a.category),
           escapeCSV(a.name),
           '-',
           escapeCSV(a.sku),
+          g1,
+          g2,
           a.quantity,
           paiseToRupees(a.purchasePricePaise),
           paiseToRupees(a.sellingPricePaise),
@@ -231,7 +245,7 @@ async function exportReportCSV(req, res, next) {
     }
 
     if (type === 'low-stock') {
-      res.write('Type,Brand/Category,Item Name,Size,SKU,Current Stock,Threshold,Status\n');
+      res.write('Type,Brand/Category,Item Name,Size,SKU,Godown 1 (G1),Godown 2 (G2),Total Stock,Threshold,Status\n');
       const tyres = await Tyre.find({
         isArchived: false,
         isActive: true,
@@ -239,15 +253,43 @@ async function exportReportCSV(req, res, next) {
       }).populate('companyId', 'name');
 
       for (const t of tyres) {
+        const g1 = t.godownStock?.G1 || 0;
+        const g2 = t.godownStock?.G2 || 0;
         const row = [
           'Tyre',
           escapeCSV(t.companyId?.name || 'Tyre'),
           escapeCSV(t.modelName),
           escapeCSV(t.size),
           escapeCSV(t.sku),
+          g1,
+          g2,
           t.quantity,
           t.lowStockThreshold,
           t.quantity <= 0 ? 'Out of Stock' : 'Low Stock',
+        ].join(',');
+        res.write(row + '\n');
+      }
+
+      const accessories = await Accessory.find({
+        isArchived: false,
+        isActive: true,
+        $expr: { $lte: ['$quantity', '$lowStockThreshold'] },
+      });
+
+      for (const a of accessories) {
+        const g1 = a.godownStock?.G1 || 0;
+        const g2 = a.godownStock?.G2 || 0;
+        const row = [
+          'Accessory',
+          escapeCSV(a.category),
+          escapeCSV(a.name),
+          '-',
+          escapeCSV(a.sku),
+          g1,
+          g2,
+          a.quantity,
+          a.lowStockThreshold,
+          a.quantity <= 0 ? 'Out of Stock' : 'Low Stock',
         ].join(',');
         res.write(row + '\n');
       }

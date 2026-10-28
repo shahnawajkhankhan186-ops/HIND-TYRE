@@ -252,17 +252,41 @@ The login screen features one-click quick-fill demo buttons:
 
 ---
 
+### Two-Godown Warehouse Management System (`G1` & `G2`)
+The ERP features full two-warehouse (godown) stock segregation:
+- **Data Model**: Every tyre and accessory stores stock in `godownStock: { G1: Number, G2: Number }`. Total stock is retained in `quantity`.
+- **Strict Invariant**: `quantity === godownStock.G1 + godownStock.G2` is maintained atomically on every update via single MongoDB `$inc` queries and enforced by schema hooks.
+- **Godown Codes & Editable Names**: Codes are `G1` and `G2`. Default display names are "Godown 1" and "Godown 2", editable in Shop Settings.
+- **Counter POS Selection**: Cashiers select which warehouse each product is sold from. The same product can be added from both warehouses as separate line items. Available stock per warehouse is shown and dynamically clamped.
+- **Zero Client Trust & Concurrency**: Deductions validate live godown stock within MongoDB ACID transactions. If the chosen warehouse lacks stock, an HTTP `409 Conflict` is returned even if the other warehouse has inventory.
+- **Cancellation Restoration**: Cancelling a sale restores units strictly to the warehouse recorded on each item line.
+- **Inter-Warehouse Transfer**: Admins can transfer stock between warehouses atomically without altering total stock.
+- **Customer Privacy**: Customer-facing receipts and PDF invoices omit internal warehouse names. Warehouse allocation is visible only to authenticated shop admins.
+
+---
+
+## 📦 Data Migration
+
+To migrate existing inventory records without godown splits to the two-godown model:
+```bash
+npm run migrate:godowns
+```
+- **Behavior**: Idempotent. For any item lacking `godownStock`, sets `G1 = quantity, G2 = 0` and writes an audit log.
+- **Safety**: Running multiple times produces no changes or duplicate entries.
+
+---
+
 ## 🧪 Test Suite & Verification
 
 ### 1. Run Jest Tests
-Validates integer paise financial math, discount policy limits, atomic stock concurrency, and transactional cancellations:
+Validates integer paise financial math, discount policy limits, two-godown stock deduction, cross-godown isolation, overselling protection, transactional cancellations, inter-warehouse transfers, invariant preservation, and migration idempotency:
 ```bash
 npm test
 ```
 
 ### 2. Run End-to-End (E2E) Flow Script
-Executes the full automated cycle in a headless environment:
-`Admin Login ➜ Stock-In (+5) ➜ Sale (-2) ➜ Stock Reduced ➜ In-Memory PDF Receipt Stream ➜ Cancel Sale ➜ Stock Restored (+2) ➜ Stock Movement Ledger Verified`
+Executes the full automated two-godown lifecycle:
+`Admin Login ➜ Stock-In to G2 (+5) ➜ Sale from G2 (-2, G1 unchanged) ➜ In-Memory PDF Receipt Stream ➜ Cancel Sale ➜ G2 Restored (+2) ➜ Stock Movement Ledger Verified (G2 tags)`
 ```bash
 npm run e2e
 ```
@@ -290,52 +314,53 @@ npm run build
 - `POST /api/auth/reset-password` – Reset password using verified OTP
 
 ### Public Showroom (`/api/portal`)
-- `GET /api/portal/tyres` – Public tyre search with brand, size, and vehicle filters
+- `GET /api/portal/tyres` – Public tyre search with brand, size, and vehicle filters (godown details stripped for customer privacy)
 - `GET /api/portal/companies` – List active tyre partner brands
 - `GET /api/portal/settings` – Public showroom address, phone, GSTIN, and business hours
 
 ### Counter Portal (`/api/counter`)
-- `GET /api/counter/catalog` – Live tyre catalog with real-time stock levels
-- `GET /api/counter/accessories` – Live accessories catalog
+- `GET /api/counter/catalog` – Live tyre catalog with real-time total and per-godown stock levels (`godownStock.G1`, `godownStock.G2`)
+- `GET /api/counter/accessories` – Live accessories catalog with per-godown stock
 - `GET /api/counter/customers/lookup?phone=9876543210` – Fast customer phone auto-fill
-- `POST /api/counter/sales` – Create new sale invoice within MongoDB ACID transaction
+- `POST /api/counter/sales` – Create new sale invoice within MongoDB ACID transaction (`items: [{ ..., godown: 'G1' | 'G2' }]`)
 - `GET /api/counter/sales` – View counter staff's today sales ledger
-- `GET /api/counter/sales/:id/receipt.pdf` – Stream in-memory PDF receipt buffer
+- `GET /api/counter/sales/:id/receipt.pdf` – Stream in-memory PDF receipt buffer (godown names omitted)
 - `POST /api/counter/sales/:id/resend-email` – Resend invoice PDF email to customer
 
 ### Shared Sales Endpoints
 - `GET /api/sales/:id/receipt.pdf` – Public/authenticated receipt download & print
-- `GET /api/sales/:id` – Detailed invoice breakdown
-- `POST /api/sales/:id/cancel` – Transactional invoice cancellation & inventory restoration (Admin only)
+- `GET /api/sales/:id` – Detailed invoice breakdown (includes godown allocation for admin view)
+- `POST /api/sales/:id/cancel` – Transactional invoice cancellation & inventory restoration to original godowns (Admin only)
 
 ### Admin Management Portal (`/api/admin`)
-- `GET /api/admin/dashboard-stats` – Recharts daily revenue trends, valuation, and reorder alerts
+- `GET /api/admin/dashboard-stats` – Recharts daily revenue trends, total & per-godown valuations (`G1` & `G2`), and reorder alerts
 - `GET /api/admin/companies` – List active/archived tyre brands
 - `POST /api/admin/companies` – Add new tyre company
 - `PUT /api/admin/companies/:id` – Edit company details
 - `DELETE /api/admin/companies/:id` – Soft-delete (archive) company
-- `GET /api/admin/tyres` – Tyres catalog with pagination, search, and stock filters
-- `POST /api/admin/tyres` – Add new tyre with specifications and material number
-- `PUT /api/admin/tyres/:id` – Edit tyre specifications & prices
+- `GET /api/admin/tyres` – Tyres catalog with pagination, search, and stock filters (`inStockGodown=G1|G2`)
+- `POST /api/admin/tyres` – Add new tyre with opening stock per godown (`godownStock.G1`, `godownStock.G2`)
+- `PUT /api/admin/tyres/:id` – Edit tyre specifications, prices, and godown stock
 - `DELETE /api/admin/tyres/:id` – Soft-delete (archive) tyre
 - `POST /api/admin/tyres/bulk-price-update` – Bulk update prices across brands with preview & apply
-- `GET /api/admin/accessories` – Accessories catalog
-- `POST /api/admin/accessories` – Add new accessory
+- `GET /api/admin/accessories` – Accessories catalog with godown stock and filters
+- `POST /api/admin/accessories` – Add new accessory with opening stock per godown
 - `PUT /api/admin/accessories/:id` – Edit accessory
 - `DELETE /api/admin/accessories/:id` – Archive accessory
-- `POST /api/admin/stock-in` – Record purchase shipment & increment stock
-- `POST /api/admin/stock-adjust` – Manual stock count correction with mandatory audit reason
-- `GET /api/admin/stock-ledger` – Query immutable `StockMovement` history
+- `POST /api/admin/stock-in` – Record purchase shipment into specific godown (`godown: 'G1' | 'G2'`)
+- `POST /api/admin/stock-adjust` – Manual godown stock correction with mandatory audit reason (`godown`, `newQuantity`)
+- `POST /api/admin/stock-transfer` – Transfer stock between warehouses atomically (`fromGodown`, `toGodown`, `quantity`)
+- `GET /api/admin/stock-ledger` – Query immutable `StockMovement` history with godown filter (`godown=G1|G2`)
 - `GET /api/admin/sales` – Master sales ledger with date filters and payment mode breakdowns
 - `GET /api/admin/customers` – Customer directory with lifetime spend
 - `GET /api/admin/customers/:id` – Customer purchase history and invoices
-- `GET /api/admin/reports/:type` – Analytical JSON data for 5 report types
-- `GET /api/admin/reports/:type/export` – Streaming CSV export
+- `GET /api/admin/reports/:type` – Analytical JSON data for 5 report types (includes G1, G2, and Total columns)
+- `GET /api/admin/reports/:type/export` – Streaming CSV export with warehouse breakdowns
 - `GET /api/admin/users` – Staff accounts list
 - `POST /api/admin/users` – Create new counter cashier user
 - `PATCH /api/admin/users/:id/toggle-status` – Enable or disable staff portal access
-- `GET /api/admin/settings` – Get shop settings & GST configuration
-- `PUT /api/admin/settings` – Update shop settings & GST details
+- `GET /api/admin/settings` – Get shop settings, GST configuration, and customizable godown names
+- `PUT /api/admin/settings` – Update shop settings, GST details, and godown names (`godowns: [{ code, name }]`)
 - `GET /api/admin/audit-logs` – Audit trail with before/after state diffs and IP addresses
 
 ---

@@ -14,6 +14,12 @@ const settingsSchema = z.object({
   defaultGstPercent: z.number().optional().default(0),
   maxDiscountPercent: z.number().min(0).max(100).default(15),
   adminReceiptEmail: z.string().email().optional().default('admin@hindtyres.com'),
+  godowns: z.array(
+    z.object({
+      code: z.enum(['G1', 'G2']),
+      name: z.string().min(1, 'Godown name is required'),
+    })
+  ).optional(),
 });
 
 async function getSettings(req, res, next) {

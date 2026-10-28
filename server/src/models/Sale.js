@@ -25,6 +25,18 @@ const saleItemSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    godown: {
+      code: {
+        type: String,
+        enum: ['G1', 'G2'],
+        required: true,
+        default: 'G1',
+      },
+      name: {
+        type: String,
+        default: 'Godown 1',
+      },
+    },
     qty: {
       type: Number,
       required: true,

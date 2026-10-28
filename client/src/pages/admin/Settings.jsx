@@ -7,6 +7,7 @@ import {
   MapPin,
   Percent,
   FileText,
+  Warehouse,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../lib/api';
@@ -26,6 +27,10 @@ export default function Settings() {
     defaultGstPercent: 0,
     maxDiscountPercent: 15,
     adminReceiptEmail: '',
+    godowns: [
+      { code: 'G1', name: 'Godown 1' },
+      { code: 'G2', name: 'Godown 2' },
+    ],
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -39,7 +44,15 @@ export default function Settings() {
       setLoading(true);
       const res = await api.get('/admin/settings');
       if (res.data.success && res.data.data) {
-        setFormData(res.data.data);
+        setFormData({
+          ...res.data.data,
+          godowns: res.data.data.godowns?.length
+            ? res.data.data.godowns
+            : [
+                { code: 'G1', name: 'Godown 1' },
+                { code: 'G2', name: 'Godown 2' },
+              ],
+        });
       }
     } catch (err) {
       toast.error('Failed to load shop settings');
@@ -133,6 +146,51 @@ export default function Settings() {
                     className="form-control"
                     value={formData.address}
                     onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                    required
+                  />
+                </div>
+              </div>
+
+              <h5 className="text-dark fw-bold mb-3 pb-2 border-bottom d-flex align-items-center gap-2">
+                <Warehouse size={18} style={{ color: 'var(--accent-dark)' }} /> Warehouse &amp; Godown Names
+              </h5>
+              <p className="text-muted small mb-3">
+                Customize the names of the two godowns as displayed across the POS, inventory tables, and reports.
+              </p>
+
+              <div className="row g-3 mb-4">
+                <div className="col-12 col-md-6">
+                  <label className="form-label text-dark small fw-semibold">Godown 1 (Code: G1) Name *</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={formData.godowns?.find((g) => g.code === 'G1')?.name || ''}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      const list = [...(formData.godowns || [{ code: 'G1', name: 'Godown 1' }, { code: 'G2', name: 'Godown 2' }])];
+                      const idx = list.findIndex((g) => g.code === 'G1');
+                      if (idx > -1) list[idx] = { ...list[idx], name: val };
+                      else list.push({ code: 'G1', name: val });
+                      setFormData({ ...formData, godowns: list });
+                    }}
+                    required
+                  />
+                </div>
+
+                <div className="col-12 col-md-6">
+                  <label className="form-label text-dark small fw-semibold">Godown 2 (Code: G2) Name *</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={formData.godowns?.find((g) => g.code === 'G2')?.name || ''}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      const list = [...(formData.godowns || [{ code: 'G1', name: 'Godown 1' }, { code: 'G2', name: 'Godown 2' }])];
+                      const idx = list.findIndex((g) => g.code === 'G2');
+                      if (idx > -1) list[idx] = { ...list[idx], name: val };
+                      else list.push({ code: 'G2', name: val });
+                      setFormData({ ...formData, godowns: list });
+                    }}
                     required
                   />
                 </div>

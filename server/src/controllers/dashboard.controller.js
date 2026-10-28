@@ -77,7 +77,11 @@ async function getDashboardStats(req, res, next) {
     const todayStats = todaySalesAgg[0] || { totalSalesPaise: 0, invoiceCount: 0, tyresSoldCount: 0 };
     const monthStats = monthSalesAgg[0] || { totalSalesPaise: 0, invoiceCount: 0, tyresSoldCount: 0 };
 
-    // 2. Inventory Valuation (Purchase Value & Selling Value)
+    // 2. Inventory Valuation (Purchase Value & Selling Value) - Total and Per-Godown
+    const ShopSettings = require('../models/ShopSettings');
+    const { getGodownName } = require('../config/godowns');
+    const shopSettings = await ShopSettings.findOne();
+
     const [tyreValuation, accessoryValuation] = await Promise.all([
       Tyre.aggregate([
         { $match: { isArchived: false, isActive: true } },
@@ -85,8 +89,22 @@ async function getDashboardStats(req, res, next) {
           $group: {
             _id: null,
             totalStockQuantity: { $sum: '$quantity' },
+            g1Quantity: { $sum: { $ifNull: ['$godownStock.G1', 0] } },
+            g2Quantity: { $sum: { $ifNull: ['$godownStock.G2', 0] } },
             purchaseValuationPaise: { $sum: { $multiply: ['$quantity', '$purchasePricePaise'] } },
             sellingValuationPaise: { $sum: { $multiply: ['$quantity', '$sellingPricePaise'] } },
+            g1PurchaseValuationPaise: {
+              $sum: { $multiply: [{ $ifNull: ['$godownStock.G1', 0] }, '$purchasePricePaise'] },
+            },
+            g1SellingValuationPaise: {
+              $sum: { $multiply: [{ $ifNull: ['$godownStock.G1', 0] }, '$sellingPricePaise'] },
+            },
+            g2PurchaseValuationPaise: {
+              $sum: { $multiply: [{ $ifNull: ['$godownStock.G2', 0] }, '$purchasePricePaise'] },
+            },
+            g2SellingValuationPaise: {
+              $sum: { $multiply: [{ $ifNull: ['$godownStock.G2', 0] }, '$sellingPricePaise'] },
+            },
             lowStockCount: {
               $sum: { $cond: [{ $lte: ['$quantity', '$lowStockThreshold'] }, 1, 0] },
             },
@@ -102,8 +120,22 @@ async function getDashboardStats(req, res, next) {
           $group: {
             _id: null,
             totalStockQuantity: { $sum: '$quantity' },
+            g1Quantity: { $sum: { $ifNull: ['$godownStock.G1', 0] } },
+            g2Quantity: { $sum: { $ifNull: ['$godownStock.G2', 0] } },
             purchaseValuationPaise: { $sum: { $multiply: ['$quantity', '$purchasePricePaise'] } },
             sellingValuationPaise: { $sum: { $multiply: ['$quantity', '$sellingPricePaise'] } },
+            g1PurchaseValuationPaise: {
+              $sum: { $multiply: [{ $ifNull: ['$godownStock.G1', 0] }, '$purchasePricePaise'] },
+            },
+            g1SellingValuationPaise: {
+              $sum: { $multiply: [{ $ifNull: ['$godownStock.G1', 0] }, '$sellingPricePaise'] },
+            },
+            g2PurchaseValuationPaise: {
+              $sum: { $multiply: [{ $ifNull: ['$godownStock.G2', 0] }, '$purchasePricePaise'] },
+            },
+            g2SellingValuationPaise: {
+              $sum: { $multiply: [{ $ifNull: ['$godownStock.G2', 0] }, '$sellingPricePaise'] },
+            },
             lowStockCount: {
               $sum: { $cond: [{ $lte: ['$quantity', '$lowStockThreshold'] }, 1, 0] },
             },
@@ -117,18 +149,35 @@ async function getDashboardStats(req, res, next) {
 
     const tVal = tyreValuation[0] || {
       totalStockQuantity: 0,
+      g1Quantity: 0,
+      g2Quantity: 0,
       purchaseValuationPaise: 0,
       sellingValuationPaise: 0,
+      g1PurchaseValuationPaise: 0,
+      g1SellingValuationPaise: 0,
+      g2PurchaseValuationPaise: 0,
+      g2SellingValuationPaise: 0,
       lowStockCount: 0,
       outOfStockCount: 0,
     };
     const aVal = accessoryValuation[0] || {
       totalStockQuantity: 0,
+      g1Quantity: 0,
+      g2Quantity: 0,
       purchaseValuationPaise: 0,
       sellingValuationPaise: 0,
+      g1PurchaseValuationPaise: 0,
+      g1SellingValuationPaise: 0,
+      g2PurchaseValuationPaise: 0,
+      g2SellingValuationPaise: 0,
       lowStockCount: 0,
       outOfStockCount: 0,
     };
+
+    const g1PurchaseValuation = (tVal.g1PurchaseValuationPaise || 0) + (aVal.g1PurchaseValuationPaise || 0);
+    const g1SellingValuation = (tVal.g1SellingValuationPaise || 0) + (aVal.g1SellingValuationPaise || 0);
+    const g2PurchaseValuation = (tVal.g2PurchaseValuationPaise || 0) + (aVal.g2PurchaseValuationPaise || 0);
+    const g2SellingValuation = (tVal.g2SellingValuationPaise || 0) + (aVal.g2SellingValuationPaise || 0);
 
     const totalStockValue = {
       purchaseValuationPaise: tVal.purchaseValuationPaise + aVal.purchaseValuationPaise,
@@ -140,6 +189,24 @@ async function getDashboardStats(req, res, next) {
       totalQuantity: tVal.totalStockQuantity + aVal.totalStockQuantity,
       lowStockCount: tVal.lowStockCount + aVal.lowStockCount,
       outOfStockCount: tVal.outOfStockCount + aVal.outOfStockCount,
+      godowns: {
+        G1: {
+          code: 'G1',
+          name: getGodownName('G1', shopSettings),
+          units: (tVal.g1Quantity || 0) + (aVal.g1Quantity || 0),
+          purchaseValuationPaise: g1PurchaseValuation,
+          sellingValuationPaise: g1SellingValuation,
+          potentialProfitPaise: g1SellingValuation - g1PurchaseValuation,
+        },
+        G2: {
+          code: 'G2',
+          name: getGodownName('G2', shopSettings),
+          units: (tVal.g2Quantity || 0) + (aVal.g2Quantity || 0),
+          purchaseValuationPaise: g2PurchaseValuation,
+          sellingValuationPaise: g2SellingValuation,
+          potentialProfitPaise: g2SellingValuation - g2PurchaseValuation,
+        },
+      },
     };
 
     // 3. Low Stock Items List
