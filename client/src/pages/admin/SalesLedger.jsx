@@ -11,7 +11,8 @@ import {
   RefreshCw,
   CheckCircle2,
   XCircle,
-  Clock
+  Clock,
+  X
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../lib/api';
@@ -52,14 +53,14 @@ export default function SalesLedger() {
     fetchSales();
   }, [page, dateFilter, paymentMode, status]);
 
-  const fetchSales = async () => {
+  const fetchSales = async (targetPage = page, targetSearch = search) => {
     try {
       setLoading(true);
       const res = await api.get('/admin/sales', {
         params: {
-          page,
+          page: targetPage,
           limit: 20,
-          search,
+          search: targetSearch?.trim() || undefined,
           date: dateFilter,
           startDate: dateFilter === 'custom' ? startDate : undefined,
           endDate: dateFilter === 'custom' ? endDate : undefined,
@@ -80,9 +81,36 @@ export default function SalesLedger() {
   };
 
   const handleSearchSubmit = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setPage(1);
-    fetchSales();
+    fetchSales(1, search);
+  };
+
+  const handleClearSearch = () => {
+    setSearch('');
+    setPage(1);
+    fetchSales(1, '');
+  };
+
+  const handleResetFilters = () => {
+    setSearch('');
+    setDateFilter('all');
+    setStartDate('');
+    setEndDate('');
+    setPaymentMode('');
+    setStatus('');
+    setPage(1);
+    (async () => {
+      try {
+        setLoading(true);
+        const res = await api.get('/admin/sales', { params: { page: 1, limit: 20 } });
+        if (res.data.success) {
+          setSales(res.data.data.sales);
+          setTotalPages(res.data.data.pages);
+          setTotalCount(res.data.data.total);
+        }
+      } catch (_) {} finally { setLoading(false); }
+    })();
   };
 
   const handleConfirmCancel = async () => {
@@ -129,16 +157,41 @@ export default function SalesLedger() {
       {/* Filter Bar */}
       <div className="filter-bar-card">
         <form onSubmit={handleSearchSubmit} className="row g-2 align-items-center">
-          <div className="col-12 col-md-4">
+          <div className="col-12 col-md-5">
             <div className="input-group input-group-sm">
-              <span className="input-group-text"><Search size={15} /></span>
+              <button
+                type="submit"
+                className="input-group-text bg-white text-muted border-end-0"
+                style={{ cursor: 'pointer' }}
+                title="Click to search"
+              >
+                <Search size={15} />
+              </button>
               <input
                 type="text"
-                className="form-control"
+                className="form-control border-start-0"
                 placeholder="Search invoice no, customer name or phone..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
+              {search && (
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary btn-sm px-2"
+                  onClick={handleClearSearch}
+                  title="Clear search text"
+                >
+                  <X size={14} />
+                </button>
+              )}
+              <button
+                type="submit"
+                className="btn btn-accent btn-sm fw-bold d-flex align-items-center gap-1.5 px-3"
+                title="Search invoices"
+              >
+                <Search size={14} />
+                <span>Search</span>
+              </button>
             </div>
           </div>
 
@@ -213,9 +266,18 @@ export default function SalesLedger() {
             </select>
           </div>
 
-          <div className="col-12 col-md-auto ms-auto">
-            <button type="submit" className="btn btn-outline-dark-custom btn-sm w-100">Filter</button>
-          </div>
+          {(search || dateFilter !== 'all' || paymentMode || status) && (
+            <div className="col-auto ms-auto">
+              <button
+                type="button"
+                className="btn btn-outline-dark-custom btn-sm d-flex align-items-center gap-1"
+                onClick={handleResetFilters}
+                title="Reset all filters"
+              >
+                <RefreshCw size={13} /> Reset
+              </button>
+            </div>
+          )}
         </form>
       </div>
 

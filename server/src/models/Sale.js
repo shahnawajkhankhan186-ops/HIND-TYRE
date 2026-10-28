@@ -47,6 +47,16 @@ const saleItemSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
+    actualPricePaise: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    minSellingPricePaise: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
     gstPercent: {
       type: Number,
       required: true,

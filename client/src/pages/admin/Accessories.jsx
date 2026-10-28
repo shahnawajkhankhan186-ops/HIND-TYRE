@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Layers, Plus, Edit2, Archive, Search, RefreshCw, AlertTriangle } from 'lucide-react';
+import { Layers, Plus, Edit2, Archive, Search, RefreshCw, AlertTriangle, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../lib/api';
 import { formatRupees, rupeesToPaise } from '../../lib/currency';
@@ -46,12 +46,12 @@ export default function Accessories() {
     fetchAccessories();
   }, [selectedCategory, inStockGodown]);
 
-  const fetchAccessories = async () => {
+  const fetchAccessories = async (targetSearch = search) => {
     try {
       setLoading(true);
       const res = await api.get('/admin/accessories', {
         params: {
-          search,
+          search: targetSearch?.trim() || undefined,
           category: selectedCategory || undefined,
           inStockGodown: inStockGodown || undefined,
           limit: 100,
@@ -65,6 +65,16 @@ export default function Accessories() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSearchSubmit = (e) => {
+    if (e) e.preventDefault();
+    fetchAccessories(search);
+  };
+
+  const handleClearSearch = () => {
+    setSearch('');
+    fetchAccessories('');
   };
 
   const handleOpenAdd = () => {
@@ -179,17 +189,42 @@ export default function Accessories() {
 
       {/* Filter Bar */}
       <div className="filter-bar-card">
-        <div className="row g-2 align-items-center">
+        <form onSubmit={handleSearchSubmit} className="row g-2 align-items-center">
           <div className="col-12 col-md-5">
             <div className="input-group input-group-sm">
-              <span className="input-group-text"><Search size={15} /></span>
+              <button
+                type="submit"
+                className="input-group-text bg-white text-muted border-end-0"
+                style={{ cursor: 'pointer' }}
+                title="Click to search"
+              >
+                <Search size={15} />
+              </button>
               <input
                 type="text"
-                className="form-control"
+                className="form-control border-start-0"
                 placeholder="Search accessories by name or SKU..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
+              {search && (
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary btn-sm px-2"
+                  onClick={handleClearSearch}
+                  title="Clear search text"
+                >
+                  <X size={14} />
+                </button>
+              )}
+              <button
+                type="submit"
+                className="btn btn-accent btn-sm fw-bold d-flex align-items-center gap-1.5 px-3"
+                title="Search accessories"
+              >
+                <Search size={14} />
+                <span>Search</span>
+              </button>
             </div>
           </div>
           <div className="col-6 col-md-3">
@@ -215,12 +250,29 @@ export default function Accessories() {
               <option value="G2">In Stock in {getGodownName('G2')}</option>
             </select>
           </div>
-          <div className="col-12 col-md-2">
-            <button className="btn btn-outline-dark-custom btn-sm w-100" onClick={fetchAccessories}>
-              Search
-            </button>
-          </div>
-        </div>
+          {(search || selectedCategory || inStockGodown) && (
+            <div className="col-12 col-md-2">
+              <button
+                type="button"
+                className="btn btn-outline-dark-custom btn-sm w-100 d-flex align-items-center justify-content-center gap-1"
+                onClick={() => {
+                  setSearch('');
+                  setSelectedCategory('');
+                  setInStockGodown('');
+                  (async () => {
+                    try {
+                      setLoading(true);
+                      const res = await api.get('/admin/accessories', { params: { limit: 100 } });
+                      if (res.data.success) setAccessories(res.data.data.accessories);
+                    } catch (_) {} finally { setLoading(false); }
+                  })();
+                }}
+              >
+                <RefreshCw size={13} /> Reset
+              </button>
+            </div>
+          )}
+        </form>
       </div>
 
       {/* Table */}
@@ -442,8 +494,8 @@ export default function Accessories() {
 
                 <div className="modal-footer border-top pt-3">
                   <button type="button" className="btn btn-outline-dark-custom" onClick={() => setShowModal(false)}>Cancel</button>
-                  <button type="submit" className="btn btn-accent" disabled={saving}>
-                    {saving ? 'Saving...' : 'Save Accessory'}
+                  <button type="submit" className="btn btn-accent fw-bold" disabled={saving}>
+                    {saving ? 'Saving...' : editingItem ? 'Confirm Edit' : 'Save Accessory'}
                   </button>
                 </div>
               </form>

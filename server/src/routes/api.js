@@ -13,6 +13,7 @@ const reportController = require('../controllers/report.controller');
 const userController = require('../controllers/user.controller');
 const settingsController = require('../controllers/settings.controller');
 const auditController = require('../controllers/audit.controller');
+const financeController = require('../controllers/finance.controller');
 
 const { authenticate, requireAdmin, requireCounterOrAdmin } = require('../middleware/auth.middleware');
 
@@ -85,6 +86,10 @@ router.get('/admin/stock-ledger', authenticate, requireAdmin, stockController.ge
 
 // Sales Ledger
 router.get('/admin/sales', authenticate, requireAdmin, saleController.getSales);
+
+// Finance & Profit Intelligence
+router.get('/admin/finance/overview', authenticate, requireAdmin, financeController.getFinanceOverview);
+router.get('/admin/finance/transactions', authenticate, requireAdmin, financeController.getFinanceTransactions);
 
 // Customers
 router.get('/admin/customers', authenticate, requireAdmin, customerController.getCustomers);

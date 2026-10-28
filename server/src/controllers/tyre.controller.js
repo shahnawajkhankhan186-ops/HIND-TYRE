@@ -17,6 +17,7 @@ const tyreSchema = z.object({
   materialNumber: z.string().min(1, 'Material number is required'),
   purchasePricePaise: z.number().int().min(0, 'Purchase price must be positive'),
   actualPricePaise: z.number().int().min(0, 'Actual price must be positive').optional(),
+  minSellingPricePaise: z.number().int().min(0, 'Minimum selling price must be positive').optional(),
   sellingPricePaise: z.number().int().min(0, 'Selling price must be positive'),
   mrpPaise: z.number().int().min(0, 'MRP must be positive').optional(),
   gstPercent: z.number().min(0).max(100).default(0),
@@ -103,9 +104,9 @@ async function getTyres(req, res, next) {
       .skip(skip)
       .limit(parseInt(limit, 10));
 
-    // Public /api/portal/tyres: show only total availability; do NOT expose godown details or purchase costs publicly
+    // Public /api/portal/tyres: show only total availability; do NOT expose godown details or purchase/minimum costs publicly
     if (!req.user) {
-      tyreQuery = tyreQuery.select('-godownStock -purchasePricePaise -actualPricePaise');
+      tyreQuery = tyreQuery.select('-godownStock -purchasePricePaise -actualPricePaise -minSellingPricePaise');
     }
 
     const [tyres, totalCount] = await Promise.all([
@@ -134,7 +135,7 @@ async function getTyreById(req, res, next) {
   try {
     let query = Tyre.findById(req.params.id).populate('companyId');
     if (!req.user) {
-      query = query.select('-godownStock -purchasePricePaise -actualPricePaise');
+      query = query.select('-godownStock -purchasePricePaise -actualPricePaise -minSellingPricePaise');
     }
     const tyre = await query;
     if (!tyre) {
@@ -173,9 +174,14 @@ async function createTyre(req, res, next) {
       ? data.actualPricePaise
       : Math.round(data.purchasePricePaise * 0.97);
 
+    const minSellingPricePaise = data.minSellingPricePaise !== undefined && data.minSellingPricePaise !== null
+      ? data.minSellingPricePaise
+      : (actualPricePaise || data.purchasePricePaise);
+
     const tyre = new Tyre({
       ...data,
       actualPricePaise,
+      minSellingPricePaise,
       mrpPaise: data.mrpPaise || actualPricePaise,
       sku: data.sku.toUpperCase(),
       materialNumber: data.materialNumber.toUpperCase(),

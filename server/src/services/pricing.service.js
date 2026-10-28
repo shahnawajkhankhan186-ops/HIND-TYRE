@@ -22,6 +22,7 @@ class PricingService {
     const maxDiscountPercent = settings.maxDiscountPercent || 15;
 
     let subtotalPaise = 0;
+    let totalMinAllowedPaise = 0;
     const computedItems = [];
 
     for (const item of items) {
@@ -69,9 +70,22 @@ class PricingService {
       }
 
       const unitPricePaise = Math.round(doc.sellingPricePaise);
+      const actualPricePaise = itemType === 'Accessory'
+        ? Math.round(doc.purchasePricePaise || 0)
+        : Math.round(doc.actualPricePaise !== undefined && doc.actualPricePaise !== null ? doc.actualPricePaise : (doc.purchasePricePaise || 0));
+
+      const minSellingPricePaise = itemType === 'Accessory'
+        ? Math.round(doc.purchasePricePaise || doc.sellingPricePaise || 0)
+        : Math.round(
+            doc.minSellingPricePaise !== undefined && doc.minSellingPricePaise !== null && doc.minSellingPricePaise > 0
+              ? doc.minSellingPricePaise
+              : (doc.actualPricePaise || doc.purchasePricePaise || doc.sellingPricePaise || 0)
+          );
+
       const lineTotalPaise = unitPricePaise * qty;
 
       subtotalPaise += lineTotalPaise;
+      totalMinAllowedPaise += (minSellingPricePaise * qty);
 
       const rawGodown = item.godown?.code || item.godown || 'G1';
       if (!['G1', 'G2'].includes(rawGodown)) {
@@ -95,6 +109,8 @@ class PricingService {
         },
         qty,
         unitPricePaise,
+        minSellingPricePaise,
+        actualPricePaise,
         gstPercent: 0,
         gstPaise: 0,
         lineTotalPaise,
@@ -102,11 +118,22 @@ class PricingService {
     }
 
     const requestedDiscountPaise = Math.max(0, parseInt(discountPaise || 0, 10));
-    const maxDiscountAllowedPaise = Math.floor((subtotalPaise * maxDiscountPercent) / 100);
+    const maxDiscountAllowedByPolicy = Math.floor((subtotalPaise * maxDiscountPercent) / 100);
+    const maxDiscountAllowedByMSP = Math.max(0, subtotalPaise - totalMinAllowedPaise);
+    const effectiveMaxDiscount = Math.min(maxDiscountAllowedByPolicy, maxDiscountAllowedByMSP);
+    const maxDiscountAllowedPaise = effectiveMaxDiscount;
 
-    if (requestedDiscountPaise > maxDiscountAllowedPaise) {
+    if (requestedDiscountPaise > effectiveMaxDiscount) {
+      if (requestedDiscountPaise > maxDiscountAllowedByMSP) {
+        const error = new Error(
+          `Discount violates Minimum Selling Price policy! Cannot sell below the floor price. Maximum discount allowed for this order is ₹${(maxDiscountAllowedByMSP / 100).toFixed(2)}.`
+        );
+        error.statusCode = 400;
+        throw error;
+      }
+
       const error = new Error(
-        `Discount cannot exceed maximum policy of ${maxDiscountPercent}% (₹${(maxDiscountAllowedPaise / 100).toFixed(2)})`
+        `Discount cannot exceed maximum policy of ${maxDiscountPercent}% (₹${(maxDiscountAllowedByPolicy / 100).toFixed(2)})`
       );
       error.statusCode = 400;
       throw error;

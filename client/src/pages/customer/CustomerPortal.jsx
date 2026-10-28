@@ -236,24 +236,34 @@ export default function CustomerPortal() {
             {/* Search Input */}
             <div className="col-12 col-md-5">
               <div className="input-group input-group-sm">
-                <span className="input-group-text">
+                <span className="input-group-text bg-white text-muted border-end-0">
                   <Search size={15} />
                 </span>
                 <input
                   type="text"
-                  className="form-control"
+                  className="form-control border-start-0"
                   placeholder="Search by size (e.g. 185/65 R15), brand, or model..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
                 {searchQuery && (
                   <button
-                    className="btn btn-outline-secondary"
+                    type="button"
+                    className="btn btn-outline-secondary px-2"
                     onClick={() => setSearchQuery('')}
+                    title="Clear search text"
                   >
                     <X size={14} />
                   </button>
                 )}
+                <button
+                  type="button"
+                  className="btn btn-accent btn-sm fw-bold d-flex align-items-center gap-1.5 px-3"
+                  title="Search tyres"
+                >
+                  <Search size={14} />
+                  <span>Search</span>
+                </button>
               </div>
             </div>
 

@@ -23,7 +23,8 @@ import {
   CreditCard,
   Banknote,
   Smartphone,
-  ShieldAlert
+  ShieldAlert,
+  X
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../lib/api';
@@ -209,6 +210,10 @@ export default function NewSale() {
         company: type === 'Tyre' ? item.companyId?.name : item.category,
         size: type === 'Tyre' ? item.size : '-',
         unitPricePaise: item.sellingPricePaise,
+        minSellingPricePaise: type === 'Tyre'
+          ? (item.minSellingPricePaise || item.actualPricePaise || item.purchasePricePaise || item.sellingPricePaise)
+          : (item.purchasePricePaise || item.sellingPricePaise),
+        actualPricePaise: item.actualPricePaise || item.purchasePricePaise,
         gstPercent: 0,
         godown: defaultGodown,
         godownStock: {
@@ -291,21 +296,43 @@ export default function NewSale() {
 
   // Client-side visual calculations (authoritative calculation happens strictly on the server!)
   const subtotalPaise = cart.reduce((sum, item) => sum + item.unitPricePaise * item.quantity, 0);
+  const minCartFloorPaise = cart.reduce((sum, item) => {
+    const msp = item.minSellingPricePaise !== undefined && item.minSellingPricePaise !== null
+      ? item.minSellingPricePaise
+      : item.unitPricePaise;
+    return sum + (msp * item.quantity);
+  }, 0);
   const gstPaise = 0;
   const maxDiscountPercent = shopSettings?.maxDiscountPercent || 15;
-  const maxDiscountAllowedPaise = Math.floor((subtotalPaise * maxDiscountPercent) / 100);
+  const maxDiscountAllowedByPolicy = Math.floor((subtotalPaise * maxDiscountPercent) / 100);
+  const maxDiscountAllowedByMSP = Math.max(0, subtotalPaise - minCartFloorPaise);
+  const effectiveMaxDiscountPaise = Math.min(maxDiscountAllowedByPolicy, maxDiscountAllowedByMSP);
 
-  const discountPaise = Math.min(
-    maxDiscountAllowedPaise,
-    Math.max(0, Math.round(Number(discountRupees || 0) * 100))
-  );
+  const enteredDiscountPaise = Math.max(0, Math.round(Number(discountRupees || 0) * 100));
+  const isViolatingMSP = enteredDiscountPaise > maxDiscountAllowedByMSP;
+  const isViolatingPolicy = enteredDiscountPaise > maxDiscountAllowedByPolicy;
 
+  const discountPaise = enteredDiscountPaise;
   const grandTotalPaise = Math.max(0, subtotalPaise - discountPaise);
 
   // Step 3: Confirm Sale (Triggers ACID MongoDB Transaction on Server)
   const handleConfirmSale = async () => {
     if (cart.length === 0) {
       toast.error('Cart cannot be empty.');
+      return;
+    }
+
+    if (isViolatingMSP) {
+      toast.error(
+        `Discount violates Minimum Selling Price policy! Cannot sell below floor price (₹${paiseToRupees(minCartFloorPaise)}). Maximum discount allowed: ₹${paiseToRupees(maxDiscountAllowedByMSP)}`
+      );
+      return;
+    }
+
+    if (isViolatingPolicy) {
+      toast.error(
+        `Discount exceeds shop maximum limit of ${maxDiscountPercent}% (₹${paiseToRupees(maxDiscountAllowedByPolicy)})`
+      );
       return;
     }
 
@@ -617,15 +644,35 @@ export default function NewSale() {
                 </div>
 
                 {/* Search */}
-                <div className="input-group" style={{ maxWidth: '300px' }}>
-                  <span className="input-group-text"><Search size={15} /></span>
+                <div className="input-group input-group-sm" style={{ maxWidth: '340px' }}>
+                  <span className="input-group-text bg-white text-muted border-end-0">
+                    <Search size={15} />
+                  </span>
                   <input
                     type="text"
-                    className="form-control form-control-sm"
+                    className="form-control border-start-0"
                     placeholder="Search size, brand, model..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary btn-sm px-2"
+                      onClick={() => setSearchQuery('')}
+                      title="Clear search text"
+                    >
+                      <X size={14} />
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    className="btn btn-accent btn-sm fw-bold d-flex align-items-center gap-1 px-3"
+                    title="Search"
+                  >
+                    <Search size={13} />
+                    <span>Search</span>
+                  </button>
                 </div>
               </div>
 
@@ -730,6 +777,9 @@ export default function NewSale() {
                               <div className="text-muted extra-small">Selling Rate</div>
                               <div className="fw-bold font-monospace fs-6 text-dark">
                                 {formatRupees(tyre.sellingPricePaise)}
+                              </div>
+                              <div className="extra-small text-danger fw-semibold" title="Minimum Selling Price Floor">
+                                Min: {formatRupees(tyre.minSellingPricePaise || tyre.actualPricePaise || tyre.sellingPricePaise)}
                               </div>
                             </div>
 
@@ -1066,23 +1116,42 @@ export default function NewSale() {
                     })}
                   </div>
 
-                  {/* Optional Discount Input */}
+                  {/* Optional Discount Input with MSP Floor Guard */}
                   <div className="mt-3">
-                    <label className="form-label text-muted small fw-semibold">
-                      Discount in Rupees (Max {maxDiscountPercent}%: ₹{paiseToRupees(maxDiscountAllowedPaise)})
-                    </label>
+                    <div className="d-flex justify-content-between align-items-center mb-1">
+                      <label className="form-label text-muted small fw-semibold m-0">
+                        Discount in Rupees (₹)
+                      </label>
+                      <span className="badge bg-light text-dark border extra-small font-monospace">
+                        Max Allowed: ₹{paiseToRupees(effectiveMaxDiscountPaise)}
+                      </span>
+                    </div>
                     <div className="input-group">
                       <span className="input-group-text">₹</span>
                       <input
                         type="number"
                         min="0"
-                        max={paiseToRupees(maxDiscountAllowedPaise)}
-                        className="form-control"
+                        className={`form-control font-monospace ${isViolatingMSP || isViolatingPolicy ? 'is-invalid border-danger' : ''}`}
                         placeholder="0.00"
                         value={discountRupees}
                         onChange={(e) => setDiscountRupees(e.target.value)}
                       />
                     </div>
+                    {isViolatingMSP ? (
+                      <div className="text-danger extra-small mt-1 fw-semibold d-flex align-items-center gap-1">
+                        <AlertCircle size={13} />
+                        Minimum Selling Price violation! Cannot sell below floor total ₹{paiseToRupees(minCartFloorPaise)}.
+                      </div>
+                    ) : isViolatingPolicy ? (
+                      <div className="text-danger extra-small mt-1 fw-semibold d-flex align-items-center gap-1">
+                        <AlertCircle size={13} />
+                        Exceeds shop maximum discount policy of {maxDiscountPercent}%.
+                      </div>
+                    ) : (
+                      <div className="form-text extra-small text-muted">
+                        Floor price protected: Bill cannot be discounted below collective MSP of ₹{paiseToRupees(minCartFloorPaise)}.
+                      </div>
+                    )}
                   </div>
                 </div>
 

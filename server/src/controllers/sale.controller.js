@@ -198,47 +198,72 @@ async function getSales(req, res, next) {
       endDate,
       paymentMode,
       status,
+      cashierId,
       onlyMine = 'false',
     } = req.query;
 
-    const query = {};
+    const conditions = [];
 
-    // Filter by counter staff's own sales if requested
-    if (onlyMine === 'true' && req.user.role === 'COUNTER') {
-      query['soldBy.userId'] = req.user._id;
+    // STRICT CASHIER ISOLATION:
+    // If logged in as COUNTER role, ALWAYS only return sales made by this cashier!
+    if (req.user.role === 'COUNTER') {
+      conditions.push({
+        $or: [
+          { 'soldBy.userId': req.user._id },
+          { 'soldBy.email': req.user.email },
+        ],
+      });
+    } else if (cashierId) {
+      // Admin filtering by specific cashier
+      if (mongoose.Types.ObjectId.isValid(cashierId)) {
+        conditions.push({
+          $or: [
+            { 'soldBy.userId': new mongoose.Types.ObjectId(cashierId) },
+            { 'soldBy.email': cashierId },
+          ],
+        });
+      } else {
+        conditions.push({ 'soldBy.email': cashierId });
+      }
     }
 
     if (status) {
-      query.status = status;
+      conditions.push({ status });
     }
 
     if (paymentMode) {
-      query.paymentMode = paymentMode;
+      conditions.push({ paymentMode });
     }
 
     // Date filtering
     if (date !== 'all') {
       const range = getISTDateRange(date);
       if (range) {
-        query.createdAt = { $gte: range.start, $lte: range.end };
+        conditions.push({ createdAt: { $gte: range.start, $lte: range.end } });
       }
     } else if (startDate && endDate) {
-      query.createdAt = {
-        $gte: new Date(startDate),
-        $lte: new Date(new Date(endDate).setHours(23, 59, 59, 999)),
-      };
+      conditions.push({
+        createdAt: {
+          $gte: new Date(startDate),
+          $lte: new Date(new Date(endDate).setHours(23, 59, 59, 999)),
+        },
+      });
     }
 
     // Search query: invoice number, customer name or phone
     if (search.trim()) {
       const s = search.trim();
-      query.$or = [
-        { invoiceNo: { $regex: s, $options: 'i' } },
-        { 'customerSnapshot.name': { $regex: s, $options: 'i' } },
-        { 'customerSnapshot.phone': { $regex: s, $options: 'i' } },
-        { 'customerSnapshot.vehicleNumber': { $regex: s, $options: 'i' } },
-      ];
+      conditions.push({
+        $or: [
+          { invoiceNo: { $regex: s, $options: 'i' } },
+          { 'customerSnapshot.name': { $regex: s, $options: 'i' } },
+          { 'customerSnapshot.phone': { $regex: s, $options: 'i' } },
+          { 'customerSnapshot.vehicleNumber': { $regex: s, $options: 'i' } },
+        ],
+      });
     }
+
+    const query = conditions.length > 0 ? { $and: conditions } : {};
 
     const skip = (parseInt(page, 10) - 1) * parseInt(limit, 10);
     const [sales, totalCount] = await Promise.all([
