@@ -13,7 +13,9 @@ const config = {
   MONGODB_URI: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/hind_tyres?replicaSet=rs0',
   JWT_SECRET: process.env.JWT_SECRET || 'super_secret_hind_tyres_jwt_key_998877665544332211',
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '7d',
-  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID || '',
+  GOOGLE_CLIENT_ID:
+    process.env.GOOGLE_CLIENT_ID ||
+    '523066431360-mfe1183b1ftu79t5etfhcojot59cck28.apps.googleusercontent.com',
   CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:5173',
   SMTP: {
     HOST: process.env.SMTP_HOST || 'smtp.gmail.com',

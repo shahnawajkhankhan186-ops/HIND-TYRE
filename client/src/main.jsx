@@ -7,7 +7,9 @@ import { AuthProvider } from './context/AuthContext';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import './styles/global.css';
 
-const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || 'dummy-client-id';
+const googleClientId =
+  import.meta.env.VITE_GOOGLE_CLIENT_ID ||
+  '523066431360-mfe1183b1ftu79t5etfhcojot59cck28.apps.googleusercontent.com';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

@@ -277,7 +277,10 @@ async function googleLogin(req, res, next) {
       return res.status(400).json({ success: false, error: 'Google credential is required' });
     }
 
-    const clientId = config.GOOGLE_CLIENT_ID || process.env.GOOGLE_CLIENT_ID;
+    const clientId =
+      config.GOOGLE_CLIENT_ID ||
+      process.env.GOOGLE_CLIENT_ID ||
+      '523066431360-mfe1183b1ftu79t5etfhcojot59cck28.apps.googleusercontent.com';
     if (!clientId) {
       return res.status(500).json({
         success: false,

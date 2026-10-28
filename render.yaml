@@ -29,7 +29,9 @@ services:
         value: 7d
       # Paste your Vercel frontend URL here (e.g. https://hind-tyres.vercel.app)
       - key: CLIENT_URL
-        sync: false
+        value: https://hind-tyre.vercel.app
+      - key: GOOGLE_CLIENT_ID
+        value: 523066431360-mfe1183b1ftu79t5etfhcojot59cck28.apps.googleusercontent.com
       - key: ADMIN_RECEIPT_EMAIL
         value: admin@hindtyres.com
       - key: SMTP_HOST
