@@ -3,12 +3,19 @@ import { ArrowDownToLine, Package, Check, Disc3, Layers, Truck } from 'lucide-re
 import toast from 'react-hot-toast';
 import api from '../../lib/api';
 import { formatRupees, rupeesToPaise } from '../../lib/currency';
+import { useAuth } from '../../context/AuthContext';
 
 export default function StockIn() {
+  const { shopSettings } = useAuth();
+  const getGodownName = (code) => {
+    return shopSettings?.godowns?.find((g) => g.code === code)?.name || (code === 'G1' ? 'Godown 1' : 'Godown 2');
+  };
+
   const [itemType, setItemType] = useState('Tyre');
   const [tyres, setTyres] = useState([]);
   const [accessories, setAccessories] = useState([]);
   const [selectedItemId, setSelectedItemId] = useState('');
+  const [godown, setGodown] = useState('G1');
   const [quantity, setQuantity] = useState('');
   const [purchasePriceRupees, setPurchasePriceRupees] = useState('');
   const [supplier, setSupplier] = useState('');
@@ -75,6 +82,7 @@ export default function StockIn() {
       const payload = {
         itemType,
         itemId: selectedItemId,
+        godown,
         quantity: qty,
         purchasePricePaise: purchasePriceRupees ? rupeesToPaise(purchasePriceRupees) : undefined,
         supplier: supplier.trim(),
@@ -83,7 +91,7 @@ export default function StockIn() {
 
       const res = await api.post('/admin/stock-in', payload);
       if (res.data.success) {
-        toast.success(`Successfully added ${qty} units into stock! New stock: ${res.data.data.qtyAfter}`);
+        toast.success(`Successfully added ${qty} units into ${getGodownName(godown)}! New godown stock: ${res.data.data.godownAfter}`);
         setQuantity('');
         setNote('');
         fetchItems(); // refresh current stock quantities
@@ -165,10 +173,12 @@ export default function StockIn() {
 
               {/* Current Item Live Info Badge */}
               {selectedItem && (
-                <div className="p-3 mb-4 rounded-3 bg-light border d-flex justify-content-between align-items-center">
+                <div className="p-3 mb-4 rounded-3 bg-light border d-flex justify-content-between align-items-center flex-wrap gap-2">
                   <div>
                     <span className="text-muted extra-small text-uppercase">Current On-Hand Stock:</span>
-                    <div className="text-dark fw-bold fs-6">{selectedItem.quantity} units</div>
+                    <div className="text-dark fw-bold fs-6">
+                      Total: {selectedItem.quantity} units ({getGodownName('G1')}: {selectedItem.godownStock?.G1 ?? 0} · {getGodownName('G2')}: {selectedItem.godownStock?.G2 ?? 0})
+                    </div>
                   </div>
                   <div className="text-end">
                     <span className="text-muted extra-small text-uppercase">Standard Cost Price:</span>
@@ -180,6 +190,20 @@ export default function StockIn() {
               )}
 
               <div className="row g-3 mb-3">
+                {/* Target Warehouse */}
+                <div className="col-12 col-md-6">
+                  <label className="form-label text-dark small fw-bold">Target Warehouse (Godown) *</label>
+                  <select
+                    className="form-select form-select-lg fs-6"
+                    value={godown}
+                    onChange={(e) => setGodown(e.target.value)}
+                    required
+                  >
+                    <option value="G1">{getGodownName('G1')} (G1)</option>
+                    <option value="G2">{getGodownName('G2')} (G2)</option>
+                  </select>
+                </div>
+
                 {/* Quantity Received */}
                 <div className="col-12 col-md-6">
                   <label className="form-label text-dark small fw-bold">Quantity Received *</label>

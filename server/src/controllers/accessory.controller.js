@@ -12,6 +12,10 @@ const accessorySchema = z.object({
   mrpPaise: z.number().int().min(0).default(0),
   gstPercent: z.number().min(0).max(100).default(0),
   quantity: z.number().int().min(0).default(0),
+  godownStock: z.object({
+    G1: z.number().int().min(0).default(0),
+    G2: z.number().int().min(0).default(0),
+  }).optional(),
   lowStockThreshold: z.number().int().min(0).default(10),
   isActive: z.boolean().optional().default(true),
 });
@@ -22,6 +26,8 @@ async function getAccessories(req, res, next) {
       page = 1,
       limit = 25,
       category,
+      godown,
+      inStockGodown,
       search = '',
       lowStock = 'false',
       includeArchived = 'false',
@@ -30,6 +36,14 @@ async function getAccessories(req, res, next) {
     const query = {};
     if (includeArchived !== 'true') query.isArchived = false;
     if (category) query.category = category;
+
+    const targetGodown = inStockGodown || godown;
+    if (targetGodown === 'G1') {
+      query['godownStock.G1'] = { $gt: 0 };
+    } else if (targetGodown === 'G2') {
+      query['godownStock.G2'] = { $gt: 0 };
+    }
+
     if (lowStock === 'true') {
       query.$expr = { $lte: ['$quantity', '$lowStockThreshold'] };
     }

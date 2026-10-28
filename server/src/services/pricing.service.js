@@ -73,12 +73,26 @@ class PricingService {
 
       subtotalPaise += lineTotalPaise;
 
+      const rawGodown = item.godown?.code || item.godown || 'G1';
+      if (!['G1', 'G2'].includes(rawGodown)) {
+        const error = new Error(`Invalid godown code "${rawGodown}". Allowed: G1, G2.`);
+        error.statusCode = 400;
+        throw error;
+      }
+
+      const { getGodownName } = require('../config/godowns');
+      const godownName = getGodownName(rawGodown, settings);
+
       computedItems.push({
         itemType,
         itemId: doc._id,
         name,
         company: companyName,
         size,
+        godown: {
+          code: rawGodown,
+          name: godownName,
+        },
         qty,
         unitPricePaise,
         gstPercent: 0,

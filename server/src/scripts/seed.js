@@ -44,6 +44,10 @@ async function seedDatabase() {
       defaultGstPercent: 0,
       maxDiscountPercent: 15,
       adminReceiptEmail: 'admin@hindtyres.com',
+      godowns: [
+        { code: 'G1', name: 'Godown 1' },
+        { code: 'G2', name: 'Godown 2' },
+      ],
     });
 
     // 2. Seed Demo Users
@@ -706,28 +710,77 @@ async function seedDatabase() {
       },
     ];
 
-    const tyresWithMat = tyresData.map((t, idx) => ({
-      ...t,
-      materialNumber: t.materialNumber || `MAT-${t.sku || (100000 + idx)}`,
-    }));
+    const tyresWithMatAndGodowns = tyresData.map((t, idx) => {
+      const total = Number(t.quantity) || 0;
+      let g1 = 0;
+      let g2 = 0;
+      if (idx % 7 === 0) {
+        // Only in Godown 1
+        g1 = total;
+        g2 = 0;
+      } else if (idx % 7 === 1) {
+        // Only in Godown 2
+        g1 = 0;
+        g2 = total;
+      } else {
+        // Realistic split across both godowns
+        g1 = Math.max(1, Math.round(total * 0.65));
+        g2 = total - g1;
+      }
 
-    const insertedTyres = await Tyre.insertMany(tyresWithMat);
+      return {
+        ...t,
+        materialNumber: t.materialNumber || `MAT-${t.sku || (100000 + idx)}`,
+        godownStock: { G1: g1, G2: g2 },
+        quantity: g1 + g2,
+      };
+    });
 
-    // Initial Stock Ledger movements for tyres
-    const initialTyreMovements = insertedTyres.map(tyre => ({
-      itemType: 'Tyre',
-      itemId: tyre._id,
-      type: 'STOCK_IN',
-      qty: tyre.quantity,
-      quantityBefore: 0,
-      quantityAfter: tyre.quantity,
-      reference: 'Initial Stock In',
-      note: 'Opening warehouse stock',
-      createdBy: adminUser._id,
-    }));
-    await StockMovement.insertMany(initialTyreMovements);
+    const insertedTyres = await Tyre.insertMany(tyresWithMatAndGodowns);
 
-    // 5. Seed Accessories (6 items)
+    // Initial Stock Ledger movements for tyres per godown
+    const initialTyreMovements = [];
+    insertedTyres.forEach(tyre => {
+      const g1 = tyre.godownStock?.G1 || 0;
+      const g2 = tyre.godownStock?.G2 || 0;
+      if (g1 > 0) {
+        initialTyreMovements.push({
+          itemType: 'Tyre',
+          itemId: tyre._id,
+          type: 'STOCK_IN',
+          godown: 'G1',
+          godownBefore: 0,
+          godownAfter: g1,
+          qty: g1,
+          quantityBefore: 0,
+          quantityAfter: g1,
+          reference: 'Initial Stock In',
+          note: 'Opening stock in Godown 1',
+          createdBy: adminUser._id,
+        });
+      }
+      if (g2 > 0) {
+        initialTyreMovements.push({
+          itemType: 'Tyre',
+          itemId: tyre._id,
+          type: 'STOCK_IN',
+          godown: 'G2',
+          godownBefore: 0,
+          godownAfter: g2,
+          qty: g2,
+          quantityBefore: g1,
+          quantityAfter: g1 + g2,
+          reference: 'Initial Stock In',
+          note: 'Opening stock in Godown 2',
+          createdBy: adminUser._id,
+        });
+      }
+    });
+    if (initialTyreMovements.length > 0) {
+      await StockMovement.insertMany(initialTyreMovements);
+    }
+
+    // 5. Seed Accessories (6 items with realistic godown split)
     console.log('[Seed] Creating Accessories...');
     const accessoriesData = [
       {
@@ -798,19 +851,65 @@ async function seedDatabase() {
       },
     ];
 
-    const insertedAccessories = await Accessory.insertMany(accessoriesData);
-    const initialAccMovements = insertedAccessories.map(acc => ({
-      itemType: 'Accessory',
-      itemId: acc._id,
-      type: 'STOCK_IN',
-      qty: acc.quantity,
-      quantityBefore: 0,
-      quantityAfter: acc.quantity,
-      reference: 'Initial Stock In',
-      note: 'Opening accessories stock',
-      createdBy: adminUser._id,
-    }));
-    await StockMovement.insertMany(initialAccMovements);
+    const accessoriesWithGodowns = accessoriesData.map((a, idx) => {
+      const total = Number(a.quantity) || 0;
+      let g1 = Math.round(total * 0.6);
+      let g2 = total - g1;
+      if (idx === 1) {
+        g1 = total;
+        g2 = 0;
+      } else if (idx === 3) {
+        g1 = 0;
+        g2 = total;
+      }
+      return {
+        ...a,
+        godownStock: { G1: g1, G2: g2 },
+        quantity: g1 + g2,
+      };
+    });
+
+    const insertedAccessories = await Accessory.insertMany(accessoriesWithGodowns);
+    const initialAccMovements = [];
+    insertedAccessories.forEach(acc => {
+      const g1 = acc.godownStock?.G1 || 0;
+      const g2 = acc.godownStock?.G2 || 0;
+      if (g1 > 0) {
+        initialAccMovements.push({
+          itemType: 'Accessory',
+          itemId: acc._id,
+          type: 'STOCK_IN',
+          godown: 'G1',
+          godownBefore: 0,
+          godownAfter: g1,
+          qty: g1,
+          quantityBefore: 0,
+          quantityAfter: g1,
+          reference: 'Initial Stock In',
+          note: 'Opening accessories stock in Godown 1',
+          createdBy: adminUser._id,
+        });
+      }
+      if (g2 > 0) {
+        initialAccMovements.push({
+          itemType: 'Accessory',
+          itemId: acc._id,
+          type: 'STOCK_IN',
+          godown: 'G2',
+          godownBefore: 0,
+          godownAfter: g2,
+          qty: g2,
+          quantityBefore: g1,
+          quantityAfter: g1 + g2,
+          reference: 'Initial Stock In',
+          note: 'Opening accessories stock in Godown 2',
+          createdBy: adminUser._id,
+        });
+      }
+    });
+    if (initialAccMovements.length > 0) {
+      await StockMovement.insertMany(initialAccMovements);
+    }
 
     console.log('----------------------------------------------------');
     console.log('✅ DATABASE SEEDING COMPLETED SUCCESSFULLY');

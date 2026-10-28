@@ -77,9 +77,10 @@ router.post('/admin/accessories', authenticate, requireAdmin, accessoryControlle
 router.put('/admin/accessories/:id', authenticate, requireAdmin, accessoryController.updateAccessory);
 router.delete('/admin/accessories/:id', authenticate, requireAdmin, accessoryController.archiveAccessory);
 
-// Stock In & Adjustments & Ledger
+// Stock In & Adjustments & Transfers & Ledger
 router.post('/admin/stock-in', authenticate, requireAdmin, stockController.stockIn);
 router.post('/admin/stock-adjust', authenticate, requireAdmin, stockController.stockAdjust);
+router.post('/admin/stock-transfer', authenticate, requireAdmin, stockController.transferStock);
 router.get('/admin/stock-ledger', authenticate, requireAdmin, stockController.getStockLedger);
 
 // Sales Ledger

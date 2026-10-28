@@ -20,8 +20,14 @@ import api from '../../lib/api';
 import { formatRupees, rupeesToPaise, paiseToRupees } from '../../lib/currency';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 import { TableSkeleton } from '../../components/common/LoadingSkeleton';
+import { useAuth } from '../../context/AuthContext';
 
 export default function Tyres() {
+  const { shopSettings } = useAuth();
+  const getGodownName = (code) => {
+    return shopSettings?.godowns?.find((g) => g.code === code)?.name || (code === 'G1' ? 'Godown 1' : 'Godown 2');
+  };
+
   const [tyres, setTyres] = useState([]);
   const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,6 +36,7 @@ export default function Tyres() {
   const [search, setSearch] = useState('');
   const [companyId, setCompanyId] = useState('');
   const [vehicleType, setVehicleType] = useState('');
+  const [inStockGodown, setInStockGodown] = useState('');
   const [lowStock, setLowStock] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -50,6 +57,8 @@ export default function Tyres() {
     actualPriceRupees: '',
     sellingPriceRupees: '',
     gstPercent: 0,
+    g1Stock: 0,
+    g2Stock: 0,
     quantity: 0,
     lowStockThreshold: 5,
   });
@@ -75,7 +84,7 @@ export default function Tyres() {
 
   useEffect(() => {
     fetchTyres();
-  }, [page, companyId, vehicleType, lowStock]);
+  }, [page, companyId, vehicleType, inStockGodown, lowStock]);
 
   const fetchCompanies = async () => {
     try {
@@ -94,6 +103,7 @@ export default function Tyres() {
           search,
           companyId,
           vehicleType,
+          inStockGodown: inStockGodown || undefined,
           lowStock: lowStock ? 'true' : 'false',
         },
       });
@@ -129,6 +139,8 @@ export default function Tyres() {
       actualPriceRupees: '',
       sellingPriceRupees: '',
       gstPercent: 0,
+      g1Stock: 5,
+      g2Stock: 5,
       quantity: 10,
       lowStockThreshold: 5,
     });
@@ -140,6 +152,9 @@ export default function Tyres() {
     const actualRupees = t.actualPricePaise
       ? (t.actualPricePaise / 100).toFixed(2)
       : (Number(purchaseRupees) * 0.97).toFixed(2);
+
+    const g1Stock = t.godownStock?.G1 ?? 0;
+    const g2Stock = t.godownStock?.G2 ?? 0;
 
     setEditingTyre(t);
     setFormData({
@@ -154,6 +169,8 @@ export default function Tyres() {
       actualPriceRupees: actualRupees,
       sellingPriceRupees: (t.sellingPricePaise / 100).toString(),
       gstPercent: 0,
+      g1Stock,
+      g2Stock,
       quantity: t.quantity,
       lowStockThreshold: t.lowStockThreshold,
     });
@@ -173,6 +190,10 @@ export default function Tyres() {
         ? rupeesToPaise(formData.actualPriceRupees)
         : Math.round(purchasePricePaise * 0.97);
 
+      const g1Stock = Math.max(0, parseInt(formData.g1Stock || 0, 10));
+      const g2Stock = Math.max(0, parseInt(formData.g2Stock || 0, 10));
+      const totalQty = g1Stock + g2Stock;
+
       const payload = {
         companyId: formData.companyId,
         modelName: formData.modelName,
@@ -186,7 +207,11 @@ export default function Tyres() {
         mrpPaise: actualPricePaise,
         sellingPricePaise: rupeesToPaise(formData.sellingPriceRupees),
         gstPercent: 0,
-        quantity: parseInt(formData.quantity || 0, 10),
+        godownStock: {
+          G1: g1Stock,
+          G2: g2Stock,
+        },
+        quantity: totalQty,
         lowStockThreshold: parseInt(formData.lowStockThreshold || 5, 10),
       };
 
@@ -344,6 +369,20 @@ export default function Tyres() {
               ))}
             </select>
           </div>
+          <div className="col-6 col-md-2">
+            <select
+              className="form-select form-select-sm"
+              value={inStockGodown}
+              onChange={(e) => {
+                setInStockGodown(e.target.value);
+                setPage(1);
+              }}
+            >
+              <option value="">All Warehouses</option>
+              <option value="G1">In Stock in {getGodownName('G1')}</option>
+              <option value="G2">In Stock in {getGodownName('G2')}</option>
+            </select>
+          </div>
           <div className="col-6 col-md-2 d-flex align-items-center">
             <div className="form-check form-switch m-0">
               <input
@@ -370,7 +409,7 @@ export default function Tyres() {
       {/* Catalog Table */}
       <div className="table-container-card">
         {loading ? (
-          <TableSkeleton rows={8} cols={9} />
+          <TableSkeleton rows={8} cols={11} />
         ) : tyres.length === 0 ? (
           <div className="p-5 text-center text-muted">
             No tyres found matching the criteria.
@@ -387,7 +426,9 @@ export default function Tyres() {
                   <th>Vehicle</th>
                   <th className="text-end">Cost Price</th>
                   <th className="text-end">Selling Price</th>
-                  <th className="text-center">Stock</th>
+                  <th className="text-center">{getGodownName('G1')}</th>
+                  <th className="text-center">{getGodownName('G2')}</th>
+                  <th className="text-center">Total Stock</th>
                   <th className="text-end">Actions</th>
                 </tr>
               </thead>
@@ -425,6 +466,16 @@ export default function Tyres() {
                       </td>
                       <td className="text-end text-dark font-monospace fw-bold fs-6">
                         {formatRupees(t.sellingPricePaise)}
+                      </td>
+                      <td className="text-center font-monospace">
+                        <span className={`badge ${t.godownStock?.G1 > 0 ? 'bg-light text-dark border' : 'bg-light text-muted opacity-50 border'} px-2 py-1`}>
+                          {t.godownStock?.G1 ?? 0}
+                        </span>
+                      </td>
+                      <td className="text-center font-monospace">
+                        <span className={`badge ${t.godownStock?.G2 > 0 ? 'bg-light text-dark border' : 'bg-light text-muted opacity-50 border'} px-2 py-1`}>
+                          {t.godownStock?.G2 ?? 0}
+                        </span>
                       </td>
                       <td className="text-center">
                         <span className={`badge ${isOut ? 'badge-pill-danger' : isLow ? 'badge-pill-warning' : 'badge-pill-success'} extra-small`}>
@@ -642,21 +693,67 @@ export default function Tyres() {
                     </div>
 
                     {/* Quantity & Threshold */}
-                    <div className="col-6">
-                      <label className="form-label text-dark small fw-semibold">Current Quantity</label>
+                    <div className="col-12 col-md-4">
+                      <label className="form-label text-dark small fw-semibold">
+                        {getGodownName('G1')} Stock
+                      </label>
                       <input
                         type="number"
-                        className="form-control"
-                        value={formData.quantity}
-                        onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
+                        min="0"
+                        className="form-control font-monospace"
+                        value={formData.g1Stock}
+                        onChange={(e) => {
+                          const g1 = parseInt(e.target.value || 0, 10);
+                          const g2 = parseInt(formData.g2Stock || 0, 10);
+                          setFormData({
+                            ...formData,
+                            g1Stock: e.target.value,
+                            quantity: g1 + g2,
+                          });
+                        }}
                         required
                       />
                     </div>
 
-                    <div className="col-6">
-                      <label className="form-label text-dark small fw-semibold">Low Stock Alert Threshold</label>
+                    <div className="col-12 col-md-4">
+                      <label className="form-label text-dark small fw-semibold">
+                        {getGodownName('G2')} Stock
+                      </label>
                       <input
                         type="number"
+                        min="0"
+                        className="form-control font-monospace"
+                        value={formData.g2Stock}
+                        onChange={(e) => {
+                          const g2 = parseInt(e.target.value || 0, 10);
+                          const g1 = parseInt(formData.g1Stock || 0, 10);
+                          setFormData({
+                            ...formData,
+                            g2Stock: e.target.value,
+                            quantity: g1 + g2,
+                          });
+                        }}
+                        required
+                      />
+                    </div>
+
+                    <div className="col-12 col-md-4">
+                      <label className="form-label text-dark small fw-semibold">
+                        Total Stock (Auto G1+G2)
+                      </label>
+                      <input
+                        type="number"
+                        className="form-control font-monospace bg-light fw-bold"
+                        value={parseInt(formData.g1Stock || 0, 10) + parseInt(formData.g2Stock || 0, 10)}
+                        readOnly
+                      />
+                    </div>
+
+                    <div className="col-12">
+                      <label className="form-label text-dark small fw-semibold">Low Stock Alert Threshold (Total)</label>
+                      <input
+                        type="number"
+                        min="0"
                         className="form-control"
                         value={formData.lowStockThreshold}
                         onChange={(e) => setFormData({ ...formData, lowStockThreshold: e.target.value })}

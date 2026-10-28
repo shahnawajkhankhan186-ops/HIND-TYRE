@@ -90,6 +90,18 @@ const tyreSchema = new mongoose.Schema(
       default: 0,
       min: 0,
     },
+    godownStock: {
+      G1: {
+        type: Number,
+        default: 0,
+        min: [0, 'Godown 1 stock cannot be negative'],
+      },
+      G2: {
+        type: Number,
+        default: 0,
+        min: [0, 'Godown 2 stock cannot be negative'],
+      },
+    },
     lowStockThreshold: {
       type: Number,
       default: 5,
@@ -145,5 +157,32 @@ const tyreSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+tyreSchema.pre('validate', function (next) {
+  if (!this.godownStock) {
+    this.godownStock = { G1: Number(this.quantity) || 0, G2: 0 };
+  } else if (
+    (this.godownStock.G1 === undefined || this.godownStock.G1 === 0) &&
+    (this.godownStock.G2 === undefined || this.godownStock.G2 === 0) &&
+    this.quantity > 0 &&
+    !this.isModified('godownStock')
+  ) {
+    this.godownStock.G1 = Number(this.quantity) || 0;
+    this.godownStock.G2 = 0;
+  }
+  const g1 = Number(this.godownStock.G1) || 0;
+  const g2 = Number(this.godownStock.G2) || 0;
+  this.quantity = g1 + g2;
+  next();
+});
+
+tyreSchema.pre('save', function (next) {
+  if (this.godownStock) {
+    const g1 = Number(this.godownStock.G1) || 0;
+    const g2 = Number(this.godownStock.G2) || 0;
+    this.quantity = g1 + g2;
+  }
+  next();
+});
 
 module.exports = mongoose.model('Tyre', tyreSchema);

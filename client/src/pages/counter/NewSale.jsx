@@ -158,27 +158,49 @@ export default function NewSale() {
     setStep(2);
   };
 
+  const getGodownName = (code) => {
+    return shopSettings?.godowns?.find((g) => g.code === code)?.name || (code === 'G1' ? 'Godown 1' : 'Godown 2');
+  };
+
   // Add Item to Cart
   const addToCart = (item, type = 'Tyre') => {
-    const existingIndex = cart.findIndex((c) => c.itemId === item._id && c.itemType === type);
-    const availableStock = item.quantity;
+    const g1Stock = item.godownStock?.G1 ?? 0;
+    const g2Stock = item.godownStock?.G2 ?? 0;
+    const totalStock = item.quantity ?? (g1Stock + g2Stock);
 
-    if (availableStock <= 0) {
+    if (totalStock <= 0 || (g1Stock <= 0 && g2Stock <= 0)) {
       toast.error('This item is currently out of stock!');
       return;
     }
 
+    // Default godown: the one with more stock, but only if it has stock > 0
+    let defaultGodown = 'G1';
+    if (g2Stock > g1Stock && g2Stock > 0) {
+      defaultGodown = 'G2';
+    } else if (g1Stock > 0) {
+      defaultGodown = 'G1';
+    } else if (g2Stock > 0) {
+      defaultGodown = 'G2';
+    }
+
+    const availableStockInChosen = defaultGodown === 'G1' ? g1Stock : g2Stock;
+
+    // Check if item already exists in cart from the SAME godown
+    const existingIndex = cart.findIndex(
+      (c) => c.itemId === item._id && c.itemType === type && c.godown === defaultGodown
+    );
+
     if (existingIndex > -1) {
       const currentCartQty = cart[existingIndex].quantity;
-      if (currentCartQty + 1 > availableStock) {
-        toast.error(`Cannot add more than available stock (${availableStock} units)`);
+      if (currentCartQty + 1 > availableStockInChosen) {
+        toast.error(`Cannot add more than available stock in ${getGodownName(defaultGodown)} (${availableStockInChosen} units)`);
         return;
       }
 
       const updated = [...cart];
       updated[existingIndex].quantity += 1;
       setCart(updated);
-      toast.success(`Updated quantity for ${updated[existingIndex].name}`);
+      toast.success(`Updated quantity for ${updated[existingIndex].name} (${getGodownName(defaultGodown)})`);
     } else {
       const newItem = {
         itemType: type,
@@ -188,11 +210,55 @@ export default function NewSale() {
         size: type === 'Tyre' ? item.size : '-',
         unitPricePaise: item.sellingPricePaise,
         gstPercent: 0,
+        godown: defaultGodown,
+        godownStock: {
+          G1: g1Stock,
+          G2: g2Stock,
+        },
         quantity: 1,
-        stockQuantity: availableStock,
       };
       setCart([...cart, newItem]);
-      toast.success(`Added ${newItem.name} to bill`);
+      toast.success(`Added ${newItem.name} (${getGodownName(defaultGodown)}) to bill`);
+    }
+  };
+
+  // Change godown for a cart item
+  const handleGodownChange = (index, newGodown) => {
+    const item = cart[index];
+    if (item.godown === newGodown) return;
+
+    const targetStock = item.godownStock?.[newGodown] ?? 0;
+    if (targetStock <= 0) {
+      toast.error(`No stock available in ${getGodownName(newGodown)}!`);
+      return;
+    }
+
+    // Check if another cart line already exists for same item in newGodown
+    const duplicateIndex = cart.findIndex(
+      (c, i) => i !== index && c.itemId === item.itemId && c.itemType === item.itemType && c.godown === newGodown
+    );
+
+    if (duplicateIndex > -1) {
+      const mergedQty = Math.min(targetStock, cart[duplicateIndex].quantity + item.quantity);
+      const updated = [...cart];
+      updated[duplicateIndex].quantity = mergedQty;
+      updated.splice(index, 1);
+      setCart(updated);
+      toast.success(`Merged with existing ${getGodownName(newGodown)} line (Qty: ${mergedQty})`);
+      return;
+    }
+
+    const clampedQty = Math.min(item.quantity, targetStock);
+    const updated = [...cart];
+    updated[index] = {
+      ...item,
+      godown: newGodown,
+      quantity: clampedQty,
+    };
+    setCart(updated);
+
+    if (clampedQty < item.quantity) {
+      toast.warning(`Quantity adjusted to available stock (${clampedQty}) in ${getGodownName(newGodown)}`);
     }
   };
 
@@ -206,8 +272,9 @@ export default function NewSale() {
       return;
     }
 
-    if (newQty > item.stockQuantity) {
-      toast.error(`Only ${item.stockQuantity} units available in stock!`);
+    const maxStock = item.godownStock?.[item.godown] ?? 0;
+    if (newQty > maxStock) {
+      toast.error(`Only ${maxStock} units available in ${getGodownName(item.godown)}!`);
       return;
     }
 
@@ -251,6 +318,7 @@ export default function NewSale() {
           itemId: item.itemId,
           itemType: item.itemType,
           quantity: item.quantity,
+          godown: item.godown,
         })),
         paymentMode,
         discountPaise,
@@ -261,6 +329,7 @@ export default function NewSale() {
         setCompletedSale(res.data.data);
         setStep(4); // Move to Success Screen
         toast.success(`Invoice #${res.data.data.invoiceNo} generated successfully!`);
+        fetchCatalog(); // Refresh stock from server
       }
     } catch (err) {
       const msg = err.response?.data?.error || 'Failed to complete sale';
@@ -641,6 +710,19 @@ export default function NewSale() {
                                 {tyre.tubeType}
                               </span>
                             </div>
+
+                            {/* Godown-wise stock breakdown */}
+                            <div className="d-flex flex-wrap gap-1 mb-2">
+                              <span className="badge bg-light text-dark border extra-small font-monospace" title="Total Available Stock">
+                                Total: {tyre.quantity}
+                              </span>
+                              <span className={`badge border extra-small font-monospace ${tyre.godownStock?.G1 > 0 ? 'bg-light text-dark' : 'bg-light text-muted opacity-50'}`}>
+                                {getGodownName('G1')}: {tyre.godownStock?.G1 ?? 0}
+                              </span>
+                              <span className={`badge border extra-small font-monospace ${tyre.godownStock?.G2 > 0 ? 'bg-light text-dark' : 'bg-light text-muted opacity-50'}`}>
+                                {getGodownName('G2')}: {tyre.godownStock?.G2 ?? 0}
+                              </span>
+                            </div>
                           </div>
 
                           <div className="pt-2 border-top d-flex justify-content-between align-items-center" style={{ borderColor: 'var(--border-light)' }}>
@@ -689,6 +771,19 @@ export default function NewSale() {
 
                             <h6 className="fw-bold mb-1 text-dark">{acc.name}</h6>
                             <div className="text-muted font-monospace extra-small mb-2">SKU: {acc.sku}</div>
+
+                            {/* Godown-wise stock breakdown */}
+                            <div className="d-flex flex-wrap gap-1 mb-2">
+                              <span className="badge bg-light text-dark border extra-small font-monospace" title="Total Available Stock">
+                                Total: {acc.quantity}
+                              </span>
+                              <span className={`badge border extra-small font-monospace ${acc.godownStock?.G1 > 0 ? 'bg-light text-dark' : 'bg-light text-muted opacity-50'}`}>
+                                {getGodownName('G1')}: {acc.godownStock?.G1 ?? 0}
+                              </span>
+                              <span className={`badge border extra-small font-monospace ${acc.godownStock?.G2 > 0 ? 'bg-light text-dark' : 'bg-light text-muted opacity-50'}`}>
+                                {getGodownName('G2')}: {acc.godownStock?.G2 ?? 0}
+                              </span>
+                            </div>
                           </div>
 
                           <div className="pt-2 border-top d-flex justify-content-between align-items-center" style={{ borderColor: 'var(--border-light)' }}>
@@ -760,7 +855,7 @@ export default function NewSale() {
                   </div>
                 ) : (
                   cart.map((item, idx) => (
-                    <div key={idx} className="p-2.5 mb-2 rounded-2" style={{ background: '#FAFBFD', border: '1px solid var(--border-light)' }}>
+                    <div key={`${item.itemId}_${item.godown}_${idx}`} className="p-2.5 mb-2 rounded-2" style={{ background: '#FAFBFD', border: '1px solid var(--border-light)' }}>
                       <div className="d-flex justify-content-between align-items-start">
                         <div className="me-2">
                           <div className="text-dark fw-semibold small lh-sm">{item.name}</div>
@@ -772,6 +867,36 @@ export default function NewSale() {
                         >
                           <Trash2 size={14} />
                         </button>
+                      </div>
+
+                      {/* Godown Selector */}
+                      <div className="d-flex align-items-center justify-content-between my-2 p-1.5 rounded" style={{ background: 'var(--bg-light)', border: '1px solid var(--border-light)' }}>
+                        <span className="extra-small text-muted fw-semibold">Warehouse:</span>
+                        <div className="btn-group btn-group-sm" role="group">
+                          {['G1', 'G2'].map((gCode) => {
+                            const isSelected = item.godown === gCode;
+                            const stockInG = item.godownStock?.[gCode] ?? 0;
+                            const disabled = stockInG <= 0;
+                            return (
+                              <button
+                                key={gCode}
+                                type="button"
+                                disabled={disabled}
+                                className={`btn btn-sm py-0.5 px-2 extra-small fw-bold ${
+                                  isSelected
+                                    ? 'btn-dark'
+                                    : disabled
+                                    ? 'btn-outline-secondary opacity-50 text-muted'
+                                    : 'btn-outline-dark'
+                                }`}
+                                onClick={() => handleGodownChange(idx, gCode)}
+                                title={`${getGodownName(gCode)} (${stockInG} in stock)`}
+                              >
+                                {getGodownName(gCode)} ({stockInG})
+                              </button>
+                            );
+                          })}
+                        </div>
                       </div>
 
                       <div className="d-flex justify-content-between align-items-center mt-2 pt-2 border-top" style={{ borderColor: 'var(--border-light)' }}>
@@ -787,7 +912,7 @@ export default function NewSale() {
                           <button
                             className="btn btn-sm text-dark p-0 px-1"
                             onClick={() => updateCartQty(idx, 1)}
-                            disabled={item.quantity >= item.stockQuantity}
+                            disabled={item.quantity >= (item.godownStock?.[item.godown] ?? 0)}
                           >
                             <Plus size={12} />
                           </button>
@@ -880,6 +1005,7 @@ export default function NewSale() {
                       <th>#</th>
                       <th>Item Description</th>
                       <th>Size</th>
+                      <th>Warehouse</th>
                       <th className="text-center">Qty</th>
                       <th className="text-end">Rate (₹)</th>
                       <th className="text-end">Line Total (₹)</th>
@@ -893,6 +1019,11 @@ export default function NewSale() {
                           <td className="text-muted">{idx + 1}</td>
                           <td className="text-dark fw-semibold">{item.name}</td>
                           <td className="text-muted font-monospace">{item.size}</td>
+                          <td>
+                            <span className="badge bg-light text-dark border font-monospace extra-small">
+                              {getGodownName(item.godown)}
+                            </span>
+                          </td>
                           <td className="text-center text-dark fw-bold">{item.quantity}</td>
                           <td className="text-end font-monospace">{formatRupees(item.unitPricePaise, false)}</td>
                           <td className="text-end font-monospace text-dark fw-bold">{formatRupees(lineSubtotal, false)}</td>

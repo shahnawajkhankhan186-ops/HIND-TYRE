@@ -17,9 +17,23 @@ const stockMovementSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ['STOCK_IN', 'SALE', 'SALE_CANCEL', 'ADJUSTMENT'],
+      enum: ['STOCK_IN', 'SALE', 'SALE_CANCEL', 'ADJUSTMENT', 'TRANSFER_OUT', 'TRANSFER_IN'],
       required: true,
       index: true,
+    },
+    godown: {
+      type: String,
+      enum: ['G1', 'G2'],
+      default: 'G1',
+      index: true,
+    },
+    godownBefore: {
+      type: Number,
+      default: 0,
+    },
+    godownAfter: {
+      type: Number,
+      default: 0,
     },
     qty: {
       type: Number,

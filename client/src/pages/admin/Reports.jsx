@@ -5,6 +5,7 @@ import api from '../../lib/api';
 import { formatRupees, paiseToRupees } from '../../lib/currency';
 import { formatIST } from '../../lib/ist-date';
 import { TableSkeleton } from '../../components/common/LoadingSkeleton';
+import { useAuth } from '../../context/AuthContext';
 
 const REPORT_TABS = [
   { id: 'sales', label: 'Sales Report', icon: TrendingUp },
@@ -15,6 +16,11 @@ const REPORT_TABS = [
 ];
 
 export default function Reports() {
+  const { shopSettings } = useAuth();
+  const getGodownName = (code) => {
+    return shopSettings?.godowns?.find((g) => g.code === code)?.name || (code === 'G1' ? 'Godown 1' : 'Godown 2');
+  };
+
   const [activeTab, setActiveTab] = useState('sales');
   const [reportData, setReportData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -180,7 +186,9 @@ export default function Reports() {
                       <th>Type</th>
                       <th>Brand / Description</th>
                       <th>Size / SKU</th>
-                      <th className="text-center">Current Stock</th>
+                      <th className="text-center">{getGodownName('G1')}</th>
+                      <th className="text-center">{getGodownName('G2')}</th>
+                      <th className="text-center">Total Stock</th>
                       <th className="text-end">Cost Rate</th>
                       <th className="text-end">Retail Rate</th>
                       <th className="text-end">Purchase Valuation</th>
@@ -196,7 +204,9 @@ export default function Reports() {
                           <div className="text-muted extra-small">{t.companyId?.name}</div>
                         </td>
                         <td className="text-dark font-monospace small">{t.size}</td>
-                        <td className="text-center text-dark fw-bold">{t.quantity}</td>
+                        <td className="text-center font-monospace">{t.godownStock?.G1 ?? 0}</td>
+                        <td className="text-center font-monospace">{t.godownStock?.G2 ?? 0}</td>
+                        <td className="text-center text-dark fw-bold font-monospace">{t.quantity}</td>
                         <td className="text-end font-monospace text-muted small">{formatRupees(t.purchasePricePaise)}</td>
                         <td className="text-end font-monospace text-dark small">{formatRupees(t.sellingPricePaise)}</td>
                         <td className="text-end font-monospace text-muted fw-semibold">
@@ -204,6 +214,27 @@ export default function Reports() {
                         </td>
                         <td className="text-end font-monospace text-success fw-bold">
                           {formatRupees(t.quantity * t.sellingPricePaise)}
+                        </td>
+                      </tr>
+                    ))}
+                    {reportData.accessories?.map((a) => (
+                      <tr key={a._id}>
+                        <td><span className="badge badge-pill-warning extra-small">Accessory</span></td>
+                        <td>
+                          <div className="text-dark fw-semibold small">{a.name}</div>
+                          <div className="text-muted extra-small">{a.category}</div>
+                        </td>
+                        <td className="text-dark font-monospace small">{a.sku}</td>
+                        <td className="text-center font-monospace">{a.godownStock?.G1 ?? 0}</td>
+                        <td className="text-center font-monospace">{a.godownStock?.G2 ?? 0}</td>
+                        <td className="text-center text-dark fw-bold font-monospace">{a.quantity}</td>
+                        <td className="text-end font-monospace text-muted small">{formatRupees(a.purchasePricePaise)}</td>
+                        <td className="text-end font-monospace text-dark small">{formatRupees(a.sellingPricePaise)}</td>
+                        <td className="text-end font-monospace text-muted fw-semibold">
+                          {formatRupees(a.quantity * a.purchasePricePaise)}
+                        </td>
+                        <td className="text-end font-monospace text-success fw-bold">
+                          {formatRupees(a.quantity * a.sellingPricePaise)}
                         </td>
                       </tr>
                     ))}
@@ -220,8 +251,10 @@ export default function Reports() {
                     <tr>
                       <th>Category</th>
                       <th>Item Specification</th>
-                      <th>Size</th>
-                      <th className="text-center">Available Stock</th>
+                      <th>Size / SKU</th>
+                      <th className="text-center">{getGodownName('G1')}</th>
+                      <th className="text-center">{getGodownName('G2')}</th>
+                      <th className="text-center">Total Stock</th>
                       <th className="text-center">Threshold</th>
                       <th>Status</th>
                     </tr>
@@ -235,11 +268,32 @@ export default function Reports() {
                           <div className="text-muted extra-small">{t.companyId?.name}</div>
                         </td>
                         <td className="text-dark font-monospace small">{t.size}</td>
+                        <td className="text-center font-monospace">{t.godownStock?.G1 ?? 0}</td>
+                        <td className="text-center font-monospace">{t.godownStock?.G2 ?? 0}</td>
                         <td className="text-center font-monospace fw-bold text-dark">{t.quantity}</td>
                         <td className="text-center text-muted small">{t.lowStockThreshold}</td>
                         <td>
                           <span className={`badge ${t.quantity <= 0 ? 'badge-pill-danger' : 'badge-pill-warning'} extra-small`}>
                             {t.quantity <= 0 ? 'Out of Stock' : 'Low Stock Alert'}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                    {reportData.accessories?.map((a) => (
+                      <tr key={a._id}>
+                        <td><span className="badge badge-pill-warning extra-small">Accessory</span></td>
+                        <td>
+                          <div className="text-dark fw-semibold small">{a.name}</div>
+                          <div className="text-muted extra-small">{a.category}</div>
+                        </td>
+                        <td className="text-dark font-monospace small">{a.sku}</td>
+                        <td className="text-center font-monospace">{a.godownStock?.G1 ?? 0}</td>
+                        <td className="text-center font-monospace">{a.godownStock?.G2 ?? 0}</td>
+                        <td className="text-center font-monospace fw-bold text-dark">{a.quantity}</td>
+                        <td className="text-center text-muted small">{a.lowStockThreshold}</td>
+                        <td>
+                          <span className={`badge ${a.quantity <= 0 ? 'badge-pill-danger' : 'badge-pill-warning'} extra-small`}>
+                            {a.quantity <= 0 ? 'Out of Stock' : 'Low Stock Alert'}
                           </span>
                         </td>
                       </tr>

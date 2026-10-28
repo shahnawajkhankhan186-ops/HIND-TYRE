@@ -5,14 +5,21 @@ import api from '../../lib/api';
 import { formatRupees, rupeesToPaise } from '../../lib/currency';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 import { TableSkeleton } from '../../components/common/LoadingSkeleton';
+import { useAuth } from '../../context/AuthContext';
 
 const CATEGORIES = ['Tube', 'Valve', 'Alloy wheel', 'Wheel cover', 'Balancing weight', 'Puncture kit', 'Other'];
 
 export default function Accessories() {
+  const { shopSettings } = useAuth();
+  const getGodownName = (code) => {
+    return shopSettings?.godowns?.find((g) => g.code === code)?.name || (code === 'G1' ? 'Godown 1' : 'Godown 2');
+  };
+
   const [accessories, setAccessories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [inStockGodown, setInStockGodown] = useState('');
 
   // Add / Edit Modal
   const [showModal, setShowModal] = useState(false);
@@ -24,6 +31,8 @@ export default function Accessories() {
     purchasePriceRupees: '',
     sellingPriceRupees: '',
     gstPercent: 0,
+    g1Stock: 5,
+    g2Stock: 5,
     quantity: 10,
     lowStockThreshold: 5,
   });
@@ -35,13 +44,18 @@ export default function Accessories() {
 
   useEffect(() => {
     fetchAccessories();
-  }, [selectedCategory]);
+  }, [selectedCategory, inStockGodown]);
 
   const fetchAccessories = async () => {
     try {
       setLoading(true);
       const res = await api.get('/admin/accessories', {
-        params: { search, category: selectedCategory || undefined, limit: 100 },
+        params: {
+          search,
+          category: selectedCategory || undefined,
+          inStockGodown: inStockGodown || undefined,
+          limit: 100,
+        },
       });
       if (res.data.success) {
         setAccessories(res.data.data.accessories);
@@ -62,6 +76,8 @@ export default function Accessories() {
       purchasePriceRupees: '',
       sellingPriceRupees: '',
       gstPercent: 0,
+      g1Stock: 5,
+      g2Stock: 5,
       quantity: 10,
       lowStockThreshold: 5,
     });
@@ -77,6 +93,8 @@ export default function Accessories() {
       purchasePriceRupees: (item.purchasePricePaise / 100).toString(),
       sellingPriceRupees: (item.sellingPricePaise / 100).toString(),
       gstPercent: 0,
+      g1Stock: item.godownStock?.G1 ?? 0,
+      g2Stock: item.godownStock?.G2 ?? 0,
       quantity: item.quantity,
       lowStockThreshold: item.lowStockThreshold,
     });
@@ -91,6 +109,10 @@ export default function Accessories() {
 
     try {
       setSaving(true);
+      const g1Stock = Math.max(0, parseInt(formData.g1Stock || 0, 10));
+      const g2Stock = Math.max(0, parseInt(formData.g2Stock || 0, 10));
+      const totalQty = g1Stock + g2Stock;
+
       const payload = {
         name: formData.name,
         category: formData.category,
@@ -98,7 +120,11 @@ export default function Accessories() {
         purchasePricePaise: rupeesToPaise(formData.purchasePriceRupees),
         sellingPricePaise: rupeesToPaise(formData.sellingPriceRupees),
         gstPercent: 0,
-        quantity: parseInt(formData.quantity || 0, 10),
+        godownStock: {
+          G1: g1Stock,
+          G2: g2Stock,
+        },
+        quantity: totalQty,
         lowStockThreshold: parseInt(formData.lowStockThreshold || 5, 10),
       };
 
@@ -154,7 +180,7 @@ export default function Accessories() {
       {/* Filter Bar */}
       <div className="filter-bar-card">
         <div className="row g-2 align-items-center">
-          <div className="col-12 col-md-6">
+          <div className="col-12 col-md-5">
             <div className="input-group input-group-sm">
               <span className="input-group-text"><Search size={15} /></span>
               <input
@@ -166,7 +192,7 @@ export default function Accessories() {
               />
             </div>
           </div>
-          <div className="col-12 col-md-4">
+          <div className="col-6 col-md-3">
             <select
               className="form-select form-select-sm"
               value={selectedCategory}
@@ -176,6 +202,17 @@ export default function Accessories() {
               {CATEGORIES.map((c) => (
                 <option key={c} value={c}>{c}</option>
               ))}
+            </select>
+          </div>
+          <div className="col-6 col-md-2">
+            <select
+              className="form-select form-select-sm"
+              value={inStockGodown}
+              onChange={(e) => setInStockGodown(e.target.value)}
+            >
+              <option value="">All Warehouses</option>
+              <option value="G1">In Stock in {getGodownName('G1')}</option>
+              <option value="G2">In Stock in {getGodownName('G2')}</option>
             </select>
           </div>
           <div className="col-12 col-md-2">
@@ -189,7 +226,7 @@ export default function Accessories() {
       {/* Table */}
       <div className="table-container-card">
         {loading ? (
-          <TableSkeleton rows={6} cols={6} />
+          <TableSkeleton rows={6} cols={8} />
         ) : (
           <div className="table-responsive">
             <table className="table table-custom mb-0">
@@ -199,7 +236,9 @@ export default function Accessories() {
                   <th>Category</th>
                   <th>SKU</th>
                   <th className="text-end">Selling Rate</th>
-                  <th className="text-center">Stock</th>
+                  <th className="text-center">{getGodownName('G1')}</th>
+                  <th className="text-center">{getGodownName('G2')}</th>
+                  <th className="text-center">Total Stock</th>
                   <th className="text-end">Actions</th>
                 </tr>
               </thead>
@@ -215,6 +254,16 @@ export default function Accessories() {
                     <td className="text-muted font-monospace extra-small">{item.sku}</td>
                     <td className="text-end font-monospace text-dark fw-bold">
                       {formatRupees(item.sellingPricePaise)}
+                    </td>
+                    <td className="text-center font-monospace">
+                      <span className={`badge ${item.godownStock?.G1 > 0 ? 'bg-light text-dark border' : 'bg-light text-muted opacity-50 border'} px-2 py-1`}>
+                        {item.godownStock?.G1 ?? 0}
+                      </span>
+                    </td>
+                    <td className="text-center font-monospace">
+                      <span className={`badge ${item.godownStock?.G2 > 0 ? 'bg-light text-dark border' : 'bg-light text-muted opacity-50 border'} px-2 py-1`}>
+                        {item.godownStock?.G2 ?? 0}
+                      </span>
                     </td>
                     <td className="text-center">
                       <span className={`badge ${item.quantity <= 0 ? 'badge-pill-danger' : item.quantity <= item.lowStockThreshold ? 'badge-pill-warning' : 'badge-pill-success'} extra-small`}>
@@ -321,21 +370,67 @@ export default function Accessories() {
                       />
                     </div>
 
-                    <div className="col-6">
-                      <label className="form-label text-dark small fw-semibold">Stock Qty</label>
+                    <div className="col-12 col-md-4">
+                      <label className="form-label text-dark small fw-semibold">
+                        {getGodownName('G1')} Stock
+                      </label>
                       <input
                         type="number"
-                        className="form-control"
-                        value={formData.quantity}
-                        onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
+                        min="0"
+                        className="form-control font-monospace"
+                        value={formData.g1Stock}
+                        onChange={(e) => {
+                          const g1 = parseInt(e.target.value || 0, 10);
+                          const g2 = parseInt(formData.g2Stock || 0, 10);
+                          setFormData({
+                            ...formData,
+                            g1Stock: e.target.value,
+                            quantity: g1 + g2,
+                          });
+                        }}
                         required
                       />
                     </div>
 
-                    <div className="col-6">
-                      <label className="form-label text-dark small fw-semibold">Threshold</label>
+                    <div className="col-12 col-md-4">
+                      <label className="form-label text-dark small fw-semibold">
+                        {getGodownName('G2')} Stock
+                      </label>
                       <input
                         type="number"
+                        min="0"
+                        className="form-control font-monospace"
+                        value={formData.g2Stock}
+                        onChange={(e) => {
+                          const g2 = parseInt(e.target.value || 0, 10);
+                          const g1 = parseInt(formData.g1Stock || 0, 10);
+                          setFormData({
+                            ...formData,
+                            g2Stock: e.target.value,
+                            quantity: g1 + g2,
+                          });
+                        }}
+                        required
+                      />
+                    </div>
+
+                    <div className="col-12 col-md-4">
+                      <label className="form-label text-dark small fw-semibold">
+                        Total Stock
+                      </label>
+                      <input
+                        type="number"
+                        className="form-control font-monospace bg-light fw-bold"
+                        value={parseInt(formData.g1Stock || 0, 10) + parseInt(formData.g2Stock || 0, 10)}
+                        readOnly
+                      />
+                    </div>
+
+                    <div className="col-12">
+                      <label className="form-label text-dark small fw-semibold">Threshold (Total)</label>
+                      <input
+                        type="number"
+                        min="0"
                         className="form-control"
                         value={formData.lowStockThreshold}
                         onChange={(e) => setFormData({ ...formData, lowStockThreshold: e.target.value })}
