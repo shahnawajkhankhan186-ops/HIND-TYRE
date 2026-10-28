@@ -1,7 +1,24 @@
 import axios from 'axios';
 
+// Smart URL resolver supporting both VITE_API_BASE_URL and VITE_API_URL
+const rawEnvUrl = (import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || '/api').trim();
+let resolvedBaseUrl = rawEnvUrl;
+
+if (resolvedBaseUrl.startsWith('http://') || resolvedBaseUrl.startsWith('https://')) {
+  resolvedBaseUrl = resolvedBaseUrl.replace(/\/+$/, '');
+  if (!resolvedBaseUrl.endsWith('/api')) {
+    resolvedBaseUrl += '/api';
+  }
+}
+
+export const getApiBaseUrl = () => resolvedBaseUrl;
+
+export const getReceiptPdfUrl = (saleId) => {
+  return `${resolvedBaseUrl}/sales/${saleId}/receipt.pdf`;
+};
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
+  baseURL: resolvedBaseUrl,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -34,14 +51,14 @@ api.interceptors.response.use(
       }
     }
 
-    // Friendly error message when Vite proxy fails to connect to backend on port 5001
+    // Friendly error message when backend is unreachable or waking up from Render free tier sleep
     if (
       !error.response ||
       (error.response.status === 500 &&
         (!error.response.data || typeof error.response.data !== 'object' || !error.response.data.error))
     ) {
       error.friendlyMessage =
-        'Backend server is not reachable on port 5001. Please make sure the backend is running (run "npm run dev").';
+        'Backend server is not reachable. If hosted on Render free tier, it may be waking up from sleep (~30-50s initial cold start). Please wait a moment and try again.';
     }
 
     return Promise.reject(error);

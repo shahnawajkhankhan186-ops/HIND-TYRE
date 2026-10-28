@@ -1,0 +1,45 @@
+# ====================================================
+# Render Blueprint Specification for HIND TYRES Backend
+# ====================================================
+# Automatically deploys the Express.js API to Render.
+# To deploy: Go to Render Dashboard -> New + -> Blueprint -> Connect this repo.
+
+services:
+  - type: web
+    name: hind-tyres-backend
+    runtime: node
+    plan: free
+    region: oregon
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      # Provide your MongoDB Atlas replica-set connection string in Render Dashboard
+      - key: MONGODB_URI
+        sync: false
+      # Auto-generates a secure random 256-bit JWT secret key
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      # Paste your Vercel frontend URL here (e.g. https://hind-tyres.vercel.app)
+      - key: CLIENT_URL
+        sync: false
+      - key: ADMIN_RECEIPT_EMAIL
+        value: admin@hindtyres.com
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: 587
+      - key: SMTP_SECURE
+        value: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+

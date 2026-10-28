@@ -15,7 +15,7 @@ import {
   X
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import api from '../../lib/api';
+import api, { getReceiptPdfUrl } from '../../lib/api';
 import { formatRupees } from '../../lib/currency';
 import { formatIST } from '../../lib/ist-date';
 import ReceiptModal from '../../components/common/ReceiptModal';
@@ -348,8 +348,10 @@ export default function SalesLedger() {
 
                           {/* Download PDF */}
                           <a
-                            href={`/api/sales/${sale._id}/receipt.pdf`}
+                            href={getReceiptPdfUrl(sale._id)}
                             download={`Invoice_${sale.invoiceNo}.pdf`}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="btn btn-sm btn-accent p-1.5"
                             title="Download PDF"
                           >

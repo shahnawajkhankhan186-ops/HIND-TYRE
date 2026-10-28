@@ -1,7 +1,7 @@
 import React from 'react';
 import { X, Download, Printer, Check, ShieldCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
-import api from '../../lib/api';
+import api, { getReceiptPdfUrl } from '../../lib/api';
 import { formatRupees, paiseToWordsINR } from '../../lib/currency';
 import { formatIST } from '../../lib/ist-date';
 
@@ -9,10 +9,11 @@ export default function ReceiptModal({ isOpen, onClose, sale, shopSettings }) {
   if (!isOpen || !sale) return null;
 
   const handleDownloadPDF = () => {
-    const url = `/api/sales/${sale._id}/receipt.pdf`;
+    const url = getReceiptPdfUrl(sale._id);
     const link = document.createElement('a');
     link.href = url;
     link.setAttribute('download', `Invoice_${sale.invoiceNo}.pdf`);
+    link.setAttribute('target', '_blank');
     document.body.appendChild(link);
     link.click();
     link.remove();
