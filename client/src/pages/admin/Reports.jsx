@@ -50,22 +50,29 @@ export default function Reports() {
     }
   };
 
-  const handleExportCSV = () => {
-    const params = new URLSearchParams();
-    if (startDate) params.append('startDate', startDate);
-    if (endDate) params.append('endDate', endDate);
-
-    const token = localStorage.getItem('token');
-    const url = `/api/admin/reports/${activeTab}/export?${params.toString()}`;
-
-    // Direct stream download
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', `hind_tyres_${activeTab}_report.csv`);
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    toast.success(`Streaming ${activeTab} CSV download...`);
+  const handleExportCSV = async () => {
+    try {
+      toast.loading(`Preparing ${activeTab} CSV download...`, { id: 'csv-export' });
+      const res = await api.get(`/admin/reports/${activeTab}/export`, {
+        params: {
+          startDate: startDate || undefined,
+          endDate: endDate || undefined,
+        },
+        responseType: 'blob',
+      });
+      const blob = new Blob([res.data], { type: 'text/csv;charset=utf-8;' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `hind_tyres_${activeTab}_report.csv`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      toast.success(`Successfully exported ${activeTab} CSV!`, { id: 'csv-export' });
+    } catch (err) {
+      toast.error('Failed to export CSV report', { id: 'csv-export' });
+    }
   };
 
   return (
