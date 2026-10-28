@@ -138,3 +138,4 @@ If your database is empty, seed it with default shop settings and staff accounts
 > Render free-tier web services automatically sleep after 15 minutes of inactivity. When a request comes in, it takes approximately 30-50 seconds to spin back up.
 > The frontend is pre-configured with helpful status alerts explaining this to users so nobody gets confused.
 > To keep the Render backend awake during store hours, you can use a free ping tool like [UptimeRobot](https://uptimerobot.com) to ping `https://your-backend.onrender.com/api/health` every 10 minutes.
+
