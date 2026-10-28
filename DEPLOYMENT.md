@@ -1,6 +1,9 @@
 # HIND TYRES & ACCESSORIES - Deployment Guide
 
-This guide explains how to deploy the **Frontend on Vercel** and the **Backend on Render** with MongoDB Atlas.
+### Live Production Deployment
+- **Frontend (Vercel)**: [https://hind-tyre.vercel.app](https://hind-tyre.vercel.app)
+- **Backend API (Render)**: [https://hind-tyres-backend.onrender.com](https://hind-tyres-backend.onrender.com)
+- **API Health Check**: [https://hind-tyres-backend.onrender.com/api/health](https://hind-tyres-backend.onrender.com/api/health)
 
 ---
 
