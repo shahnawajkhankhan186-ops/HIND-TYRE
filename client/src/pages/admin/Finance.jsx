@@ -195,6 +195,24 @@ export default function Finance() {
     }
   };
 
+  const handleToggleCashierFilter = (c) => {
+    if (selectedCashier === String(c.userId)) {
+      setSelectedCashier('');
+      setPage(1);
+      toast('Showing all cashier transactions');
+    } else {
+      setSelectedCashier(String(c.userId));
+      setPage(1);
+      toast.success(`Filtering transactions by: ${c.name}`);
+      setTimeout(() => {
+        const el = document.getElementById('financial-transactions-section');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
+  };
+
   const isFiltered = Boolean(
     search || selectedCashier || dateFilter !== 'all' || startDate || endDate || paymentMode || status
   );
@@ -364,17 +382,21 @@ export default function Finance() {
                       <span className="text-muted extra-small">Invoices: {c.todayInvoices} today / {c.totalInvoices} all</span>
                       <button
                         type="button"
-                        className={`btn btn-sm ${isSelected ? 'btn-dark-solid' : 'btn-outline-dark-custom'} py-1 px-2.5 extra-small`}
-                        onClick={() => {
-                          if (isSelected) {
-                            setSelectedCashier('');
-                          } else {
-                            setSelectedCashier(String(c.userId));
-                            setPage(1);
-                          }
-                        }}
+                        className={`btn btn-sm ${isSelected ? 'btn-dark-solid' : 'btn-outline-dark-custom'} py-1 px-2.5 extra-small d-inline-flex align-items-center gap-1`}
+                        onClick={() => handleToggleCashierFilter(c)}
+                        title={isSelected ? 'Currently filtering by this cashier. Click to view all sales.' : `Filter transactions to see sales made by ${c.name}`}
                       >
-                        {isSelected ? 'Clear Filter' : 'View Sales'}
+                        {isSelected ? (
+                          <>
+                            <X size={13} />
+                            <span>Clear Filter</span>
+                          </>
+                        ) : (
+                          <>
+                            <Eye size={13} />
+                            <span>View Sales</span>
+                          </>
+                        )}
                       </button>
                     </div>
                   </div>
@@ -431,17 +453,21 @@ export default function Finance() {
                         <td className="text-end">
                           <button
                             type="button"
-                            className={`btn btn-sm ${isSelected ? 'btn-dark-solid' : 'btn-outline-dark-custom'} py-1 px-2.5 extra-small`}
-                            onClick={() => {
-                              if (isSelected) {
-                                setSelectedCashier('');
-                              } else {
-                                setSelectedCashier(String(c.userId));
-                                setPage(1);
-                              }
-                            }}
+                            className={`btn btn-sm ${isSelected ? 'btn-dark-solid' : 'btn-outline-dark-custom'} py-1 px-2.5 extra-small d-inline-flex align-items-center gap-1`}
+                            onClick={() => handleToggleCashierFilter(c)}
+                            title={isSelected ? 'Currently filtering by this cashier. Click to view all sales.' : `Filter transactions to see sales made by ${c.name}`}
                           >
-                            {isSelected ? 'Clear Filter' : 'View Sales'}
+                            {isSelected ? (
+                              <>
+                                <X size={13} />
+                                <span>Clear Filter</span>
+                              </>
+                            ) : (
+                              <>
+                                <Eye size={13} />
+                                <span>View Sales</span>
+                              </>
+                            )}
                           </button>
                         </td>
                       </tr>
@@ -606,9 +632,29 @@ export default function Finance() {
       </div>
 
       {/* Filtered Summary Ribbon */}
-      <div className="card-clean p-2.5 px-3 bg-white mb-3 d-flex flex-wrap align-items-center justify-content-between gap-2 gap-sm-3 border" style={{ borderColor: 'var(--border-light)' }}>
-        <div className="d-flex align-items-center gap-2">
+      <div
+        id="financial-transactions-section"
+        className="card-clean p-2.5 px-3 bg-white mb-3 d-flex flex-wrap align-items-center justify-content-between gap-2 gap-sm-3 border"
+        style={{ borderColor: 'var(--border-light)' }}
+      >
+        <div className="d-flex align-items-center gap-2 flex-wrap">
           <span className="badge bg-dark extra-small">Filtered Results</span>
+          {selectedCashier && (
+            <span className="badge bg-warning bg-opacity-25 text-dark border border-warning border-opacity-50 extra-small d-inline-flex align-items-center gap-1">
+              <span>Cashier: <strong>{overview.cashiers.find((c) => String(c.userId) === selectedCashier)?.name || 'Selected'}</strong></span>
+              <button
+                type="button"
+                className="btn-close btn-close-dark ms-1"
+                style={{ fontSize: '0.6rem' }}
+                onClick={() => {
+                  setSelectedCashier('');
+                  setPage(1);
+                  toast('Showing all cashier transactions');
+                }}
+                title="Clear cashier filter"
+              />
+            </span>
+          )}
           <small className="text-muted">
             Showing <strong className="text-dark">{totalCount}</strong> matching transactions ({filteredSummary.completedCount} completed)
           </small>
