@@ -66,6 +66,7 @@ function calculateSaleProfit(sale, itemPriceMap) {
       unitPricePaise: unitSellingPaise,
       actualPricePaise: unitActualPricePaise,
       lineSellingPaise,
+      lineTotalPaise: it.lineTotalPaise || lineSellingPaise,
       lineCostPaise,
       lineProfitPaise,
     };
@@ -352,8 +353,9 @@ async function getFinanceTransactions(req, res, next) {
         costPaise: calc.costPaise,
         profitPaise: calc.profitPaise,
         marginPercent: calc.marginPercent,
-        customer: sale.customerSnapshot,
-        soldBy: sale.soldBy,
+        customer: sale.customerSnapshot || {},
+        customerSnapshot: sale.customerSnapshot || {},
+        soldBy: sale.soldBy || {},
         items: calc.items,
       };
     });

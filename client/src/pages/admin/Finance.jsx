@@ -169,9 +169,30 @@ export default function Finance() {
     fetchTransactions();
   };
 
-  const handleViewReceipt = (sale) => {
-    setSelectedSale(sale);
+  const handleViewReceipt = async (tx) => {
+    // Adapt transaction immediately so receipt modal opens instantly without delay
+    const adaptedSale = {
+      ...tx,
+      customerSnapshot: tx.customerSnapshot || tx.customer || {},
+      items: (tx.items || []).map((it) => ({
+        ...it,
+        lineTotalPaise: it.lineTotalPaise ?? it.lineSellingPaise ?? ((it.unitPricePaise || 0) * (it.qty || 1)),
+      })),
+    };
+    setSelectedSale(adaptedSale);
     setShowReceiptModal(true);
+
+    // Fetch the full original sale in background for complete details
+    if (tx._id) {
+      try {
+        const res = await api.get(`/sales/${tx._id}`);
+        if (res.data?.success && res.data?.data) {
+          setSelectedSale(res.data.data);
+        }
+      } catch (err) {
+        // Fallback to adaptedSale is already active
+      }
+    }
   };
 
   const isFiltered = Boolean(

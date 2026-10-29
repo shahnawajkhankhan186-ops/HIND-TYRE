@@ -8,11 +8,15 @@ import { formatIST } from '../../lib/ist-date';
 export default function ReceiptModal({ isOpen, onClose, sale, shopSettings }) {
   if (!isOpen || !sale) return null;
 
+  const customer = sale.customerSnapshot || sale.customer || {};
+  const items = sale.items || [];
+  const invoiceNo = sale.invoiceNo || 'Receipt';
+
   const handleDownloadPDF = () => {
     const url = getReceiptPdfUrl(sale._id);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `Invoice_${sale.invoiceNo}.pdf`);
+    link.setAttribute('download', `Invoice_${invoiceNo}.pdf`);
     link.setAttribute('target', '_blank');
     document.body.appendChild(link);
     link.click();
@@ -93,13 +97,13 @@ export default function ReceiptModal({ isOpen, onClose, sale, shopSettings }) {
               <div className="col-12 col-md-6">
                 <div className="card-clean p-3 h-100 bg-white">
                   <div className="small text-uppercase fw-bold mb-2" style={{ color: 'var(--text-muted)' }}>Billed To (Customer)</div>
-                  <div className="fw-bold fs-6" style={{ color: 'var(--text-on-light)' }}>{sale.customerSnapshot.name}</div>
-                  <div className="small text-muted">Phone: <span className="text-dark fw-medium font-monospace">{sale.customerSnapshot.phone}</span></div>
-                  <div className="small text-muted">Email: <span className="text-dark fw-medium">{sale.customerSnapshot.email || '-'}</span></div>
-                  <div className="small text-muted">Address: <span className="text-dark">{sale.customerSnapshot.address || '-'}</span></div>
-                  {sale.customerSnapshot.vehicleNumber && (
+                  <div className="fw-bold fs-6" style={{ color: 'var(--text-on-light)' }}>{customer.name || 'Walk-in Customer'}</div>
+                  <div className="small text-muted">Phone: <span className="text-dark fw-medium font-monospace">{customer.phone || '-'}</span></div>
+                  <div className="small text-muted">Email: <span className="text-dark fw-medium">{customer.email || '-'}</span></div>
+                  <div className="small text-muted">Address: <span className="text-dark">{customer.address || '-'}</span></div>
+                  {customer.vehicleNumber && (
                     <div className="small mt-1 text-muted">
-                      Vehicle: <span className="badge bg-dark text-white font-monospace">{sale.customerSnapshot.vehicleNumber}</span> {sale.customerSnapshot.vehicleModel && `(${sale.customerSnapshot.vehicleModel})`}
+                      Vehicle: <span className="badge bg-dark text-white font-monospace">{customer.vehicleNumber}</span> {customer.vehicleModel && `(${customer.vehicleModel})`}
                     </div>
                   )}
                 </div>
@@ -110,16 +114,16 @@ export default function ReceiptModal({ isOpen, onClose, sale, shopSettings }) {
                   <div className="small text-uppercase fw-bold mb-2" style={{ color: 'var(--text-muted)' }}>Payment & Cashier Info</div>
                   <div className="d-flex justify-content-between py-1 border-bottom small" style={{ borderColor: 'var(--border-light)' }}>
                     <span className="text-muted">Payment Mode:</span>
-                    <span className="badge-pill-yellow font-monospace">{sale.paymentMode}</span>
+                    <span className="badge-pill-yellow font-monospace">{sale.paymentMode || 'CASH'}</span>
                   </div>
                   <div className="d-flex justify-content-between py-1 border-bottom small" style={{ borderColor: 'var(--border-light)' }}>
                     <span className="text-muted">Payment Status:</span>
-                    <span className="text-dark fw-semibold">{sale.paymentStatus}</span>
+                    <span className="text-dark fw-semibold">{sale.paymentStatus || 'PAID'}</span>
                   </div>
                   <div className="d-flex justify-content-between py-1 border-bottom small" style={{ borderColor: 'var(--border-light)' }}>
                     <span className="text-muted">Invoice Status:</span>
                     <span className={sale.status === 'COMPLETED' ? 'badge-pill-success' : 'badge-pill-danger'}>
-                      {sale.status}
+                      {sale.status || 'COMPLETED'}
                     </span>
                   </div>
                   <div className="d-flex justify-content-between py-1 small">
@@ -145,17 +149,19 @@ export default function ReceiptModal({ isOpen, onClose, sale, shopSettings }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {sale.items.map((item, idx) => (
+                    {items.map((item, idx) => (
                       <tr key={idx}>
                         <td className="text-muted">{idx + 1}</td>
                         <td>
-                          <span className="fw-semibold text-dark">{item.name}</span>
+                          <span className="fw-semibold text-dark">{item.name || 'Unnamed Item'}</span>
                           {item.company && <div className="text-muted small">{item.company}</div>}
                         </td>
                         <td className="text-muted font-monospace small">{item.size || '-'}</td>
-                        <td className="text-center fw-bold text-dark">{item.qty}</td>
+                        <td className="text-center fw-bold text-dark">{item.qty || 1}</td>
                         <td className="text-end font-monospace">{formatRupees(item.unitPricePaise)}</td>
-                        <td className="text-end font-monospace fw-bold text-dark">{formatRupees(item.lineTotalPaise)}</td>
+                        <td className="text-end font-monospace fw-bold text-dark">
+                          {formatRupees(item.lineTotalPaise ?? item.lineSellingPaise ?? ((item.unitPricePaise || 0) * (item.qty || 1)))}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
