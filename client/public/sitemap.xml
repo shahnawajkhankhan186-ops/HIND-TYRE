@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://hind-tyre.vercel.app/</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://hind-tyre.vercel.app/images/hero_tyre_workshop.jpg</image:loc>
+      <image:title>HIND TYRES AND ACCESSORIES - Premium Tyre Showroom and Workshop</image:title>
+      <image:caption>Authorized dealer for MRF, Apollo, Bridgestone, Michelin, Goodyear, CEAT, JK Tyre</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://hind-tyre.vercel.app/images/car_tyres_card.jpg</image:loc>
+      <image:title>Car Tyres - Hatchback, Sedan, SUV Tyres</image:title>
+      <image:caption>Genuine tubeless and radial car tyres with manufacturer warranty</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://hind-tyre.vercel.app/images/bike_tyres_card.jpg</image:loc>
+      <image:title>Two Wheeler and Bike Tyres</image:title>
+      <image:caption>Commuter, sports, and cruiser motorcycle tyres</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://hind-tyre.vercel.app/images/suv_tyres_card.jpg</image:loc>
+      <image:title>SUV All-Terrain and Highway Tyres</image:title>
+      <image:caption>Heavy-duty on-road and off-road SUV tyres</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://hind-tyre.vercel.app/images/commercial_tyres_card.jpg</image:loc>
+      <image:title>Commercial Truck and Fleet Tyres</image:title>
+      <image:caption>Durable commercial vehicle and tractor tyres</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://hind-tyre.vercel.app/images/service_wheel_alignment.jpg</image:loc>
+      <image:title>3D Laser Wheel Alignment Service</image:title>
+      <image:caption>Computerized precision wheel alignment in Kanpur</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://hind-tyre.vercel.app/images/service_wheel_balancing.jpg</image:loc>
+      <image:title>Dynamic Wheel Balancing Service</image:title>
+      <image:caption>Eliminate highway vibration with computerized wheel balancing</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://hind-tyre.vercel.app/images/service_tyre_fitting.jpg</image:loc>
+      <image:title>Express Tyre Fitting and Installation</image:title>
+      <image:caption>Scratchless pneumatic tyre mounting and fitting</image:caption>
+    </image:image>
+  </url>
+</urlset>
+

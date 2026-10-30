@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Disc3, Mail, KeyRound, Lock, ArrowLeft, CheckCircle2, ArrowRight } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../lib/api';
+import SEO from '../../components/common/SEO';
 
 export default function ForgotPassword() {
   const [step, setStep] = useState(1); // 1: Email, 2: OTP, 3: New Password
@@ -103,6 +104,11 @@ export default function ForgotPassword() {
 
   return (
     <div className="min-vh-100 d-flex flex-column flex-lg-row" style={{ backgroundColor: 'var(--bg-black)' }}>
+      <SEO
+        title="Account Recovery & Password Reset"
+        description="Account recovery and password reset verification for HIND TYRES AND ACCESSORIES staff."
+        noindex={true}
+      />
       {/* Left Workshop Hero */}
       <div
         className="col-12 col-lg-6 d-flex flex-column justify-content-between p-4 p-md-5 text-white position-relative"

@@ -1,0 +1,19 @@
+{
+  "name": "HIND TYRES AND ACCESSORIES",
+  "short_name": "HIND TYRES",
+  "description": "Authorized Dealer for MRF, Apollo, Bridgestone, Michelin, Goodyear, CEAT. 100% Genuine Tyres & 3D Alignment Workshop.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0A0C",
+  "theme_color": "#FFC107",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
+

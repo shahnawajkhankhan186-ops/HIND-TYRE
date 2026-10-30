@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
+import SEO from '../common/SEO';
 
 export default function AdminLayout() {
   // Desktop sidebar state (default: open on desktop >= 992px)
@@ -45,6 +46,7 @@ export default function AdminLayout() {
 
   return (
     <div className="admin-app-root">
+      <SEO title="Admin Management Portal" noindex={true} />
       <header className="admin-navbar-fixed">
         <Navbar onToggleSidebar={handleToggleSidebar} isSidebarOpen={isSidebarOpen} />
       </header>

@@ -2,10 +2,12 @@ import React from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
 import { ShoppingCart, Calendar, Search } from 'lucide-react';
 import Navbar from './Navbar';
+import SEO from '../common/SEO';
 
 export default function CounterLayout() {
   return (
     <div className="min-vh-100 d-flex flex-column" style={{ backgroundColor: 'var(--bg-light)' }}>
+      <SEO title="Counter Staff Billing Portal" noindex={true} />
       {/* Dark Charcoal Top Header */}
       <Navbar />
 
