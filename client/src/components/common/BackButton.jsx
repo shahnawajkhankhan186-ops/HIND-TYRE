@@ -30,3 +30,4 @@ export default function BackButton({ fallback = '/', label = 'Back', className =
     </button>
   );
 }
+
