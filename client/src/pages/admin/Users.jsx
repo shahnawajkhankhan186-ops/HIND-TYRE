@@ -6,6 +6,7 @@ import { useAuth } from '../../context/AuthContext';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 import { formatIST } from '../../lib/ist-date';
 import { TableSkeleton } from '../../components/common/LoadingSkeleton';
+import BackButton from '../../components/common/BackButton';
 
 export default function Users() {
   const { user: currentUser, isPrimaryAdmin: isCurrentPrimaryAdmin } = useAuth();
@@ -112,11 +113,14 @@ export default function Users() {
       {/* Header */}
       <div className="page-header-card">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
-          <div>
-            <h1 className="page-title">Administrators & Staff Accounts</h1>
-            <p className="page-subtitle">
-              Add new shop admins with Gmail & phone, manage counter cashiers, and control portal privileges
-            </p>
+          <div className="d-flex align-items-center gap-2.5">
+            <BackButton fallback="/admin/dashboard" />
+            <div>
+              <h1 className="page-title mb-0">Administrators & Staff Accounts</h1>
+              <p className="page-subtitle mb-0">
+                Add new shop admins with Gmail & phone, manage counter cashiers, and control portal privileges
+              </p>
+            </div>
           </div>
           <div className="d-flex align-items-center gap-2">
             <button className="btn btn-outline-dark-custom btn-sm d-flex align-items-center gap-1.5" onClick={fetchUsers}>

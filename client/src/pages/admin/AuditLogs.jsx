@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import api from '../../lib/api';
 import { formatIST } from '../../lib/ist-date';
 import { TableSkeleton } from '../../components/common/LoadingSkeleton';
+import BackButton from '../../components/common/BackButton';
 
 export default function AuditLogs() {
   const [logs, setLogs] = useState([]);
@@ -48,11 +49,14 @@ export default function AuditLogs() {
     <div className="page-container">
       <div className="page-header-card">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
-          <div>
-            <h1 className="page-title">System Audit Logs & Compliance Ledger</h1>
-            <p className="page-subtitle">
-              Rule 8: Immutable trace of every user action, state mutations & IP address logs
-            </p>
+          <div className="d-flex align-items-center gap-2.5">
+            <BackButton fallback="/admin/dashboard" />
+            <div>
+              <h1 className="page-title mb-0">System Audit Logs & Compliance Ledger</h1>
+              <p className="page-subtitle mb-0">
+                Rule 8: Immutable trace of every user action, state mutations & IP address logs
+              </p>
+            </div>
           </div>
           <button className="btn btn-outline-dark-custom btn-sm d-flex align-items-center gap-1.5" onClick={fetchLogs}>
             <RefreshCw size={14} /> Refresh

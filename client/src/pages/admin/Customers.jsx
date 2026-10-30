@@ -5,6 +5,7 @@ import api from '../../lib/api';
 import { formatRupees } from '../../lib/currency';
 import { formatIST } from '../../lib/ist-date';
 import { TableSkeleton } from '../../components/common/LoadingSkeleton';
+import BackButton from '../../components/common/BackButton';
 
 export default function Customers() {
   const [customers, setCustomers] = useState([]);
@@ -75,11 +76,14 @@ export default function Customers() {
       {/* Header */}
       <div className="page-header-card">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
-          <div>
-            <h1 className="page-title">Customer Directory & Purchase Ledger</h1>
-            <p className="page-subtitle">
-              Registered vehicle owners, lifetime invoice history & warranty profiles
-            </p>
+          <div className="d-flex align-items-center gap-2.5">
+            <BackButton fallback="/admin/dashboard" />
+            <div>
+              <h1 className="page-title mb-0">Customer Directory & Purchase Ledger</h1>
+              <p className="page-subtitle mb-0">
+                Registered vehicle owners, lifetime invoice history & warranty profiles
+              </p>
+            </div>
           </div>
           <button className="btn btn-outline-dark-custom btn-sm d-flex align-items-center gap-1.5" onClick={fetchCustomers}>
             <RefreshCw size={14} /> Refresh

@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import api from '../../lib/api';
 import { formatRupees, rupeesToPaise } from '../../lib/currency';
 import { useAuth } from '../../context/AuthContext';
+import BackButton from '../../components/common/BackButton';
 
 export default function StockIn() {
   const { shopSettings } = useAuth();
@@ -106,10 +107,15 @@ export default function StockIn() {
   return (
     <div className="page-container">
       <div className="page-header-card">
-        <h1 className="page-title">Stock In (Purchase Entry)</h1>
-        <p className="page-subtitle">
-          Record received tyre shipments & supplier purchases with ledger updates
-        </p>
+        <div className="d-flex align-items-center gap-2.5">
+          <BackButton fallback="/admin/dashboard" />
+          <div>
+            <h1 className="page-title mb-0">Stock In (Purchase Entry)</h1>
+            <p className="page-subtitle mb-0">
+              Record received tyre shipments & supplier purchases with ledger updates
+            </p>
+          </div>
+        </div>
       </div>
 
       <div className="row justify-content-center">

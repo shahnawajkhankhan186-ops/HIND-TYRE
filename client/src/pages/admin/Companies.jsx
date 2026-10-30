@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import api from '../../lib/api';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 import { TableSkeleton } from '../../components/common/LoadingSkeleton';
+import BackButton from '../../components/common/BackButton';
 
 export default function Companies() {
   const [companies, setCompanies] = useState([]);
@@ -136,9 +137,12 @@ export default function Companies() {
       {/* Header */}
       <div className="page-header-card">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
-          <div>
-            <h1 className="page-title">Tyre Companies & Brands</h1>
-            <p className="page-subtitle">Manage partner manufacturers and brand status</p>
+          <div className="d-flex align-items-center gap-2.5">
+            <BackButton fallback="/admin/dashboard" />
+            <div>
+              <h1 className="page-title mb-0">Tyre Companies & Brands</h1>
+              <p className="page-subtitle mb-0">Manage partner manufacturers and brand status</p>
+            </div>
           </div>
           <div className="d-flex align-items-center gap-2">
             <button className="btn btn-outline-dark-custom btn-sm d-flex align-items-center gap-1.5" onClick={fetchCompanies}>

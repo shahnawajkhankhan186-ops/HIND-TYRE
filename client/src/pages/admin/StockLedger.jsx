@@ -6,6 +6,7 @@ import { formatIST } from '../../lib/ist-date';
 import { TableSkeleton } from '../../components/common/LoadingSkeleton';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 import { useAuth } from '../../context/AuthContext';
+import BackButton from '../../components/common/BackButton';
 
 export default function StockLedger() {
   const { shopSettings } = useAuth();
@@ -160,11 +161,14 @@ export default function StockLedger() {
       {/* Header */}
       <div className="page-header-card">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
-          <div>
-            <h1 className="page-title">Inventory Stock Movement Ledger</h1>
-            <p className="page-subtitle">
-              Immutable audit ledger of all stock additions, transfers, sales deductions & adjustments
-            </p>
+          <div className="d-flex align-items-center gap-2.5">
+            <BackButton fallback="/admin/dashboard" />
+            <div>
+              <h1 className="page-title mb-0">Inventory Stock Movement Ledger</h1>
+              <p className="page-subtitle mb-0">
+                Immutable audit ledger of all stock additions, transfers, sales deductions & adjustments
+              </p>
+            </div>
           </div>
           <div className="d-flex align-items-center gap-2">
             <button className="btn btn-accent btn-sm d-flex align-items-center gap-1.5" onClick={handleOpenTransfer}>

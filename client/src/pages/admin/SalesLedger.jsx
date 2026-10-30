@@ -22,6 +22,7 @@ import ReceiptModal from '../../components/common/ReceiptModal';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 import { TableSkeleton } from '../../components/common/LoadingSkeleton';
 import { useAuth } from '../../context/AuthContext';
+import BackButton from '../../components/common/BackButton';
 
 export default function SalesLedger() {
   const [sales, setSales] = useState([]);
@@ -142,11 +143,14 @@ export default function SalesLedger() {
       {/* Header */}
       <div className="page-header-card">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
-          <div>
-            <h1 className="page-title">Sales & Invoices Ledger</h1>
-            <p className="page-subtitle">
-              Complete invoice records, customer details, PDF receipts, and audited cancellation
-            </p>
+          <div className="d-flex align-items-center gap-2.5">
+            <BackButton fallback="/admin/dashboard" />
+            <div>
+              <h1 className="page-title mb-0">Sales & Invoices Ledger</h1>
+              <p className="page-subtitle mb-0">
+                Complete invoice records, customer details, PDF receipts, and audited cancellation
+              </p>
+            </div>
           </div>
           <button className="btn btn-outline-dark-custom btn-sm d-flex align-items-center gap-1.5" onClick={fetchSales}>
             <RefreshCw size={14} /> Refresh

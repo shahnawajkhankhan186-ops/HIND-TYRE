@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   User,
   Phone,
@@ -35,6 +36,7 @@ import { useAuth } from '../../context/AuthContext';
 
 export default function NewSale() {
   const { shopSettings } = useAuth();
+  const navigate = useNavigate();
 
   // Current Step: 1 (Customer), 2 (Select Items), 3 (Review & Bill), 4 (Success Screen)
   const [step, setStep] = useState(1);
@@ -419,6 +421,21 @@ export default function NewSale() {
       <div className="page-header-card">
         <div className="d-flex flex-wrap align-items-center justify-content-between gap-3">
           <div className="d-flex align-items-center gap-2">
+            <button
+              type="button"
+              className="btn btn-outline-dark-custom btn-sm d-flex align-items-center gap-1.5 px-2.5 py-1.5 rounded-2 shadow-xs"
+              onClick={() => {
+                if (step > 1) {
+                  setStep((prev) => prev - 1);
+                } else {
+                  navigate('/counter/today-sales');
+                }
+              }}
+              title={step > 1 ? `Back to Step ${step - 1}` : "Back to Today's Invoices"}
+            >
+              <ArrowLeft size={16} />
+              <span className="fw-bold">{step > 1 ? `Back` : 'Back'}</span>
+            </button>
             <div className="p-2 rounded-3" style={{ background: 'var(--accent-soft)', color: '#B45309' }}>
               <ShoppingCart size={22} />
             </div>
@@ -428,53 +445,70 @@ export default function NewSale() {
             </div>
           </div>
 
-          {/* Stepper Progress (4 states) */}
+          {/* Stepper Progress (Clickable Steps) */}
           <div className="d-flex align-items-center gap-1.5 flex-nowrap overflow-x-auto scrollbar-hidden pb-1 w-100 w-md-auto">
-            <div
-              className="d-flex align-items-center px-2.5 px-sm-3 py-1.5 rounded-pill small flex-shrink-0"
+            <button
+              type="button"
+              className="btn p-0 border-0 d-flex align-items-center px-2.5 px-sm-3 py-1.5 rounded-pill small flex-shrink-0"
               style={
                 step > 1
-                  ? { background: 'var(--accent)', color: '#000', fontWeight: '700' }
+                  ? { background: 'var(--accent)', color: '#000', fontWeight: '700', cursor: 'pointer' }
                   : step === 1
                   ? { border: '2px solid var(--accent)', background: 'var(--accent-soft)', color: '#000', fontWeight: '700' }
                   : { border: '1px solid var(--border-light)', background: '#F1F3F5', color: 'var(--text-muted)' }
               }
+              onClick={() => setStep(1)}
+              title="Go to Step 1: Customer Details"
             >
               {step > 1 ? <CheckCircle2 size={14} className="me-1.5" /> : null}
               1. Customer
-            </div>
+            </button>
 
             <span className="text-muted flex-shrink-0">→</span>
 
-            <div
-              className="d-flex align-items-center px-2.5 px-sm-3 py-1.5 rounded-pill small flex-shrink-0"
+            <button
+              type="button"
+              className="btn p-0 border-0 d-flex align-items-center px-2.5 px-sm-3 py-1.5 rounded-pill small flex-shrink-0"
               style={
                 step > 2
-                  ? { background: 'var(--accent)', color: '#000', fontWeight: '700' }
+                  ? { background: 'var(--accent)', color: '#000', fontWeight: '700', cursor: 'pointer' }
                   : step === 2
                   ? { border: '2px solid var(--accent)', background: 'var(--accent-soft)', color: '#000', fontWeight: '700' }
-                  : { border: '1px solid var(--border-light)', background: '#F1F3F5', color: 'var(--text-muted)' }
+                  : { border: '1px solid var(--border-light)', background: '#F1F3F5', color: 'var(--text-muted)', cursor: customer.name ? 'pointer' : 'default' }
               }
+              onClick={() => {
+                if (customer.name && customer.phone) {
+                  setStep(2);
+                }
+              }}
+              title={customer.name ? "Go to Step 2: Tyres & Cart" : "Please fill customer details first"}
             >
               {step > 2 ? <CheckCircle2 size={14} className="me-1.5" /> : null}
               2. Tyres & Cart ({cart.length})
-            </div>
+            </button>
 
             <span className="text-muted flex-shrink-0">→</span>
 
-            <div
-              className="d-flex align-items-center px-2.5 px-sm-3 py-1.5 rounded-pill small flex-shrink-0"
+            <button
+              type="button"
+              className="btn p-0 border-0 d-flex align-items-center px-2.5 px-sm-3 py-1.5 rounded-pill small flex-shrink-0"
               style={
                 step > 3
                   ? { background: 'var(--accent)', color: '#000', fontWeight: '700' }
                   : step === 3
                   ? { border: '2px solid var(--accent)', background: 'var(--accent-soft)', color: '#000', fontWeight: '700' }
-                  : { border: '1px solid var(--border-light)', background: '#F1F3F5', color: 'var(--text-muted)' }
+                  : { border: '1px solid var(--border-light)', background: '#F1F3F5', color: 'var(--text-muted)', cursor: cart.length > 0 ? 'pointer' : 'default' }
               }
+              onClick={() => {
+                if (cart.length > 0) {
+                  setStep(3);
+                }
+              }}
+              title={cart.length > 0 ? "Go to Step 3: Review & Bill" : "Please add at least 1 item to bill"}
             >
               {step > 3 ? <CheckCircle2 size={14} className="me-1.5" /> : null}
               3. Review & Bill
-            </div>
+            </button>
           </div>
         </div>
       </div>
@@ -658,6 +692,24 @@ export default function NewSale() {
           {/* Left Column: Catalog & Search */}
           <div className={`col-12 col-lg-8 ${mobileStep2View === 'catalog' ? 'd-block' : 'd-none d-lg-block'}`}>
             <div className="card-clean p-3 mb-3 bg-white">
+              {/* Back to Customer Bar */}
+              <div className="d-flex align-items-center justify-content-between mb-3 p-2 px-3 rounded-2" style={{ background: 'var(--bg-light)', border: '1px solid var(--border-light)' }}>
+                <button
+                  type="button"
+                  className="btn btn-sm btn-outline-dark-custom d-inline-flex align-items-center gap-1.5 py-1 px-2.5 fw-semibold"
+                  onClick={() => setStep(1)}
+                  title="Return to Customer Details Form"
+                >
+                  <ArrowLeft size={14} />
+                  <span>← Back to Customer Details</span>
+                </button>
+                {customer.name && (
+                  <div className="small text-muted d-none d-sm-block">
+                    Customer: <strong className="text-dark">{customer.name}</strong> ({customer.phone})
+                  </div>
+                )}
+              </div>
+
               {/* Type Switcher & Search Bar */}
               <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
                 <div className="btn-group p-1 rounded-pill" style={{ background: 'var(--bg-light)', border: '1px solid var(--border-light)' }}>
@@ -928,11 +980,11 @@ export default function NewSale() {
                   <span className="text-dark font-monospace">{customer.phone}</span>
                 </div>
                 <button
-                  className="btn btn-link extra-small p-0 mt-1 text-decoration-none fw-semibold"
-                  style={{ color: 'var(--link-blue)' }}
+                  className="btn btn-outline-dark-custom btn-sm w-100 mt-2 d-flex align-items-center justify-content-center gap-1.5 extra-small fw-semibold py-1"
                   onClick={() => setStep(1)}
+                  title="Go back to customer information"
                 >
-                  Edit customer details
+                  <ArrowLeft size={13} /> Edit Customer Details
                 </button>
               </div>
 
@@ -1076,16 +1128,21 @@ export default function NewSale() {
         <div className="row justify-content-center">
           <div className="col-12 col-lg-9">
             <div className="card-clean p-3 p-sm-4 p-md-5 bg-white">
-              <div className="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom" style={{ borderColor: 'var(--border-light)' }}>
+              <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4 pb-2 border-bottom" style={{ borderColor: 'var(--border-light)' }}>
                 <div>
                   <h4 className="fw-bold m-0" style={{ color: 'var(--text-on-light)' }}>Step 3: Review Invoice & Confirm Sale</h4>
                   <p className="text-muted small m-0 mt-1">
                     Server calculation will verify stock and generate sequential retail invoice
                   </p>
                 </div>
-                <button className="btn btn-outline-dark-custom btn-sm" onClick={() => setStep(2)}>
-                  <ArrowLeft size={15} /> Modify Items
-                </button>
+                <div className="d-flex align-items-center gap-2">
+                  <button className="btn btn-outline-dark-custom btn-sm d-flex align-items-center gap-1.5" onClick={() => setStep(1)} title="Back to Customer">
+                    <ArrowLeft size={14} /> Back to Customer
+                  </button>
+                  <button className="btn btn-accent btn-sm d-flex align-items-center gap-1.5 fw-bold" onClick={() => setStep(2)} title="Modify Items">
+                    <ArrowLeft size={14} /> Modify Items / Cart
+                  </button>
+                </div>
               </div>
 
               {/* Customer Snapshot */}

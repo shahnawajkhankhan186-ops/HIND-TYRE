@@ -6,6 +6,7 @@ import api, { getReceiptPdfUrl } from '../../lib/api';
 import { formatRupees } from '../../lib/currency';
 import { formatIST } from '../../lib/ist-date';
 import ReceiptModal from '../../components/common/ReceiptModal';
+import BackButton from '../../components/common/BackButton';
 import { TableSkeleton } from '../../components/common/LoadingSkeleton';
 import EmptyState from '../../components/common/EmptyState';
 import { useAuth } from '../../context/AuthContext';
@@ -64,9 +65,12 @@ export default function TodaySales() {
       {/* Header & Metrics */}
       <div className="page-header-card">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
-          <div>
-            <h1 className="page-title">Today's Counter Invoices</h1>
-            <p className="page-subtitle">Live transactions recorded during the current shift</p>
+          <div className="d-flex align-items-center gap-2.5">
+            <BackButton fallback="/counter/new-sale" />
+            <div>
+              <h1 className="page-title">Today's Counter Invoices</h1>
+              <p className="page-subtitle">Live transactions recorded during the current shift</p>
+            </div>
           </div>
 
           <div className="d-flex align-items-center gap-2 gap-sm-3 flex-wrap">

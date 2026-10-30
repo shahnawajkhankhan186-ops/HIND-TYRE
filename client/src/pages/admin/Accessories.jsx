@@ -6,6 +6,7 @@ import { formatRupees, rupeesToPaise } from '../../lib/currency';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 import { TableSkeleton } from '../../components/common/LoadingSkeleton';
 import { useAuth } from '../../context/AuthContext';
+import BackButton from '../../components/common/BackButton';
 
 const CATEGORIES = ['Tube', 'Valve', 'Alloy wheel', 'Wheel cover', 'Balancing weight', 'Puncture kit', 'Other'];
 
@@ -177,9 +178,12 @@ export default function Accessories() {
       {/* Header */}
       <div className="page-header-card">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
-          <div>
-            <h1 className="page-title">Accessories & Parts Catalog</h1>
-            <p className="page-subtitle">Tubes, valves, wheel weights, alloy covers & repair kits</p>
+          <div className="d-flex align-items-center gap-2.5">
+            <BackButton fallback="/admin/dashboard" />
+            <div>
+              <h1 className="page-title mb-0">Accessories & Parts Catalog</h1>
+              <p className="page-subtitle mb-0">Tubes, valves, wheel weights, alloy covers & repair kits</p>
+            </div>
           </div>
           <button className="btn btn-accent btn-sm d-flex align-items-center gap-1.5" onClick={handleOpenAdd}>
             <Plus size={16} /> Add Accessory

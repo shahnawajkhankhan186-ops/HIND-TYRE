@@ -12,6 +12,7 @@ import {
 import toast from 'react-hot-toast';
 import api from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
+import BackButton from '../../components/common/BackButton';
 
 export default function Settings() {
   const { refreshSettings, setShopSettings } = useAuth();
@@ -91,10 +92,15 @@ export default function Settings() {
   return (
     <div className="page-container">
       <div className="page-header-card">
-        <h1 className="page-title">Shop Settings & Invoice Configuration</h1>
-        <p className="page-subtitle">
-          Configure business details, receipt terms & store information
-        </p>
+        <div className="d-flex align-items-center gap-2.5">
+          <BackButton fallback="/admin/dashboard" />
+          <div>
+            <h1 className="page-title mb-0">Shop Settings & Invoice Configuration</h1>
+            <p className="page-subtitle mb-0">
+              Configure business details, receipt terms & store information
+            </p>
+          </div>
+        </div>
       </div>
 
       <div className="row justify-content-center">

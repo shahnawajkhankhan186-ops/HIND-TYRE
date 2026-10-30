@@ -6,6 +6,7 @@ import { formatRupees, paiseToRupees } from '../../lib/currency';
 import { formatIST } from '../../lib/ist-date';
 import { TableSkeleton } from '../../components/common/LoadingSkeleton';
 import { useAuth } from '../../context/AuthContext';
+import BackButton from '../../components/common/BackButton';
 
 const REPORT_TABS = [
   { id: 'sales', label: 'Sales Report', icon: TrendingUp },
@@ -80,11 +81,14 @@ export default function Reports() {
       {/* Header */}
       <div className="page-header-card">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
-          <div>
-            <h1 className="page-title">Business Reports & Data Exports</h1>
-            <p className="page-subtitle">
-              Comprehensive valuation, company performance, profit margins & streaming CSV exports
-            </p>
+          <div className="d-flex align-items-center gap-2.5">
+            <BackButton fallback="/admin/dashboard" />
+            <div>
+              <h1 className="page-title mb-0">Business Reports & Data Exports</h1>
+              <p className="page-subtitle mb-0">
+                Comprehensive valuation, company performance, profit margins & streaming CSV exports
+              </p>
+            </div>
           </div>
           <div className="d-flex align-items-center gap-2">
             <button className="btn btn-accent btn-sm d-flex align-items-center gap-1.5" onClick={handleExportCSV}>
