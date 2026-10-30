@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { UserCheck, Plus, Shield, User, Lock, Mail, Phone, RefreshCw, KeyRound, CheckCircle2 } from 'lucide-react';
+import { UserCheck, Plus, Shield, User, Lock, Mail, Phone, RefreshCw, KeyRound, CheckCircle2, Check } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../lib/api';
 import { formatIST } from '../../lib/ist-date';
@@ -186,9 +186,12 @@ export default function Users() {
       {/* Add User Modal */}
       {showModal && (
         <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0, 0, 0, 0.65)', zIndex: 1055 }}>
-          <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div className="modal-content border-0 shadow-lg" style={{ borderRadius: 'var(--radius-md)', background: '#FFFFFF' }}>
-              <div className="modal-header border-bottom pb-3">
+          <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable" style={{ maxHeight: 'calc(100vh - 40px)' }}>
+            <div
+              className="modal-content border-0 shadow-lg d-flex flex-column"
+              style={{ borderRadius: 'var(--radius-md)', background: '#FFFFFF', maxHeight: 'calc(100vh - 60px)', overflow: 'hidden' }}
+            >
+              <div className="modal-header border-bottom py-3 flex-shrink-0">
                 <div className="d-flex align-items-center gap-2">
                   <div className="p-2 rounded-3 bg-light border text-dark">
                     {formData.role === 'ADMIN' ? <Shield size={18} /> : <User size={18} />}
@@ -205,8 +208,8 @@ export default function Users() {
                 <button type="button" className="btn btn-sm text-muted" onClick={() => setShowModal(false)}>✕</button>
               </div>
 
-              <form onSubmit={handleCreate}>
-                <div className="modal-body py-3">
+              <form onSubmit={handleCreate} className="d-flex flex-column flex-grow-1" style={{ minHeight: 0, overflow: 'hidden' }}>
+                <div className="modal-body py-3 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 200px)' }}>
                   {/* Role Selector Card */}
                   <div className="mb-3">
                     <label className="form-label text-dark small fw-semibold">Account Role *</label>
@@ -315,10 +318,26 @@ export default function Users() {
                   </div>
                 </div>
 
-                <div className="modal-footer border-top pt-3">
-                  <button type="button" className="btn btn-outline-dark-custom" onClick={() => setShowModal(false)}>Cancel</button>
-                  <button type="submit" className="btn btn-accent" disabled={saving}>
-                    {saving ? 'Creating...' : formData.role === 'ADMIN' ? '+ Create Administrator' : '+ Create Cashier'}
+                <div className="modal-footer border-top py-2.5 flex-shrink-0 bg-white d-flex justify-content-end gap-2">
+                  <button type="button" className="btn btn-outline-dark-custom btn-sm px-3" onClick={() => setShowModal(false)}>
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="btn btn-accent btn-sm fw-bold px-3 d-flex align-items-center gap-1.5 shadow-sm"
+                    disabled={saving}
+                  >
+                    {saving ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <span>Creating...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Check size={16} />
+                        <span>{formData.role === 'ADMIN' ? 'Confirm & Create Administrator' : 'Confirm & Create Cashier'}</span>
+                      </>
+                    )}
                   </button>
                 </div>
               </form>
