@@ -135,6 +135,84 @@ If your database is empty, seed it with default shop settings and staff accounts
 
 ---
 
+## PART 4: Multi-Environment Database Isolation & Selling to Clients
+
+To ensure that your local testing and AI test suites **never tamper with or erase live client data**, the codebase implements **3-Tier Database Isolation**:
+
+```
+ ┌────────────────────────────────────────────────────────────────────────┐
+ │                      MongoDB Atlas Cluster                             │
+ ├───────────────────┬──────────────────────────┬─────────────────────────┤
+ │  hind_tyres_prod  │     hind_tyres_dev       │     hind_tyres_test     │
+ │  (Production DB)  │    (Localhost Dev DB)    │    (Automated Tests)    │
+ ├───────────────────┼──────────────────────────┼─────────────────────────┤
+ │ • Live on Render  │ • Used on your laptop    │ • Used during npm test  │
+ │ • Real Client Invoices│ • Mock tyres & bills │ • Created/cleared by    │
+ │ • Real Stock Count│ • Safe for experiments   │   automated tests       │
+ └───────────────────┴──────────────────────────┴─────────────────────────┘
+```
+
+### Safety Features Built-in:
+1. **Automatic Test Isolation**: Running `npm test` automatically routes to `hind_tyres_test`, leaving both dev and prod untouched.
+2. **Accidental Wipe Protection**: Running `npm run seed` is blocked if connected to any `_prod` database or if `NODE_ENV=production`.
+3. **Clean Client Onboarding**: Dedicated initialization script `npm run init:client` sets up a brand new store with zero dummy sales and zero dummy tyres.
+
+---
+
+### Step 4.1: Switch Render to the Production Database (`hind_tyres_prod`)
+
+1. Go to your [Render Dashboard](https://dashboard.render.com/) -> **hind-tyres-backend**.
+2. Click **Environment** on the left menu.
+3. Edit `MONGODB_URI` so it points to `hind_tyres_prod`:
+   ```text
+   mongodb+srv://<user>:<password>@cluster0.gfhiwgc.mongodb.net/hind_tyres_prod?retryWrites=true&w=majority
+   ```
+4. Click **Save Changes**. Render will automatically redeploy and connect to this fresh database.
+
+---
+
+### Step 4.2: How to Sell to a Client (Onboarding a Fresh Store)
+
+When handing over the portal to a client (e.g. shop owner), you want a **clean system** (no dummy test sales, no fake invoices):
+
+1. In your local terminal, initialize the client's store in the production database:
+   ```bash
+   MONGODB_URI="mongodb+srv://<user>:<password>@cluster0.gfhiwgc.mongodb.net/hind_tyres_prod?retryWrites=true&w=majority" \
+   npm run init:client -- \
+     --shop="HIND TYRES AND ACCESSORIES" \
+     --email="owner@clientdomain.com" \
+     --password="SecurePassword@123" \
+     --name="Client Owner Name" \
+     --phone="+91 98765 43210" \
+     --address="Client Shop Address"
+   ```
+2. The script will:
+   - Create the client's shop settings (name, address, phone, warranty terms).
+   - Create the client's primary Admin account with their email & password.
+   - Register the 8 standard tyre brands (MRF, CEAT, Apollo, JK Tyre, Bridgestone, etc.).
+   - Leave tyres, accessories, sales, and customers **100% clean (0 records)** so the client starts with a blank slate.
+3. Give the client their login credentials:
+   - URL: `https://hind-tyre.vercel.app/login`
+   - Email: `owner@clientdomain.com`
+   - Password: `SecurePassword@123`
+
+---
+
+### Step 4.3: How to Safely Build New Features in the Future
+
+When a client requests a new feature or you want to make changes:
+
+1. **Develop on Localhost**: Your laptop's `server/.env` uses `hind_tyres_dev`. Add test tyres, generate test sales, and check the UI on `http://localhost:5173`.
+2. **Run Automated Tests**: Run `npm test` inside `server/`. It runs against `hind_tyres_test` and confirms all stock calculations and transactions pass.
+3. **Deploy Code**: When ready, simply push your code:
+   ```bash
+   git push origin main
+   ```
+4. Vercel updates the frontend UI and Render updates the backend logic.
+5. **Result**: The client's live database (`hind_tyres_prod`) gets the new code/features immediately, and **not a single dummy record or test invoice from your laptop ever touches their data!**
+
+---
+
 ## Important Tips for Render Free Tier
 
 > [!NOTE]

@@ -13,9 +13,23 @@ const AuditLog = require('../models/AuditLog');
 
 async function seedDatabase() {
   try {
-    console.log('[Seed] Connecting to MongoDB...');
-    await connectDB();
+    const isProd = process.env.NODE_ENV === 'production';
+    const forceFlag = process.argv.includes('--force-production-seed');
 
+    console.log('[Seed] Connecting to MongoDB...');
+    const conn = await connectDB();
+    const dbName = mongoose.connection.name;
+
+    // Fail-safe protection: never allow accidental wipe of production client database
+    if ((isProd || dbName.endsWith('_prod')) && !forceFlag) {
+      console.error('\n🛑 [SAFETY BLOCKED] Refusing to run seed in PRODUCTION environment or on a "_prod" database!');
+      console.error(`   Target Database: "${dbName}"`);
+      console.error('   Running seed deletes all collections, which would erase real client invoices and inventory.');
+      console.error('   If you genuinely intend to wipe production, pass "--force-production-seed" explicitly.\n');
+      process.exit(1);
+    }
+
+    console.log(`[Seed] Target database: "${dbName}" (Environment: ${process.env.NODE_ENV || 'development'})`);
     console.log('[Seed] Clearing existing collections...');
     await Promise.all([
       User.deleteMany({}),

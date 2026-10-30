@@ -8,6 +8,7 @@
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
     "seed": "node src/scripts/seed.js",
+    "init:client": "node src/scripts/initClient.js",
     "migrate:godowns": "node src/scripts/migrateGodowns.js",
     "test": "jest --runInBand --detectOpenHandles --forceExit"
   },
