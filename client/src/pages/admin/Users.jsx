@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { UserCheck, Plus, Shield, User, Lock, Mail, Phone, RefreshCw, KeyRound, CheckCircle2, Check } from 'lucide-react';
+import { UserCheck, Plus, Shield, User, Lock, Mail, Phone, RefreshCw, KeyRound, CheckCircle2, Check, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../lib/api';
+import { useAuth } from '../../context/AuthContext';
+import ConfirmDialog from '../../components/common/ConfirmDialog';
 import { formatIST } from '../../lib/ist-date';
 import { TableSkeleton } from '../../components/common/LoadingSkeleton';
 
 export default function Users() {
+  const { user: currentUser, isPrimaryAdmin: isCurrentPrimaryAdmin } = useAuth();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -17,6 +20,10 @@ export default function Users() {
     role: 'ADMIN',
   });
   const [saving, setSaving] = useState(false);
+
+  // Permanent Delete Dialog
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -56,6 +63,23 @@ export default function Users() {
       }
     } catch (err) {
       toast.error(err.response?.data?.error || 'Failed to toggle status');
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deleteTarget) return;
+    try {
+      setDeleting(true);
+      const res = await api.delete(`/admin/users/${deleteTarget._id}`);
+      if (res.data.success) {
+        toast.success(res.data.message || `Deleted account ${deleteTarget.name}`);
+        setDeleteTarget(null);
+        fetchUsers();
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.error || 'Failed to delete user account');
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -129,54 +153,70 @@ export default function Users() {
                 </tr>
               </thead>
               <tbody>
-                {users.map((u) => (
-                  <tr key={u._id}>
-                    <td>
-                      <div className="d-flex align-items-center gap-2.5">
-                        <div className="p-2 rounded-circle bg-light border text-dark">
-                          {u.role === 'ADMIN' ? <Shield size={16} /> : <User size={16} />}
+                {users.map((u) => {
+                  const isUserPrimary = !!(u.isPrimaryAdmin || u.email === 'hindtyre01@gmail.com');
+                  return (
+                    <tr key={u._id}>
+                      <td>
+                        <div className="d-flex align-items-center gap-2.5">
+                          <div className="p-2 rounded-circle bg-light border text-dark">
+                            {u.role === 'ADMIN' ? <Shield size={16} /> : <User size={16} />}
+                          </div>
+                          <div>
+                            <div className="text-dark fw-bold small">{u.name}</div>
+                            {isUserPrimary && (
+                              <span className="badge-pill-yellow extra-small">
+                                Primary Admin
+                              </span>
+                            )}
+                          </div>
                         </div>
-                        <div>
-                          <div className="text-dark fw-bold small">{u.name}</div>
-                          {u.email === 'prolemda@gmail.com' && (
-                            <span className="badge-pill-yellow extra-small">
-                              Primary Admin
-                            </span>
+                      </td>
+                      <td className="text-dark small font-monospace">{u.email}</td>
+                      <td>
+                        {u.phone ? (
+                          <div className="d-flex align-items-center gap-1.5 text-muted small font-monospace">
+                            <Phone size={13} /> {u.phone}
+                          </div>
+                        ) : (
+                          <span className="text-muted extra-small">-</span>
+                        )}
+                      </td>
+                      <td>
+                        <span className={`badge ${u.role === 'ADMIN' ? 'badge-pill-yellow' : 'badge-pill-info'} extra-small`}>
+                          {u.role === 'ADMIN' ? 'Administrator (Full Access)' : 'Counter Cashier (POS)'}
+                        </span>
+                      </td>
+                      <td>
+                        <span className={`badge ${u.isActive ? 'badge-pill-success' : 'badge-pill-danger'} extra-small`}>
+                          {u.isActive ? 'Active' : 'Disabled'}
+                        </span>
+                      </td>
+                      <td className="text-muted small font-monospace">{formatIST(u.createdAt)}</td>
+                      <td className="text-end">
+                        <div className="d-flex align-items-center justify-content-end gap-1.5">
+                          <button
+                            className={`btn btn-sm ${u.isActive ? 'btn-outline-danger' : 'btn-outline-success'} extra-small`}
+                            onClick={() => handleToggleStatus(u)}
+                            disabled={isUserPrimary}
+                            title={isUserPrimary ? 'Primary Administrator cannot be disabled' : (u.isActive ? 'Disable Access' : 'Enable Access')}
+                          >
+                            {u.isActive ? 'Disable Access' : 'Enable Access'}
+                          </button>
+                          {isCurrentPrimaryAdmin && !isUserPrimary && (
+                            <button
+                              className="btn btn-sm btn-outline-danger p-1.5"
+                              title="Permanently Delete Account from Database"
+                              onClick={() => setDeleteTarget(u)}
+                            >
+                              <Trash2 size={14} />
+                            </button>
                           )}
                         </div>
-                      </div>
-                    </td>
-                    <td className="text-dark small font-monospace">{u.email}</td>
-                    <td>
-                      {u.phone ? (
-                        <div className="d-flex align-items-center gap-1.5 text-muted small font-monospace">
-                          <Phone size={13} /> {u.phone}
-                        </div>
-                      ) : (
-                        <span className="text-muted extra-small">-</span>
-                      )}
-                    </td>
-                    <td>
-                      <span className={`badge ${u.role === 'ADMIN' ? 'badge-pill-yellow' : 'badge-pill-info'} extra-small`}>
-                        {u.role === 'ADMIN' ? 'Administrator (Full Access)' : 'Counter Cashier (POS)'}
-                      </span>
-                    </td>
-                    <td>
-                      <span className={`badge ${u.isActive ? 'badge-pill-success' : 'badge-pill-danger'} extra-small`}>
-                        {u.isActive ? 'Active' : 'Disabled'}
-                      </span>
-                    </td>
-                    <td className="text-muted small font-monospace">{formatIST(u.createdAt)}</td>
-                    <td className="text-end">
-                      <button
-                        className={`btn btn-sm ${u.isActive ? 'btn-outline-danger' : 'btn-outline-success'} extra-small`}
-                        onClick={() => handleToggleStatus(u)}
-                      >
-                        {u.isActive ? 'Disable Access' : 'Enable Access'}
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -345,6 +385,17 @@ export default function Users() {
           </div>
         </div>
       )}
+      {/* Custom ConfirmDialog for Permanent Hard Delete */}
+      <ConfirmDialog
+        isOpen={!!deleteTarget}
+        title={`Permanently Delete ${deleteTarget?.name}?`}
+        message={`Are you sure you want to permanently delete the account "${deleteTarget?.name}" (${deleteTarget?.email}) from the MongoDB database? This action is irreversible and cannot be undone.`}
+        confirmText="Delete Account"
+        variant="danger"
+        isLoading={deleting}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }

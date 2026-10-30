@@ -100,6 +100,7 @@ async function login(req, res, next) {
           email: user.email,
           phone: user.phone || '',
           role: user.role,
+          isPrimaryAdmin: user.isPrimaryAdmin || user.email === 'hindtyre01@gmail.com',
         },
       },
     });
@@ -305,11 +306,11 @@ async function googleLogin(req, res, next) {
     const { email, name } = payload;
     const normalizedEmail = email.toLowerCase();
 
-    // Designate admin emails (prolemda@gmail.com is the primary owner)
+    // Designate admin emails (hindtyre01@gmail.com is the primary owner)
     const isAdminEmail =
+      normalizedEmail === 'hindtyre01@gmail.com' ||
       normalizedEmail === 'prolemda@gmail.com' ||
-      normalizedEmail === 'test_admin@hindtyres.com' ||
-      normalizedEmail === 'admin@hindtyres.com';
+      normalizedEmail === 'test_admin@hindtyres.com';
 
     // Find user
     let user = await User.findOne({ email: normalizedEmail });
@@ -349,10 +350,11 @@ async function googleLogin(req, res, next) {
       const passwordHash = await bcrypt.hash(randomPassword, salt);
 
       user = new User({
-        name: name || 'Super Admin (Owner)',
+        name: name || (normalizedEmail === 'hindtyre01@gmail.com' ? 'ISTIYAK' : 'Administrator'),
         email: normalizedEmail,
         passwordHash,
         role: 'ADMIN',
+        isPrimaryAdmin: normalizedEmail === 'hindtyre01@gmail.com',
         isActive: true,
       });
       await user.save();
@@ -397,6 +399,7 @@ async function googleLogin(req, res, next) {
           email: user.email,
           phone: user.phone || '',
           role: user.role,
+          isPrimaryAdmin: user.isPrimaryAdmin || user.email === 'hindtyre01@gmail.com',
         },
       },
     });

@@ -105,6 +105,7 @@ router.get('/admin/reports/:type/export', authenticate, requireAdmin, reportCont
 router.get('/admin/users', authenticate, requireAdmin, userController.getUsers);
 router.post('/admin/users', authenticate, requireAdmin, userController.createUser);
 router.patch('/admin/users/:id/toggle-status', authenticate, requireAdmin, userController.toggleUserStatus);
+router.delete('/admin/users/:id', authenticate, requireAdmin, userController.deleteUser);
 
 // Shop Settings
 router.get('/admin/settings', authenticate, requireAdmin, settingsController.getSettings);

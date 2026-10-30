@@ -157,11 +157,14 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const isPrimaryAdmin = !!(user?.isPrimaryAdmin || user?.email === 'hindtyre01@gmail.com');
+
   const value = {
     user,
     token,
     role: user?.role,
     isAdmin: user?.role === 'ADMIN',
+    isPrimaryAdmin,
     isCounter: user?.role === 'COUNTER' || user?.role === 'ADMIN',
     isCustomer: false,
     shopSettings,

@@ -108,8 +108,68 @@ async function toggleUserStatus(req, res, next) {
   }
 }
 
+/**
+ * Permanently delete a user account from MongoDB (Primary Admin Only)
+ */
+async function deleteUser(req, res, next) {
+  try {
+    const isPrimary = req.user.isPrimaryAdmin || req.user.email === 'hindtyre01@gmail.com';
+    if (!isPrimary) {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied: Only the Primary Administrator has permission to permanently delete accounts.',
+      });
+    }
+
+    const userToDelete = await User.findById(req.params.id);
+    if (!userToDelete) {
+      return res.status(404).json({ success: false, error: 'User account not found.' });
+    }
+
+    // Protection: Primary Admin cannot delete their own account or another primary admin
+    if (userToDelete._id.toString() === req.user._id.toString()) {
+      return res.status(400).json({
+        success: false,
+        error: 'You cannot delete your own Primary Administrator account.',
+      });
+    }
+
+    if (userToDelete.isPrimaryAdmin || userToDelete.email === 'hindtyre01@gmail.com') {
+      return res.status(400).json({
+        success: false,
+        error: 'Cannot delete the Primary Administrator account.',
+      });
+    }
+
+    await User.findByIdAndDelete(userToDelete._id);
+
+    await auditService.log({
+      action: 'DELETE_USER',
+      entity: 'User',
+      entityId: userToDelete._id,
+      beforeSnapshot: {
+        name: userToDelete.name,
+        email: userToDelete.email,
+        phone: userToDelete.phone,
+        role: userToDelete.role,
+      },
+      req,
+      user: req.user,
+    });
+
+    res.json({
+      success: true,
+      message: `Account "${userToDelete.name}" (${userToDelete.email}) permanently deleted from database.`,
+      data: { _id: userToDelete._id },
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   getUsers,
   createUser,
   toggleUserStatus,
+  deleteUser,
 };

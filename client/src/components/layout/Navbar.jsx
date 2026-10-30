@@ -300,7 +300,11 @@ export default function Navbar({ onToggleSidebar, isSidebarOpen }) {
                     className="badge px-1 py-0 extra-small text-warning"
                     style={{ fontSize: '0.65rem' }}
                   >
-                    {user.role === 'ADMIN' ? 'Owner (Admin)' : 'Staff Member'}
+                    {user.isPrimaryAdmin || user.email === 'hindtyre01@gmail.com'
+                      ? 'Primary Admin (Owner)'
+                      : user.role === 'ADMIN'
+                      ? 'Administrator'
+                      : 'Staff Member'}
                   </span>
                 </div>
 
@@ -505,7 +509,11 @@ export default function Navbar({ onToggleSidebar, isSidebarOpen }) {
                             border: '1px solid rgba(245, 158, 11, 0.4)'
                           }}
                         >
-                          {user.role === 'ADMIN' ? '👑 Administrator / Owner' : 'Staff Member'}
+                          {user.isPrimaryAdmin || user.email === 'hindtyre01@gmail.com'
+                            ? '👑 Primary Admin (Owner)'
+                            : user.role === 'ADMIN'
+                            ? 'Administrator'
+                            : 'Staff Member'}
                         </span>
                       </div>
 
