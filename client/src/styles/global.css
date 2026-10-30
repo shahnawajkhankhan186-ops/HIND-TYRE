@@ -996,3 +996,84 @@ h1, h2, h3, h4, h5, h6, .brand-font {
   transform: translateY(0) !important;
 }
 
+/* ========================================================== */
+/* RESPONSIVE LANDING PAGE STYLES */
+/* ========================================================== */
+.brand-word-1 {
+  font-family: Montserrat, sans-serif;
+  font-weight: 900;
+  font-style: italic;
+  font-size: 1.12rem;
+  letter-spacing: -0.02em;
+  color: #0A0A0C;
+  line-height: 1;
+}
+
+.brand-word-2 {
+  font-family: Montserrat, sans-serif;
+  font-weight: 900;
+  font-style: italic;
+  font-size: 1.12rem;
+  letter-spacing: -0.02em;
+  color: #FFC107;
+  line-height: 1;
+}
+
+.brand-tagline {
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  color: #6B7280;
+  line-height: 1;
+}
+
+@media (min-width: 576px) {
+  .brand-word-1,
+  .brand-word-2 {
+    font-size: 1.35rem;
+  }
+  .brand-tagline {
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+  }
+}
+
+.trust-strip-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(6px);
+  transition: all 0.2s ease;
+}
+
+.trust-strip-card:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 193, 7, 0.35);
+  transform: translateY(-1px);
+}
+
+.cta-yellow-slice {
+  background-color: var(--accent);
+  z-index: 2;
+}
+
+@media (min-width: 992px) {
+  .cta-yellow-slice {
+    clip-path: polygon(0 0, 100% 0, 92% 100%, 0 100%);
+  }
+}
+
+@media (max-width: 991.98px) {
+  .landing-header {
+    padding-top: 0.55rem !important;
+    padding-bottom: 0.55rem !important;
+  }
+  .landing-signin-btn {
+    padding: 0.42rem 0.95rem !important;
+    font-size: 0.84rem !important;
+  }
+  .hero-headline {
+    font-size: clamp(2.35rem, 9.5vw, 3.4rem) !important;
+    line-height: 1.08 !important;
+  }
+}
+
+

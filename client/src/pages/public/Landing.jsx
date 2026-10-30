@@ -101,69 +101,88 @@ export default function Landing() {
       {/* ========================================================== */}
       {/* 1. STICKY WHITE NAVBAR (Exact Mockup Match: Logo + Links + Phone + Sign In) */}
       {/* ========================================================== */}
-      <header className="landing-header sticky-top py-2.5 px-3 px-xl-0">
+      <header className="landing-header sticky-top py-2 py-md-2.5 px-2 px-sm-3 px-xl-0">
         <div className="container d-flex align-items-center justify-content-between">
-          {/* Logo with Detailed Alloy Wheel & Tyre Vector */}
-          <Link to="/" className="d-flex align-items-center gap-2.5 text-decoration-none">
-            <div className="flex-shrink-0 d-flex align-items-center justify-content-center">
-              <svg width="44" height="44" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
-                {/* Tyre Rubber Silhouette */}
-                <circle cx="27" cy="27" r="25" fill="#111318" stroke="#0A0A0C" strokeWidth="2" />
-                {/* Yellow Tyre Tread Notches */}
-                <path d="M27 2 L27 6" stroke="#FFC107" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M27 48 L27 52" stroke="#FFC107" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M2 27 L6 27" stroke="#FFC107" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M48 27 L52 27" stroke="#FFC107" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M9 9 L12 12" stroke="#FFC107" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M42 42 L45 45" stroke="#FFC107" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M42 12 L45 9" stroke="#FFC107" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M9 45 L12 42" stroke="#FFC107" strokeWidth="2.5" strokeLinecap="round" />
-                
-                {/* Inner Rubber Sidewall */}
-                <circle cx="27" cy="27" r="19" stroke="#2A2D34" strokeWidth="2.5" />
-                
-                {/* Alloy Wheel Rim */}
-                <circle cx="27" cy="27" r="14.5" fill="#1A1C21" stroke="#FFC107" strokeWidth="2.2" />
-                
-                {/* Alloy Rim Twin Spokes */}
-                <line x1="27" y1="13" x2="27" y2="21" stroke="#FFC107" strokeWidth="2.2" strokeLinecap="round" />
-                <line x1="27" y1="33" x2="27" y2="41" stroke="#FFC107" strokeWidth="2.2" strokeLinecap="round" />
-                <line x1="13" y1="27" x2="21" y2="27" stroke="#FFC107" strokeWidth="2.2" strokeLinecap="round" />
-                <line x1="33" y1="27" x2="41" y2="27" stroke="#FFC107" strokeWidth="2.2" strokeLinecap="round" />
-                <line x1="17" y1="17" x2="22.5" y2="22.5" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" />
-                <line x1="31.5" y1="31.5" x2="37" y2="37" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" />
-                <line x1="37" y1="17" x2="31.5" y2="22.5" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" />
-                <line x1="17" y1="37" x2="22.5" y2="31.5" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" />
-                
-                {/* Center Hub */}
-                <circle cx="27" cy="27" r="5" fill="#FFC107" stroke="#0A0A0C" strokeWidth="1.5" />
-                <circle cx="27" cy="27" r="2.2" fill="#0A0A0C" />
-              </svg>
-            </div>
-            <div className="d-flex flex-column text-start">
-              {(() => {
-                const name = (shopSettings?.shopName || 'HIND TYRES & ACCESSORIES').toUpperCase();
-                const parts = name.split(' ');
-                const firstWord = parts[0] || 'HIND';
-                const remaining = parts.slice(1).join(' ') || 'TYRES';
-                return (
-                  <div className="d-flex align-items-center lh-1">
-                    <span style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 900, fontStyle: 'italic', fontSize: '1.38rem', letterSpacing: '-0.02em', color: '#0A0A0C' }}>
-                      {firstWord}
-                    </span>
-                    <span className="ms-1.5" style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 900, fontStyle: 'italic', fontSize: '1.38rem', letterSpacing: '-0.02em', color: '#FFC107' }}>
-                      {remaining}
-                    </span>
-                  </div>
-                );
-              })()}
-              <div className="text-muted fw-bold mt-1" style={{ fontSize: '0.62rem', letterSpacing: '0.18em', color: '#6B7280' }}>
-                DRIVE SAFE · DRIVE FAR
-              </div>
-            </div>
-          </Link>
+          
+          {/* Left Action Group: [ ≡ Hamburger Button on Mobile ] + [ Brand Logo & Name ] */}
+          <div className="d-flex align-items-center gap-1.5 gap-sm-2.5">
+            {/* Mobile Hamburger Menu Toggle positioned on the LEFT */}
+            <button
+              className="btn d-lg-none p-1.5 border-0 text-dark d-flex align-items-center justify-content-center me-0.5"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle navigation menu"
+              style={{
+                width: '38px',
+                height: '38px',
+                backgroundColor: mobileMenuOpen ? 'rgba(0,0,0,0.06)' : 'transparent',
+                borderRadius: '8px',
+              }}
+            >
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
 
-          {/* Desktop Navigation Links (with Yellow Indicator on Active) */}
+            {/* Logo with Detailed Alloy Wheel & Tyre Vector */}
+            <Link to="/" className="d-flex align-items-center gap-2 text-decoration-none">
+              <div className="flex-shrink-0 d-flex align-items-center justify-content-center">
+                <svg width="36" height="36" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  {/* Tyre Rubber Silhouette */}
+                  <circle cx="27" cy="27" r="25" fill="#111318" stroke="#0A0A0C" strokeWidth="2" />
+                  {/* Yellow Tyre Tread Notches */}
+                  <path d="M27 2 L27 6" stroke="#FFC107" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M27 48 L27 52" stroke="#FFC107" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M2 27 L6 27" stroke="#FFC107" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M48 27 L52 27" stroke="#FFC107" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M9 9 L12 12" stroke="#FFC107" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M42 42 L45 45" stroke="#FFC107" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M42 12 L45 9" stroke="#FFC107" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M9 45 L12 42" stroke="#FFC107" strokeWidth="2.5" strokeLinecap="round" />
+                  
+                  {/* Inner Rubber Sidewall */}
+                  <circle cx="27" cy="27" r="19" stroke="#2A2D34" strokeWidth="2.5" />
+                  
+                  {/* Alloy Wheel Rim */}
+                  <circle cx="27" cy="27" r="14.5" fill="#1A1C21" stroke="#FFC107" strokeWidth="2.2" />
+                  
+                  {/* Alloy Rim Twin Spokes */}
+                  <line x1="27" y1="13" x2="27" y2="21" stroke="#FFC107" strokeWidth="2.2" strokeLinecap="round" />
+                  <line x1="27" y1="33" x2="27" y2="41" stroke="#FFC107" strokeWidth="2.2" strokeLinecap="round" />
+                  <line x1="13" y1="27" x2="21" y2="27" stroke="#FFC107" strokeWidth="2.2" strokeLinecap="round" />
+                  <line x1="33" y1="27" x2="41" y2="27" stroke="#FFC107" strokeWidth="2.2" strokeLinecap="round" />
+                  <line x1="17" y1="17" x2="22.5" y2="22.5" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" />
+                  <line x1="31.5" y1="31.5" x2="37" y2="37" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" />
+                  <line x1="37" y1="17" x2="31.5" y2="22.5" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" />
+                  <line x1="17" y1="37" x2="22.5" y2="31.5" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" />
+                  
+                  {/* Center Hub */}
+                  <circle cx="27" cy="27" r="5" fill="#FFC107" stroke="#0A0A0C" strokeWidth="1.5" />
+                  <circle cx="27" cy="27" r="2.2" fill="#0A0A0C" />
+                </svg>
+              </div>
+              <div className="d-flex flex-column text-start">
+                {(() => {
+                  const name = (shopSettings?.shopName || 'HIND TYRES & ACCESSORIES').toUpperCase();
+                  const parts = name.split(' ');
+                  const firstWord = parts[0] || 'HIND';
+                  const remaining = parts.slice(1).join(' ') || 'TYRES';
+                  return (
+                    <div className="d-flex align-items-center lh-1">
+                      <span className="brand-word-1">
+                        {firstWord}
+                      </span>
+                      <span className="brand-word-2 ms-1">
+                        {remaining}
+                      </span>
+                    </div>
+                  );
+                })()}
+                <div className="brand-tagline mt-0.5">
+                  DRIVE SAFE · DRIVE FAR
+                </div>
+              </div>
+            </Link>
+          </div>
+
+          {/* Center: Desktop Navigation Links (with Yellow Indicator on Active) */}
           <nav className="d-none d-lg-flex align-items-center gap-4">
             <a
               href="#hero"
@@ -210,8 +229,8 @@ export default function Landing() {
           </nav>
 
           {/* Right Action: Phone Chip + Yellow Sign In / Portal button */}
-          <div className="d-flex align-items-center gap-2.5">
-            {/* Phone Chip (as seen in mockup) */}
+          <div className="d-flex align-items-center gap-2 gap-sm-2.5">
+            {/* Phone Chip (desktop only) */}
             <a
               href={`tel:${(shopSettings?.phone || '+919693734121').replace(/[^0-9+]/g, '')}`}
               className="d-none d-md-flex align-items-center gap-2 landing-phone-pill"
@@ -232,13 +251,13 @@ export default function Landing() {
               </div>
             </a>
 
-            {/* Sign In Button (Reference Mockup Style) */}
+            {/* Sign In Button */}
             {!user ? (
               <Link
                 to="/login"
                 className="landing-signin-btn"
               >
-                <User size={16} strokeWidth={2.5} />
+                <User size={15} strokeWidth={2.5} />
                 <span>Sign In</span>
               </Link>
             ) : (
@@ -250,96 +269,95 @@ export default function Landing() {
                     else navigate('/counter/new-sale');
                   }}
                 >
-                  <UserCheck size={16} strokeWidth={2.5} />
+                  <UserCheck size={15} strokeWidth={2.5} />
                   <span>
-                    {isAdmin ? 'Admin Portal' : 'Counter POS'}
+                    {isAdmin ? 'Admin' : 'POS'}
                   </span>
                 </button>
                 <button
-                  className="btn btn-sm btn-outline-secondary rounded-circle p-1.5 d-flex align-items-center justify-content-center"
+                  className="btn btn-sm btn-outline-secondary rounded-circle p-1 d-flex align-items-center justify-content-center"
                   onClick={logout}
                   title="Sign Out"
-                  style={{ width: '36px', height: '36px', borderColor: 'var(--border-light)' }}
+                  style={{ width: '32px', height: '32px', borderColor: 'var(--border-light)' }}
                 >
-                  <LogOut size={15} />
+                  <LogOut size={14} />
                 </button>
               </div>
             )}
-
-            {/* Mobile Hamburger Menu Toggle */}
-            <button
-              className="btn d-lg-none p-1.5 border-0 text-dark ms-1"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Toggle navigation menu"
-            >
-              {mobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
-            </button>
           </div>
         </div>
 
-        {/* Mobile Dropdown Menu */}
+        {/* Mobile Dropdown Menu (Smooth Animated Drawer) */}
         {mobileMenuOpen && (
-          <div className="d-lg-none bg-white border-top px-3 py-3 shadow-sm animate-fade-in mt-2" style={{ borderColor: 'var(--border-light)' }}>
-            <div className="d-flex flex-column gap-2 pb-3 border-bottom" style={{ borderColor: 'var(--border-light)' }}>
+          <div className="d-lg-none bg-white border-top px-3 py-3 shadow-lg animate-fade-in" style={{ borderColor: 'var(--border-light)' }}>
+            <div className="d-flex flex-column gap-1 pb-3 border-bottom" style={{ borderColor: 'var(--border-light)' }}>
               <a
                 href="#hero"
-                className={`py-1.5 text-decoration-none ${activeSection === 'home' ? 'text-dark fw-bold' : 'text-secondary fw-semibold'}`}
+                className={`py-2 px-2.5 rounded-2 text-decoration-none d-flex align-items-center justify-content-between ${
+                  activeSection === 'home' ? 'bg-warning bg-opacity-10 text-dark fw-bold' : 'text-dark fw-semibold'
+                }`}
                 onClick={() => {
                   setActiveSection('home');
                   setMobileMenuOpen(false);
                 }}
               >
-                Home
+                <span>Home</span>
+                <ChevronRight size={16} className="text-muted" />
               </a>
               <a
                 href="#vehicle-types"
-                className="text-secondary fw-semibold py-1.5 text-decoration-none"
+                className="py-2 px-2.5 rounded-2 text-decoration-none text-dark fw-semibold d-flex align-items-center justify-content-between"
                 onClick={() => {
                   setActiveSection('tyres');
                   setMobileMenuOpen(false);
                 }}
               >
-                Tyres
+                <span>Tyres by Vehicle</span>
+                <ChevronRight size={16} className="text-muted" />
               </a>
               <a
                 href="#services"
-                className="text-secondary fw-semibold py-1.5 text-decoration-none"
+                className="py-2 px-2.5 rounded-2 text-decoration-none text-dark fw-semibold d-flex align-items-center justify-content-between"
                 onClick={() => {
                   setActiveSection('services');
                   setMobileMenuOpen(false);
                 }}
               >
-                Services
+                <span>Workshop Services</span>
+                <ChevronRight size={16} className="text-muted" />
               </a>
               <a
                 href="#brands"
-                className="text-secondary fw-semibold py-1.5 text-decoration-none"
+                className="py-2 px-2.5 rounded-2 text-decoration-none text-dark fw-semibold d-flex align-items-center justify-content-between"
                 onClick={() => {
                   setActiveSection('brands');
                   setMobileMenuOpen(false);
                 }}
               >
-                Brands
+                <span>Top Tyre Brands</span>
+                <ChevronRight size={16} className="text-muted" />
               </a>
               <a
                 href="#about"
-                className="text-secondary fw-semibold py-1.5 text-decoration-none"
+                className="py-2 px-2.5 rounded-2 text-decoration-none text-dark fw-semibold d-flex align-items-center justify-content-between"
                 onClick={() => {
                   setActiveSection('about');
                   setMobileMenuOpen(false);
                 }}
               >
-                About Us
+                <span>About Us</span>
+                <ChevronRight size={16} className="text-muted" />
               </a>
               <a
                 href="#contact"
-                className="text-secondary fw-semibold py-1.5 text-decoration-none"
+                className="py-2 px-2.5 rounded-2 text-decoration-none text-dark fw-semibold d-flex align-items-center justify-content-between"
                 onClick={() => {
                   setActiveSection('contact');
                   setMobileMenuOpen(false);
                 }}
               >
-                Contact
+                <span>Contact & Location</span>
+                <ChevronRight size={16} className="text-muted" />
               </a>
             </div>
 
@@ -347,7 +365,7 @@ export default function Landing() {
             <div className="pt-3 d-flex flex-column gap-2">
               <a
                 href={`tel:${(shopSettings?.phone || '+919693734121').replace(/[^0-9+]/g, '')}`}
-                className="d-flex align-items-center justify-content-center gap-2 py-2 px-3 rounded-pill bg-light text-dark fw-bold text-decoration-none"
+                className="d-flex align-items-center justify-content-center gap-2 py-2 px-3 rounded-pill bg-light border text-dark fw-bold text-decoration-none"
               >
                 <PhoneCall size={15} className="text-warning" />
                 <span>Call: {shopSettings?.phone || '+91 9693734121'}</span>
@@ -386,95 +404,107 @@ export default function Landing() {
       {/* ========================================================== */}
       <section
         id="hero"
-        className="position-relative text-white py-5 py-lg-6"
+        className="position-relative text-white py-4 py-md-5 py-lg-6"
         style={{
-          backgroundImage: `linear-gradient(to right, rgba(10, 10, 12, 0.95) 0%, rgba(10, 10, 12, 0.85) 45%, rgba(10, 10, 12, 0.35) 100%), url('/images/hero_tyre_workshop.jpg')`,
+          backgroundImage: `linear-gradient(to right, rgba(10, 10, 12, 0.95) 0%, rgba(10, 10, 12, 0.88) 45%, rgba(10, 10, 12, 0.4) 100%), url('/images/hero_tyre_workshop.jpg')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center right',
           backgroundColor: 'var(--bg-black)',
-          minHeight: '520px',
+          minHeight: '480px',
         }}
       >
-        <div className="container py-4">
+        <div className="container py-2 py-md-4">
           <div className="row align-items-center">
             <div className="col-12 col-lg-7">
               {/* Eyebrow */}
-              <div className="hero-eyebrow text-light mb-2 opacity-90">
+              <div className="hero-eyebrow text-light mb-2 opacity-90" style={{ fontSize: '0.82rem', letterSpacing: '0.12em' }}>
                 PREMIUM TYRES FOR A
               </div>
 
               {/* Big Italic Headline with yellow keyword */}
-              <h1 className="hero-headline display-3 mb-3 text-white">
+              <h1 className="hero-headline display-3 mb-2 mb-md-3 text-white">
                 SAFER<br />
                 <span style={{ color: 'var(--accent)' }}>SMOOTHER</span><br />
                 JOURNEY
               </h1>
 
               {/* Subline */}
-              <p className="fs-5 text-light fw-medium mb-4 opacity-90">
+              <p className="fs-6 fs-md-5 text-light fw-medium mb-3 mb-md-4 opacity-90">
                 Top Brands &nbsp;|&nbsp; Best Prices &nbsp;|&nbsp; Expert Fitting
               </p>
 
               {/* Two buttons */}
-              <div className="d-flex flex-wrap align-items-center gap-3 mb-5">
+              <div className="d-flex flex-wrap align-items-center gap-2.5 gap-sm-3 mb-4 mb-md-5">
                 <a
                   href="#vehicle-types"
-                  className="btn-accent px-4 py-2.5 rounded-3 fw-bold shadow-lg"
-                  style={{ fontSize: '0.95rem' }}
+                  className="btn-accent px-3.5 px-sm-4 py-2.5 rounded-3 fw-bold shadow-lg d-inline-flex align-items-center gap-1.5"
+                  style={{ fontSize: '0.92rem' }}
                 >
                   <span>Explore Tyres</span>
-                  <ArrowRight size={17} />
+                  <ArrowRight size={16} />
                 </a>
 
                 <button
-                  className="btn-outline-light-custom px-4 py-2.5 rounded-3"
-                  style={{ fontSize: '0.95rem' }}
+                  className="btn-outline-light-custom px-3.5 px-sm-4 py-2.5 rounded-3 d-inline-flex align-items-center gap-1.5"
+                  style={{ fontSize: '0.92rem' }}
                   onClick={() => openServiceModal('Tyre Fitting')}
                 >
-                  <Calendar size={17} />
+                  <Calendar size={16} />
                   <span>Book Service</span>
                 </button>
               </div>
 
-              {/* Trust Strip (5 yellow outline icons + white text) */}
-              <div className="row g-3 pt-3 border-top" style={{ borderColor: 'var(--border-dark)' }}>
-                <div className="col-6 col-sm-auto d-flex align-items-center gap-2">
-                  <ShieldCheck size={20} style={{ color: 'var(--accent)' }} />
-                  <div className="lh-1">
-                    <div className="fw-bold small text-white">100% Genuine</div>
-                    <div className="extra-small text-muted" style={{ fontSize: '0.65rem' }}>Tyres</div>
+              {/* Trust Strip (5 Yellow Accent Trust Badges) */}
+              <div className="pt-3 border-top" style={{ borderColor: 'var(--border-dark)' }}>
+                <div className="row g-2 g-sm-3">
+                  <div className="col-6 col-sm-auto">
+                    <div className="trust-strip-card d-flex align-items-center gap-2 p-2 px-2.5 rounded-3 h-100">
+                      <ShieldCheck size={18} style={{ color: 'var(--accent)' }} className="flex-shrink-0" />
+                      <div className="lh-1">
+                        <div className="fw-bold small text-white text-nowrap">100% Genuine</div>
+                        <div className="extra-small text-secondary mt-0.5" style={{ fontSize: '0.66rem', color: '#9CA3AF' }}>Certified Tyres</div>
+                      </div>
+                    </div>
                   </div>
-                </div>
 
-                <div className="col-6 col-sm-auto d-flex align-items-center gap-2">
-                  <Truck size={20} style={{ color: 'var(--accent)' }} />
-                  <div className="lh-1">
-                    <div className="fw-bold small text-white">Wide Range</div>
-                    <div className="extra-small text-muted" style={{ fontSize: '0.65rem' }}>of Brands</div>
+                  <div className="col-6 col-sm-auto">
+                    <div className="trust-strip-card d-flex align-items-center gap-2 p-2 px-2.5 rounded-3 h-100">
+                      <Truck size={18} style={{ color: 'var(--accent)' }} className="flex-shrink-0" />
+                      <div className="lh-1">
+                        <div className="fw-bold small text-white text-nowrap">Wide Range</div>
+                        <div className="extra-small text-secondary mt-0.5" style={{ fontSize: '0.66rem', color: '#9CA3AF' }}>8 Top Brands</div>
+                      </div>
+                    </div>
                   </div>
-                </div>
 
-                <div className="col-6 col-sm-auto d-flex align-items-center gap-2">
-                  <Wrench size={20} style={{ color: 'var(--accent)' }} />
-                  <div className="lh-1">
-                    <div className="fw-bold small text-white">Professional</div>
-                    <div className="extra-small text-muted" style={{ fontSize: '0.65rem' }}>Fitting</div>
+                  <div className="col-6 col-sm-auto">
+                    <div className="trust-strip-card d-flex align-items-center gap-2 p-2 px-2.5 rounded-3 h-100">
+                      <Wrench size={18} style={{ color: 'var(--accent)' }} className="flex-shrink-0" />
+                      <div className="lh-1">
+                        <div className="fw-bold small text-white text-nowrap">Professional</div>
+                        <div className="extra-small text-secondary mt-0.5" style={{ fontSize: '0.66rem', color: '#9CA3AF' }}>Laser Alignment</div>
+                      </div>
+                    </div>
                   </div>
-                </div>
 
-                <div className="col-6 col-sm-auto d-flex align-items-center gap-2">
-                  <span className="fw-bold fs-5 lh-1" style={{ color: 'var(--accent)' }}>₹</span>
-                  <div className="lh-1">
-                    <div className="fw-bold small text-white">Best Prices</div>
-                    <div className="extra-small text-muted" style={{ fontSize: '0.65rem' }}>Guaranteed</div>
+                  <div className="col-6 col-sm-auto">
+                    <div className="trust-strip-card d-flex align-items-center gap-2 p-2 px-2.5 rounded-3 h-100">
+                      <span className="fw-bold fs-5 lh-1 flex-shrink-0" style={{ color: 'var(--accent)' }}>₹</span>
+                      <div className="lh-1">
+                        <div className="fw-bold small text-white text-nowrap">Best Prices</div>
+                        <div className="extra-small text-secondary mt-0.5" style={{ fontSize: '0.66rem', color: '#9CA3AF' }}>Direct Wholesale</div>
+                      </div>
+                    </div>
                   </div>
-                </div>
 
-                <div className="col-6 col-sm-auto d-flex align-items-center gap-2">
-                  <Headphones size={20} style={{ color: 'var(--accent)' }} />
-                  <div className="lh-1">
-                    <div className="fw-bold small text-white">Expert</div>
-                    <div className="extra-small text-muted" style={{ fontSize: '0.65rem' }}>Support</div>
+                  <div className="col-12 col-sm-auto">
+                    <div className="trust-strip-card d-flex align-items-center gap-2 p-2 px-2.5 rounded-3 h-100">
+                      <Headphones size={18} style={{ color: 'var(--accent)' }} className="flex-shrink-0" />
+                      <div className="lh-1">
+                        <div className="fw-bold small text-white text-nowrap">Expert Support</div>
+                        <div className="extra-small text-secondary mt-0.5" style={{ fontSize: '0.66rem', color: '#9CA3AF' }}>Warranty Claim Hub</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -795,12 +825,7 @@ export default function Landing() {
         <div className="row g-0 align-items-stretch">
           {/* Left Yellow Slice */}
           <div
-            className="col-12 col-lg-5 p-4 p-md-5 d-flex flex-column justify-content-center text-dark"
-            style={{
-              backgroundColor: 'var(--accent)',
-              clipPath: 'polygon(0 0, 100% 0, 92% 100%, 0 100%)',
-              zIndex: 2,
-            }}
+            className="col-12 col-lg-5 p-3.5 p-sm-4 p-md-5 d-flex flex-column justify-content-center text-dark cta-yellow-slice"
           >
             <h2 className="display-6 fw-black mb-2 text-dark" style={{ letterSpacing: '-0.02em' }}>
               Get the Best Deals on Premium Tyres
@@ -811,7 +836,7 @@ export default function Landing() {
             <div>
               <a
                 href="#brands"
-                className="btn-dark-solid px-4 py-2.5 rounded-3 shadow"
+                className="btn-dark-solid px-4 py-2.5 rounded-3 shadow d-inline-flex align-items-center gap-1.5"
                 style={{ fontSize: '0.95rem' }}
               >
                 <span>View Brands</span>
@@ -822,7 +847,7 @@ export default function Landing() {
 
           {/* Right Highway Tyre Photo & Benefits Box */}
           <div
-            className="col-12 col-lg-7 position-relative d-flex align-items-center justify-content-end p-4 p-md-5"
+            className="col-12 col-lg-7 position-relative d-flex align-items-center justify-content-center justify-content-lg-end p-4 p-md-5"
             style={{
               backgroundImage: `url('/images/highway_tyre_promo.jpg')`,
               backgroundSize: 'cover',
@@ -831,11 +856,11 @@ export default function Landing() {
             }}
           >
             <div
-              className="p-3.5 rounded-4 d-flex flex-column gap-3 text-white shadow-2xl"
+              className="p-3.5 rounded-4 d-flex flex-column gap-3 text-white shadow-2xl w-100"
               style={{
                 backgroundColor: 'rgba(10, 10, 12, 0.88)',
                 backdropFilter: 'blur(10px)',
-                minWidth: '220px',
+                maxWidth: '320px',
                 border: '1px solid var(--border-dark)',
               }}
             >
@@ -1007,8 +1032,8 @@ export default function Landing() {
           style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)', backdropFilter: 'blur(4px)', zIndex: 1060 }}
           onClick={() => setShowBookingModal(false)}
         >
-          <div className="modal-dialog modal-dialog-centered" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-content border-0 shadow-lg" style={{ backgroundColor: '#FFFFFF', color: 'var(--text-on-light)' }}>
+          <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable mx-2 mx-sm-auto" style={{ maxWidth: '500px' }} onClick={(e) => e.stopPropagation()}>
+            <div className="modal-content border-0 shadow-2xl" style={{ borderRadius: 'var(--radius-md)', backgroundColor: '#FFFFFF', color: 'var(--text-on-light)' }}>
               <div className="modal-header border-bottom">
                 <h5 className="modal-title fw-bold text-dark mb-0">Book Workshop Service</h5>
                 <button type="button" className="btn-close" onClick={() => setShowBookingModal(false)} />
