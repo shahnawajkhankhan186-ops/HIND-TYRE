@@ -160,15 +160,15 @@ export default function StockLedger() {
     <div className="page-container">
       {/* Header */}
       <div className="page-header-card">
+        <div className="back-nav-container">
+          <BackButton fallback="/admin/dashboard" desktopLabel="Back to Dashboard" label="Back" />
+        </div>
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
-          <div className="d-flex align-items-center gap-2.5">
-            <BackButton fallback="/admin/dashboard" />
-            <div>
-              <h1 className="page-title mb-0">Inventory Stock Movement Ledger</h1>
-              <p className="page-subtitle mb-0">
-                Immutable audit ledger of all stock additions, transfers, sales deductions & adjustments
-              </p>
-            </div>
+          <div>
+            <h1 className="page-title">Inventory Stock Movement Ledger</h1>
+            <p className="page-subtitle">
+              Immutable audit ledger of all stock additions, transfers, sales deductions & adjustments
+            </p>
           </div>
           <div className="d-flex align-items-center gap-2">
             <button className="btn btn-accent btn-sm d-flex align-items-center gap-1.5" onClick={handleOpenTransfer}>

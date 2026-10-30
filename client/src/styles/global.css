@@ -341,6 +341,60 @@ h1, h2, h3, h4, h5, h6, .brand-font {
   }
 }
 
+/* Universal Back Navigation Pill */
+.back-nav-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+@media (max-width: 575.98px) {
+  .back-nav-container {
+    margin-bottom: 0.5rem;
+  }
+}
+
+.back-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.32rem 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #4b5563;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 9999px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  user-select: none;
+  line-height: 1.2;
+}
+
+.back-nav-btn:hover {
+  color: #0f172a;
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  transform: translateX(-2px);
+}
+
+.back-nav-btn:active {
+  transform: translateX(0);
+  background-color: #e2e8f0;
+}
+
+.back-nav-btn .back-nav-icon {
+  flex-shrink: 0;
+  transition: transform 0.18s ease;
+}
+
+.back-nav-btn:hover .back-nav-icon {
+  transform: translateX(-2px);
+}
+
 .filter-bar-card {
   background-color: var(--bg-white);
   border: 1px solid var(--border-light);

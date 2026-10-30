@@ -112,15 +112,15 @@ export default function Users() {
     <div className="page-container">
       {/* Header */}
       <div className="page-header-card">
+        <div className="back-nav-container">
+          <BackButton fallback="/admin/dashboard" desktopLabel="Back to Dashboard" label="Back" />
+        </div>
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
-          <div className="d-flex align-items-center gap-2.5">
-            <BackButton fallback="/admin/dashboard" />
-            <div>
-              <h1 className="page-title mb-0">Administrators & Staff Accounts</h1>
-              <p className="page-subtitle mb-0">
-                Add new shop admins with Gmail & phone, manage counter cashiers, and control portal privileges
-              </p>
-            </div>
+          <div>
+            <h1 className="page-title">Administrators & Staff Accounts</h1>
+            <p className="page-subtitle">
+              Add new shop admins with Gmail & phone, manage counter cashiers, and control portal privileges
+            </p>
           </div>
           <div className="d-flex align-items-center gap-2">
             <button className="btn btn-outline-dark-custom btn-sm d-flex align-items-center gap-1.5" onClick={fetchUsers}>

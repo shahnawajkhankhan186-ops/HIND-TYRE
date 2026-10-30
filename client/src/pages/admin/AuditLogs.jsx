@@ -48,15 +48,15 @@ export default function AuditLogs() {
   return (
     <div className="page-container">
       <div className="page-header-card">
+        <div className="back-nav-container">
+          <BackButton fallback="/admin/dashboard" desktopLabel="Back to Dashboard" label="Back" />
+        </div>
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
-          <div className="d-flex align-items-center gap-2.5">
-            <BackButton fallback="/admin/dashboard" />
-            <div>
-              <h1 className="page-title mb-0">System Audit Logs & Compliance Ledger</h1>
-              <p className="page-subtitle mb-0">
-                Rule 8: Immutable trace of every user action, state mutations & IP address logs
-              </p>
-            </div>
+          <div>
+            <h1 className="page-title">System Audit Logs & Compliance Ledger</h1>
+            <p className="page-subtitle">
+              Rule 8: Immutable trace of every user action, state mutations & IP address logs
+            </p>
           </div>
           <button className="btn btn-outline-dark-custom btn-sm d-flex align-items-center gap-1.5" onClick={fetchLogs}>
             <RefreshCw size={14} /> Refresh

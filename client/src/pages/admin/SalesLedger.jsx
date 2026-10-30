@@ -142,15 +142,15 @@ export default function SalesLedger() {
     <div className="page-container">
       {/* Header */}
       <div className="page-header-card">
+        <div className="back-nav-container">
+          <BackButton fallback="/admin/dashboard" desktopLabel="Back to Dashboard" label="Back" />
+        </div>
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
-          <div className="d-flex align-items-center gap-2.5">
-            <BackButton fallback="/admin/dashboard" />
-            <div>
-              <h1 className="page-title mb-0">Sales & Invoices Ledger</h1>
-              <p className="page-subtitle mb-0">
-                Complete invoice records, customer details, PDF receipts, and audited cancellation
-              </p>
-            </div>
+          <div>
+            <h1 className="page-title">Sales & Invoices Ledger</h1>
+            <p className="page-subtitle">
+              Complete invoice records, customer details, PDF receipts, and audited cancellation
+            </p>
           </div>
           <button className="btn btn-outline-dark-custom btn-sm d-flex align-items-center gap-1.5" onClick={fetchSales}>
             <RefreshCw size={14} /> Refresh

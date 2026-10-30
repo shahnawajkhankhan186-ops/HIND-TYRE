@@ -343,15 +343,15 @@ export default function Tyres() {
     <div className="page-container">
       {/* Header */}
       <div className="page-header-card">
+        <div className="back-nav-container">
+          <BackButton fallback="/admin/dashboard" desktopLabel="Back to Dashboard" label="Back" />
+        </div>
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
-          <div className="d-flex align-items-center gap-2.5">
-            <BackButton fallback="/admin/dashboard" />
-            <div>
-              <h1 className="page-title mb-0">Tyre Catalog & Stock Manager</h1>
-              <p className="page-subtitle mb-0">
-                Multi-company inventory, sizes, selling rates & bulk price adjustment
-              </p>
-            </div>
+          <div>
+            <h1 className="page-title">Tyre Catalog & Stock Manager</h1>
+            <p className="page-subtitle">
+              Multi-company inventory, sizes, selling rates & bulk price adjustment
+            </p>
           </div>
           <div className="d-flex align-items-center gap-2">
             <button

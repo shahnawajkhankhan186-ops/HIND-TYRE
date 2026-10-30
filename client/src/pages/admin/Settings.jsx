@@ -92,15 +92,13 @@ export default function Settings() {
   return (
     <div className="page-container">
       <div className="page-header-card">
-        <div className="d-flex align-items-center gap-2.5">
-          <BackButton fallback="/admin/dashboard" />
-          <div>
-            <h1 className="page-title mb-0">Shop Settings & Invoice Configuration</h1>
-            <p className="page-subtitle mb-0">
-              Configure business details, receipt terms & store information
-            </p>
-          </div>
+        <div className="back-nav-container">
+          <BackButton fallback="/admin/dashboard" desktopLabel="Back to Dashboard" label="Back" />
         </div>
+        <h1 className="page-title">Shop Settings & Invoice Configuration</h1>
+        <p className="page-subtitle">
+          Configure business details, receipt terms & store information
+        </p>
       </div>
 
       <div className="row justify-content-center">

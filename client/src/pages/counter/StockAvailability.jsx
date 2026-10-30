@@ -90,17 +90,13 @@ export default function StockAvailability() {
   return (
     <div className="page-container">
       <div className="page-header-card">
-        <div className="d-flex align-items-center justify-content-between flex-wrap gap-2">
-          <div className="d-flex align-items-center gap-2.5">
-            <BackButton fallback="/counter/new-sale" />
-            <div>
-              <h1 className="page-title mb-0">Live Inventory & Stock Lookup</h1>
-              <p className="page-subtitle mb-0">
-                Instant stock check for customer queries on size, brand, price & warehouse quantity
-              </p>
-            </div>
-          </div>
+        <div className="back-nav-container">
+          <BackButton fallback="/counter/new-sale" desktopLabel="Back to New Sale POS" label="Back" />
         </div>
+        <h1 className="page-title">Live Inventory & Stock Lookup</h1>
+        <p className="page-subtitle">
+          Instant stock check for customer queries on size, brand, price & warehouse quantity
+        </p>
       </div>
 
       {/* Filters */}

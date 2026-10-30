@@ -419,23 +419,44 @@ export default function NewSale() {
     <div className="page-container">
       {/* Top Breadcrumb Steps Header */}
       <div className="page-header-card">
+        {/* Back Navigation Bar */}
+        <div className="back-nav-container">
+          <button
+            type="button"
+            className="back-nav-btn"
+            onClick={() => {
+              if (step > 1) {
+                setStep((prev) => prev - 1);
+              } else {
+                navigate('/counter/today-sales');
+              }
+            }}
+            title={step > 1 ? `Return to Step ${step - 1}` : "Back to Today's Invoices"}
+          >
+            <ArrowLeft size={14} className="back-nav-icon" />
+            {step === 1 && (
+              <>
+                <span className="d-none d-sm-inline">Back to Today's Invoices</span>
+                <span className="d-inline d-sm-none">Back</span>
+              </>
+            )}
+            {step === 2 && (
+              <>
+                <span className="d-none d-sm-inline">Back to Customer Details (Step 1)</span>
+                <span className="d-inline d-sm-none">Back to Customer</span>
+              </>
+            )}
+            {step === 3 && (
+              <>
+                <span className="d-none d-sm-inline">Back to Tyres & Cart (Step 2)</span>
+                <span className="d-inline d-sm-none">Back to Cart</span>
+              </>
+            )}
+          </button>
+        </div>
+
         <div className="d-flex flex-wrap align-items-center justify-content-between gap-3">
-          <div className="d-flex align-items-center gap-2">
-            <button
-              type="button"
-              className="btn btn-outline-dark-custom btn-sm d-flex align-items-center gap-1.5 px-2.5 py-1.5 rounded-2 shadow-xs"
-              onClick={() => {
-                if (step > 1) {
-                  setStep((prev) => prev - 1);
-                } else {
-                  navigate('/counter/today-sales');
-                }
-              }}
-              title={step > 1 ? `Back to Step ${step - 1}` : "Back to Today's Invoices"}
-            >
-              <ArrowLeft size={16} />
-              <span className="fw-bold">{step > 1 ? `Back` : 'Back'}</span>
-            </button>
+          <div className="d-flex align-items-center gap-2.5">
             <div className="p-2 rounded-3" style={{ background: 'var(--accent-soft)', color: '#B45309' }}>
               <ShoppingCart size={22} />
             </div>
@@ -696,12 +717,12 @@ export default function NewSale() {
               <div className="d-flex align-items-center justify-content-between mb-3 p-2 px-3 rounded-2" style={{ background: 'var(--bg-light)', border: '1px solid var(--border-light)' }}>
                 <button
                   type="button"
-                  className="btn btn-sm btn-outline-dark-custom d-inline-flex align-items-center gap-1.5 py-1 px-2.5 fw-semibold"
+                  className="back-nav-btn"
                   onClick={() => setStep(1)}
                   title="Return to Customer Details Form"
                 >
-                  <ArrowLeft size={14} />
-                  <span>← Back to Customer Details</span>
+                  <ArrowLeft size={14} className="back-nav-icon" />
+                  <span>Back to Customer Details</span>
                 </button>
                 {customer.name && (
                   <div className="small text-muted d-none d-sm-block">
@@ -1136,8 +1157,9 @@ export default function NewSale() {
                   </p>
                 </div>
                 <div className="d-flex align-items-center gap-2">
-                  <button className="btn btn-outline-dark-custom btn-sm d-flex align-items-center gap-1.5" onClick={() => setStep(1)} title="Back to Customer">
-                    <ArrowLeft size={14} /> Back to Customer
+                  <button className="back-nav-btn" onClick={() => setStep(1)} title="Back to Customer">
+                    <ArrowLeft size={14} className="back-nav-icon" />
+                    <span>Back to Customer</span>
                   </button>
                   <button className="btn btn-accent btn-sm d-flex align-items-center gap-1.5 fw-bold" onClick={() => setStep(2)} title="Modify Items">
                     <ArrowLeft size={14} /> Modify Items / Cart

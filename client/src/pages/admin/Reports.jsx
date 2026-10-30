@@ -80,15 +80,15 @@ export default function Reports() {
     <div className="page-container">
       {/* Header */}
       <div className="page-header-card">
+        <div className="back-nav-container">
+          <BackButton fallback="/admin/dashboard" desktopLabel="Back to Dashboard" label="Back" />
+        </div>
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
-          <div className="d-flex align-items-center gap-2.5">
-            <BackButton fallback="/admin/dashboard" />
-            <div>
-              <h1 className="page-title mb-0">Business Reports & Data Exports</h1>
-              <p className="page-subtitle mb-0">
-                Comprehensive valuation, company performance, profit margins & streaming CSV exports
-              </p>
-            </div>
+          <div>
+            <h1 className="page-title">Business Reports & Data Exports</h1>
+            <p className="page-subtitle">
+              Comprehensive valuation, company performance, profit margins & streaming CSV exports
+            </p>
           </div>
           <div className="d-flex align-items-center gap-2">
             <button className="btn btn-accent btn-sm d-flex align-items-center gap-1.5" onClick={handleExportCSV}>

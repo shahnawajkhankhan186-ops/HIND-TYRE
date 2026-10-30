@@ -64,13 +64,13 @@ export default function TodaySales() {
     <div className="page-container">
       {/* Header & Metrics */}
       <div className="page-header-card">
+        <div className="back-nav-container">
+          <BackButton fallback="/counter/new-sale" desktopLabel="Back to New Sale POS" label="Back" />
+        </div>
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
-          <div className="d-flex align-items-center gap-2.5">
-            <BackButton fallback="/counter/new-sale" />
-            <div>
-              <h1 className="page-title">Today's Counter Invoices</h1>
-              <p className="page-subtitle">Live transactions recorded during the current shift</p>
-            </div>
+          <div>
+            <h1 className="page-title">Today's Counter Invoices</h1>
+            <p className="page-subtitle">Live transactions recorded during the current shift</p>
           </div>
 
           <div className="d-flex align-items-center gap-2 gap-sm-3 flex-wrap">

@@ -222,20 +222,20 @@ export default function Finance() {
     <div className="page-container">
       {/* Page Header */}
       <div className="page-header-card mb-3">
+        <div className="back-nav-container">
+          <BackButton fallback="/admin/dashboard" desktopLabel="Back to Dashboard" label="Back" />
+        </div>
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
-          <div className="d-flex align-items-center gap-2.5">
-            <BackButton fallback="/admin/dashboard" />
-            <div>
-              <div className="d-flex align-items-center gap-2 mb-1">
-                <h1 className="page-title m-0">Finance & Profit Analytics</h1>
-                <span className="badge bg-warning bg-opacity-25 text-warning border border-warning border-opacity-25 extra-small">
-                  Owner Access Only
-                </span>
-              </div>
-              <p className="page-subtitle m-0">
-                Cashier revenue intelligence, invoice records & profit calculations (Selling Price − Actual Cost)
-              </p>
+          <div>
+            <div className="d-flex align-items-center gap-2 mb-1">
+              <h1 className="page-title m-0">Finance & Profit Analytics</h1>
+              <span className="badge bg-warning bg-opacity-25 text-warning border border-warning border-opacity-25 extra-small">
+                Owner Access Only
+              </span>
             </div>
+            <p className="page-subtitle m-0">
+              Cashier revenue intelligence, invoice records & profit calculations (Selling Price − Actual Cost)
+            </p>
           </div>
           <button
             className="btn btn-outline-dark-custom btn-sm d-flex align-items-center gap-1.5"

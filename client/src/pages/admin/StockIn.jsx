@@ -107,15 +107,13 @@ export default function StockIn() {
   return (
     <div className="page-container">
       <div className="page-header-card">
-        <div className="d-flex align-items-center gap-2.5">
-          <BackButton fallback="/admin/dashboard" />
-          <div>
-            <h1 className="page-title mb-0">Stock In (Purchase Entry)</h1>
-            <p className="page-subtitle mb-0">
-              Record received tyre shipments & supplier purchases with ledger updates
-            </p>
-          </div>
+        <div className="back-nav-container">
+          <BackButton fallback="/admin/dashboard" desktopLabel="Back to Dashboard" label="Back" />
         </div>
+        <h1 className="page-title">Stock In (Purchase Entry)</h1>
+        <p className="page-subtitle">
+          Record received tyre shipments & supplier purchases with ledger updates
+        </p>
       </div>
 
       <div className="row justify-content-center">
