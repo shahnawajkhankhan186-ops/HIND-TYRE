@@ -78,6 +78,23 @@ async function initializeClientStore() {
       { upsert: true, new: true }
     );
 
+    // Also create Cashier / Counter staff account
+    const counterEmail = (getArg('counterEmail') || 'counter@hindtyres.com').toLowerCase();
+    const counterPassword = getArg('counterPassword') || 'Counter@123';
+    const counterPasswordHash = await bcrypt.hash(counterPassword, salt);
+
+    await User.findOneAndUpdate(
+      { email: counterEmail },
+      {
+        name: 'Amit Verma (Cashier)',
+        email: counterEmail,
+        passwordHash: counterPasswordHash,
+        role: 'COUNTER',
+        isActive: true,
+      },
+      { upsert: true, new: true }
+    );
+
     // 3. Initialize Standard Tyre Brand Companies
     console.log('[Init] Registering standard tyre brands (MRF, CEAT, Apollo, Bridgestone, etc.)...');
     const brands = [
@@ -117,3 +134,4 @@ async function initializeClientStore() {
 }
 
 initializeClientStore();
+
