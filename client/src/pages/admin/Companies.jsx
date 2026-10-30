@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Building2, Plus, Edit2, Archive, CheckCircle2, XCircle, Search, RefreshCw } from 'lucide-react';
+import { Building2, Plus, Edit2, Archive, Trash2, RotateCcw, CheckCircle2, XCircle, Search, RefreshCw } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../lib/api';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
@@ -16,6 +16,13 @@ export default function Companies() {
   // Archive dialog
   const [archiveTarget, setArchiveTarget] = useState(null);
   const [archiving, setArchiving] = useState(false);
+
+  // Permanent Delete dialog
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [deleting, setDeleting] = useState(false);
+
+  // Restoring company
+  const [restoringId, setRestoringId] = useState(null);
 
   useEffect(() => {
     fetchCompanies();
@@ -92,6 +99,38 @@ export default function Companies() {
     }
   };
 
+  const handleConfirmPermanentDelete = async () => {
+    if (!deleteTarget) return;
+    try {
+      setDeleting(true);
+      const res = await api.delete(`/admin/companies/${deleteTarget._id}?permanent=true`);
+      if (res.data.success) {
+        toast.success(res.data.message || `Permanently deleted ${deleteTarget.name}`);
+        setDeleteTarget(null);
+        fetchCompanies();
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.error || 'Failed to permanently delete company');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const handleRestoreCompany = async (comp) => {
+    try {
+      setRestoringId(comp._id);
+      const res = await api.post(`/admin/companies/${comp._id}/restore`);
+      if (res.data.success) {
+        toast.success(res.data.message || `Restored ${comp.name} to active`);
+        fetchCompanies();
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.error || 'Failed to restore company');
+    } finally {
+      setRestoringId(null);
+    }
+  };
+
   return (
     <div className="page-container">
       {/* Header */}
@@ -152,22 +191,48 @@ export default function Companies() {
                     </td>
                     <td className="text-end">
                       <div className="d-flex align-items-center justify-content-end gap-1.5">
-                        <button
-                          className="btn btn-sm btn-outline-dark-custom p-1.5"
-                          title="Edit Company"
-                          onClick={() => handleOpenEdit(comp)}
-                          disabled={comp.isArchived}
-                        >
-                          <Edit2 size={14} />
-                        </button>
-                        {!comp.isArchived && (
-                          <button
-                            className="btn btn-sm btn-outline-danger p-1.5"
-                            title="Archive Company"
-                            onClick={() => setArchiveTarget(comp)}
-                          >
-                            <Archive size={14} />
-                          </button>
+                        {comp.isArchived ? (
+                          <>
+                            <button
+                              className="btn btn-sm btn-outline-success p-1.5"
+                              title="Restore Company to Active"
+                              onClick={() => handleRestoreCompany(comp)}
+                              disabled={restoringId === comp._id}
+                            >
+                              <RotateCcw size={14} className={restoringId === comp._id ? 'spin' : ''} />
+                            </button>
+                            <button
+                              className="btn btn-sm btn-outline-danger p-1.5"
+                              title="Permanently Delete from Database"
+                              onClick={() => setDeleteTarget(comp)}
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <button
+                              className="btn btn-sm btn-outline-dark-custom p-1.5"
+                              title="Edit Company"
+                              onClick={() => handleOpenEdit(comp)}
+                            >
+                              <Edit2 size={14} />
+                            </button>
+                            <button
+                              className="btn btn-sm btn-outline-secondary p-1.5"
+                              title="Archive Company (Deactivate from POS)"
+                              onClick={() => setArchiveTarget(comp)}
+                            >
+                              <Archive size={14} />
+                            </button>
+                            <button
+                              className="btn btn-sm btn-outline-danger p-1.5"
+                              title="Permanently Delete from Database"
+                              onClick={() => setDeleteTarget(comp)}
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          </>
                         )}
                       </div>
                     </td>
@@ -242,12 +307,24 @@ export default function Companies() {
       <ConfirmDialog
         isOpen={!!archiveTarget}
         title={`Archive ${archiveTarget?.name}?`}
-        message={`Are you sure you want to archive "${archiveTarget?.name}"? In accordance with auditing and billing compliance (Rule 7), this soft-deletes the company and prevents new stock entries, while completely preserving all historical sales records and warranties.`}
+        message={`Are you sure you want to archive "${archiveTarget?.name}"? This deactivates the brand from new stock entry and POS billing, while safely keeping all past sales records and customer invoices intact.`}
         confirmText="Archive Company"
-        variant="danger"
+        variant="warning"
         isLoading={archiving}
         onConfirm={handleConfirmArchive}
         onCancel={() => setArchiveTarget(null)}
+      />
+
+      {/* Custom ConfirmDialog for Permanent Hard Delete */}
+      <ConfirmDialog
+        isOpen={!!deleteTarget}
+        title={`Permanently Delete ${deleteTarget?.name}?`}
+        message={`Are you sure you want to permanently delete "${deleteTarget?.name}" from the database? This action is irreversible and completely removes this company record from MongoDB.`}
+        confirmText="Delete Permanently"
+        variant="danger"
+        isLoading={deleting}
+        onConfirm={handleConfirmPermanentDelete}
+        onCancel={() => setDeleteTarget(null)}
       />
     </div>
   );

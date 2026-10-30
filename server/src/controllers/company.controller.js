@@ -83,21 +83,41 @@ async function updateCompany(req, res, next) {
 }
 
 /**
- * Soft delete (archive) company
+ * Delete (Permanent) or Soft Delete (Archive) company
  */
 async function archiveCompany(req, res, next) {
   try {
+    const { permanent = 'false' } = req.query;
     const company = await Company.findById(req.params.id);
     if (!company) {
       return res.status(404).json({ success: false, error: 'Company not found' });
     }
 
-    // Check if tyres under this company have sales history
+    // Permanent hard delete if explicitly requested
+    if (permanent === 'true') {
+      await Company.findByIdAndDelete(company._id);
+
+      await auditService.log({
+        action: 'DELETE',
+        entity: 'Company',
+        entityId: company._id,
+        beforeSnapshot: company.toObject(),
+        req,
+        user: req.user,
+      });
+
+      return res.json({
+        success: true,
+        message: `Company "${company.name}" has been permanently deleted from database.`,
+        data: { _id: company._id, permanentlyDeleted: true },
+      });
+    }
+
+    // Soft-delete (archive)
     const tyres = await Tyre.find({ companyId: company._id });
-    const tyreIds = tyres.map(t => t._id);
+    const tyreIds = tyres.map((t) => t._id);
     const hasSales = await Sale.exists({ 'items.itemId': { $in: tyreIds } });
 
-    // Per Rule 7: Soft-delete (archive) records that have history, never hard delete records referenced by invoices
     company.isArchived = true;
     company.isActive = false;
     await company.save();
@@ -124,9 +144,46 @@ async function archiveCompany(req, res, next) {
   }
 }
 
+/**
+ * Restore an archived company back to active
+ */
+async function restoreCompany(req, res, next) {
+  try {
+    const company = await Company.findById(req.params.id);
+    if (!company) {
+      return res.status(404).json({ success: false, error: 'Company not found' });
+    }
+
+    company.isArchived = false;
+    company.isActive = true;
+    await company.save();
+
+    // Also restore its tyres to active
+    await Tyre.updateMany({ companyId: company._id }, { isActive: true });
+
+    await auditService.log({
+      action: 'RESTORE',
+      entity: 'Company',
+      entityId: company._id,
+      afterSnapshot: company.toObject(),
+      req,
+      user: req.user,
+    });
+
+    res.json({
+      success: true,
+      message: `Company "${company.name}" has been restored to active status.`,
+      data: company,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   getCompanies,
   createCompany,
   updateCompany,
   archiveCompany,
+  restoreCompany,
 };

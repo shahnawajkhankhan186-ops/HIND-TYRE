@@ -63,6 +63,7 @@ router.get('/admin/companies', authenticate, requireCounterOrAdmin, companyContr
 router.post('/admin/companies', authenticate, requireAdmin, companyController.createCompany);
 router.put('/admin/companies/:id', authenticate, requireAdmin, companyController.updateCompany);
 router.delete('/admin/companies/:id', authenticate, requireAdmin, companyController.archiveCompany);
+router.post('/admin/companies/:id/restore', authenticate, requireAdmin, companyController.restoreCompany);
 
 // Tyres Catalog
 router.get('/admin/tyres', authenticate, requireAdmin, tyreController.getTyres);
