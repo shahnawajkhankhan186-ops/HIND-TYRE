@@ -35,8 +35,16 @@ services:
         value: 523066431360-mfe1183b1ftu79t5etfhcojot59cck28.apps.googleusercontent.com
       - key: ADMIN_RECEIPT_EMAIL
         value: admin@hindtyres.com
+      # Brevo (Sendinblue) Transactional API (HTTPS Port 443 - zero firewall blocks)
+      - key: BREVO_API_KEY
+        sync: false
+      - key: BREVO_SENDER_NAME
+        value: "HIND TYRES & ACCESSORIES"
+      - key: BREVO_SENDER_EMAIL
+        value: hindtyre01@gmail.com
+      # Brevo SMTP Relay Fallback (Port 587)
       - key: SMTP_HOST
-        value: smtp.gmail.com
+        value: smtp-relay.brevo.com
       - key: SMTP_PORT
         value: 587
       - key: SMTP_SECURE
@@ -45,4 +53,6 @@ services:
         sync: false
       - key: SMTP_PASS
         sync: false
+      - key: SMTP_FROM
+        value: '"HIND TYRES & ACCESSORIES" <hindtyre01@gmail.com>'
 
