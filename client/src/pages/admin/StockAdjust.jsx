@@ -3,6 +3,7 @@ import { SlidersHorizontal, AlertTriangle, Disc3, Layers, Check } from 'lucide-r
 import toast from 'react-hot-toast';
 import api from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
+import BackButton from '../../components/common/BackButton';
 
 export default function StockAdjust() {
   const { shopSettings } = useAuth();
@@ -93,6 +94,9 @@ export default function StockAdjust() {
   return (
     <div className="page-container">
       <div className="page-header-card">
+        <div className="back-nav-container">
+          <BackButton fallback="/admin/dashboard" desktopLabel="Back to Dashboard" label="Back" />
+        </div>
         <h1 className="page-title">Manual Stock Adjustment</h1>
         <p className="page-subtitle">
           Audited inventory corrections (physical audit recount, damaged goods, or showroom display)

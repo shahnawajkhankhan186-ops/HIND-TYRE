@@ -47,9 +47,9 @@ async function seedDatabase() {
     console.log('[Seed] Creating Shop Settings...');
     const settings = await ShopSettings.create({
       shopName: 'HIND TYRES AND ACCESSORIES',
-      address: 'Shop No. 12-14, GT Road Bypass, Transport Nagar, Kanpur, UP - 208001',
-      phone: '+91 98765 43210',
-      email: 'contact@hindtyres.com',
+      address: 'Cantonment Market Shop No:03 Near Football Ground Bus Stand Ramgarh Cantt ,Jharkhand 829122',
+      phone: '+91 79911 89048',
+      email: 'hindtyre01@gmail.com',
       gstin: '',
       logoUrl: '',
       invoiceFooter: 'Goods once sold cannot be returned after 7 days. Tyre warranty as per company norms.',

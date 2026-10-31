@@ -6,6 +6,7 @@ import api, { getReceiptPdfUrl } from '../../lib/api';
 import { formatRupees } from '../../lib/currency';
 import { formatIST } from '../../lib/ist-date';
 import ReceiptModal from '../../components/common/ReceiptModal';
+import BackButton from '../../components/common/BackButton';
 import { TableSkeleton } from '../../components/common/LoadingSkeleton';
 import EmptyState from '../../components/common/EmptyState';
 import { useAuth } from '../../context/AuthContext';
@@ -63,6 +64,9 @@ export default function TodaySales() {
     <div className="page-container">
       {/* Header & Metrics */}
       <div className="page-header-card">
+        <div className="back-nav-container">
+          <BackButton fallback="/counter/new-sale" desktopLabel="Back to New Sale POS" label="Back" />
+        </div>
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <div>
             <h1 className="page-title">Today's Counter Invoices</h1>

@@ -154,7 +154,7 @@ export default function AdminProfileModal({ show, onClose }) {
                     <span>Shop Address</span>
                   </div>
                   <div className="small text-white opacity-90">
-                    {shopSettings?.address || 'Shop No. 12-14, GT Road Bypass, Transport Nagar, Kanpur, UP'}
+                    {shopSettings?.address || 'Cantonment Market Shop No:03 Near Football Ground Bus Stand Ramgarh Cantt ,Jharkhand 829122'}
                   </div>
                 </div>
               </div>

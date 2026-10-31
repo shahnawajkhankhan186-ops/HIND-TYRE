@@ -4,6 +4,7 @@ import { Disc3, Lock, Mail, Eye, EyeOff, LogIn, CheckCircle2 } from 'lucide-reac
 import { GoogleLogin } from '@react-oauth/google';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
+import SEO from '../../components/common/SEO';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -62,6 +63,11 @@ export default function Login() {
 
   return (
     <div className="min-vh-100 d-flex flex-column flex-lg-row" style={{ backgroundColor: 'var(--bg-black)' }}>
+      <SEO
+        title="Staff & Admin Portal Sign In"
+        description="Internal staff and administration authentication portal for HIND TYRES AND ACCESSORIES."
+        noindex={true}
+      />
       {/* ========================================================== */}
       {/* LEFT SIDE: Black/Charcoal with Tyre Workshop & Headline */}
       {/* ========================================================== */}

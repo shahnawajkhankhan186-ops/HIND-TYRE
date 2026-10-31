@@ -19,7 +19,7 @@ export function AuthProvider({ children }) {
     if (settings) {
       try {
         localStorage.setItem('shopSettings', JSON.stringify(settings));
-      } catch (_) {}
+      } catch (_) { }
     }
     setShopSettingsState(settings);
   };
@@ -74,7 +74,7 @@ export function AuthProvider({ children }) {
         if (meRes.data.success) {
           setShopSettings(meRes.data.data.settings);
         }
-      } catch (_) {}
+      } catch (_) { }
 
       return newUser;
     }
@@ -95,7 +95,7 @@ export function AuthProvider({ children }) {
         if (meRes.data.success) {
           setShopSettings(meRes.data.data.settings);
         }
-      } catch (_) {}
+      } catch (_) { }
 
       return newUser;
     }
@@ -116,7 +116,7 @@ export function AuthProvider({ children }) {
         if (meRes.data.success) {
           setShopSettings(meRes.data.data.settings);
         }
-      } catch (_) {}
+      } catch (_) { }
 
       return newUser;
     }
@@ -141,7 +141,7 @@ export function AuthProvider({ children }) {
       try {
         const fallback = await api.get('/admin/settings');
         if (fallback.data.success) setShopSettings(fallback.data.data);
-      } catch (_) {}
+      } catch (_) { }
     }
   };
 
@@ -151,7 +151,7 @@ export function AuthProvider({ children }) {
         const next = { ...prev, ...updatedUserData };
         try {
           localStorage.setItem('user', JSON.stringify(next));
-        } catch (_) {}
+        } catch (_) { }
         return next;
       });
     }

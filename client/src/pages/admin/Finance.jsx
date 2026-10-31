@@ -26,6 +26,7 @@ import { formatIST } from '../../lib/ist-date';
 import ReceiptModal from '../../components/common/ReceiptModal';
 import { TableSkeleton } from '../../components/common/LoadingSkeleton';
 import { useAuth } from '../../context/AuthContext';
+import BackButton from '../../components/common/BackButton';
 
 export default function Finance() {
   const { shopSettings } = useAuth();
@@ -221,6 +222,9 @@ export default function Finance() {
     <div className="page-container">
       {/* Page Header */}
       <div className="page-header-card mb-3">
+        <div className="back-nav-container">
+          <BackButton fallback="/admin/dashboard" desktopLabel="Back to Dashboard" label="Back" />
+        </div>
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <div>
             <div className="d-flex align-items-center gap-2 mb-1">

@@ -60,12 +60,12 @@ async function generateInvoicePDF({ sale, settings }) {
 
       doc.fillColor('#A9AEB8').fontSize(9).font('Helvetica');
       doc.text(
-        `${settings?.address || 'GT Road Bypass, Transport Nagar, Kanpur, UP'}`,
+        `${settings?.address || 'Cantonment Market Shop No:03 Near Football Ground Bus Stand Ramgarh Cantt ,Jharkhand 829122'}`,
         50,
         72
       );
       doc.text(
-        `Phone: ${settings?.phone || '+91 98765 43210'} | Email: ${settings?.email || 'contact@hindtyres.com'}`,
+        `Phone: ${settings?.phone || '+91 79911 89048'} | Email: ${settings?.email || 'hindtyre01@gmail.com'}`,
         50,
         86
       );

@@ -22,6 +22,7 @@ import { formatRupees, rupeesToPaise, paiseToRupees } from '../../lib/currency';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 import { TableSkeleton } from '../../components/common/LoadingSkeleton';
 import { useAuth } from '../../context/AuthContext';
+import BackButton from '../../components/common/BackButton';
 
 export default function Tyres() {
   const { shopSettings } = useAuth();
@@ -342,6 +343,9 @@ export default function Tyres() {
     <div className="page-container">
       {/* Header */}
       <div className="page-header-card">
+        <div className="back-nav-container">
+          <BackButton fallback="/admin/dashboard" desktopLabel="Back to Dashboard" label="Back" />
+        </div>
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <div>
             <h1 className="page-title">Tyre Catalog & Stock Manager</h1>

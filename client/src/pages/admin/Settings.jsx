@@ -12,6 +12,7 @@ import {
 import toast from 'react-hot-toast';
 import api from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
+import BackButton from '../../components/common/BackButton';
 
 export default function Settings() {
   const { refreshSettings, setShopSettings } = useAuth();
@@ -91,6 +92,9 @@ export default function Settings() {
   return (
     <div className="page-container">
       <div className="page-header-card">
+        <div className="back-nav-container">
+          <BackButton fallback="/admin/dashboard" desktopLabel="Back to Dashboard" label="Back" />
+        </div>
         <h1 className="page-title">Shop Settings & Invoice Configuration</h1>
         <p className="page-subtitle">
           Configure business details, receipt terms & store information

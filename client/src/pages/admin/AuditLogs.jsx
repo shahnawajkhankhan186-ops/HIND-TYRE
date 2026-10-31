@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import api from '../../lib/api';
 import { formatIST } from '../../lib/ist-date';
 import { TableSkeleton } from '../../components/common/LoadingSkeleton';
+import BackButton from '../../components/common/BackButton';
 
 export default function AuditLogs() {
   const [logs, setLogs] = useState([]);
@@ -47,6 +48,9 @@ export default function AuditLogs() {
   return (
     <div className="page-container">
       <div className="page-header-card">
+        <div className="back-nav-container">
+          <BackButton fallback="/admin/dashboard" desktopLabel="Back to Dashboard" label="Back" />
+        </div>
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <div>
             <h1 className="page-title">System Audit Logs & Compliance Ledger</h1>

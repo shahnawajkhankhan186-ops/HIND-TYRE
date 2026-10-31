@@ -5,6 +5,7 @@ import api from '../../lib/api';
 import { formatRupees } from '../../lib/currency';
 import { TableSkeleton } from '../../components/common/LoadingSkeleton';
 import { useAuth } from '../../context/AuthContext';
+import BackButton from '../../components/common/BackButton';
 
 export default function StockAvailability() {
   const { shopSettings } = useAuth();
@@ -89,6 +90,9 @@ export default function StockAvailability() {
   return (
     <div className="page-container">
       <div className="page-header-card">
+        <div className="back-nav-container">
+          <BackButton fallback="/counter/new-sale" desktopLabel="Back to New Sale POS" label="Back" />
+        </div>
         <h1 className="page-title">Live Inventory & Stock Lookup</h1>
         <p className="page-subtitle">
           Instant stock check for customer queries on size, brand, price & warehouse quantity

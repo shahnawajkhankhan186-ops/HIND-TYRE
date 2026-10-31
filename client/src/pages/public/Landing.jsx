@@ -30,11 +30,41 @@ import {
   Youtube,
   Linkedin,
   ChevronRight,
+  ChevronDown,
   Crosshair,
-  Timer
+  Timer,
+  HelpCircle
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
+import SEO from '../../components/common/SEO';
+
+const FAQS = [
+  {
+    q: 'Which tyre brands are available at Hind Tyres in Ramgarh Cantt, Jharkhand?',
+    a: 'Hind Tyres is an authorized multi-brand retailer offering 100% genuine tyres from MRF, Apollo, Bridgestone, Michelin, Goodyear, CEAT, JK Tyre, and TVS Eurogrip with official manufacturer warranty and computerized GST invoicing.'
+  },
+  {
+    q: 'How do I know when my vehicle needs new tyres?',
+    a: 'You should replace your tyres if tread depth is below 1.6mm (reaching tread wear indicators), if you see visible cracks or sidewall bulges, if the tyres are older than 5 years, or if your vehicle frequently slips during wet braking.'
+  },
+  {
+    q: 'What is the difference between 3D Wheel Alignment and Wheel Balancing?',
+    a: 'Wheel Alignment adjusts the precision angles (camber, caster, and toe) so all wheels point straight and tyre wear is even. Wheel Balancing eliminates high-speed steering wobble by distributing weight evenly across the wheel rim and tyre.'
+  },
+  {
+    q: 'Do you provide manufacturer warranty with new tyres?',
+    a: 'Yes! Every tyre purchased at Hind Tyres comes with 100% genuine company warranty ranging from 3 to 5 years, complete with authorized warranty registration and digital receipt.'
+  },
+  {
+    q: 'How can I book an appointment for tyre fitting or alignment?',
+    a: 'You can book instantly online by clicking the "Book Service" button above, or by calling our workshop directly at +91 9693734121. Instant confirmation with zero advance fee required.'
+  },
+  {
+    q: 'Is Nitrogen gas inflation better than regular compressed air?',
+    a: 'Yes, Nitrogen has larger molecules that leak through rubber much slower than regular air, ensuring steady tyre pressure, lower tyre temperatures on highways, and improved fuel economy.'
+  }
+];
 
 // 8 Real Tyre Brands per strict project requirement
 const TOP_BRANDS = [
@@ -96,8 +126,31 @@ export default function Landing() {
     setShowBookingModal(true);
   };
 
+  // FAQ Accordion State
+  const [openFaq, setOpenFaq] = useState(0);
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": FAQS.map((item) => ({
+      "@type": "Question",
+      "name": item.q,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": item.a
+      }
+    }))
+  };
+
   return (
     <div className="min-vh-100 d-flex flex-column" style={{ backgroundColor: '#FFFFFF', color: 'var(--text-on-light)' }}>
+      {/* Dynamic SEO Meta & Schema Manager */}
+      <SEO
+        title="HIND TYRES AND ACCESSORIES – Top Brands | Best Prices | Expert Fitting"
+        description="Authorized dealer for MRF, Apollo, Bridgestone, Michelin, Goodyear, CEAT & JK Tyre in Ramgarh Cantt, Jharkhand. 100% genuine tyres, 5-year warranty, 3D laser wheel alignment & express fitting."
+        canonicalUrl="https://hind-tyre.vercel.app/"
+        structuredData={faqSchema}
+      />
       {/* ========================================================== */}
       {/* 1. STICKY WHITE NAVBAR (Exact Mockup Match: Logo + Links + Phone + Sign In) */}
       {/* ========================================================== */}
@@ -544,9 +597,13 @@ export default function Landing() {
                 <div style={{ height: '175px', overflow: 'hidden', backgroundColor: '#e2e8f0' }}>
                   <img
                     src="/images/car_tyres_card.jpg"
-                    alt="Car Tyres"
+                    alt="Car Tyres - Tubeless & Radial Tyres for Hatchback, Sedan, SUV | Hind Tyres"
                     className="w-100 h-100"
                     style={{ objectFit: 'cover' }}
+                    loading="lazy"
+                    decoding="async"
+                    width="300"
+                    height="175"
                   />
                 </div>
                 <div className="p-3 d-flex align-items-center justify-content-between">
@@ -573,9 +630,13 @@ export default function Landing() {
                 <div style={{ height: '175px', overflow: 'hidden', backgroundColor: '#e2e8f0' }}>
                   <img
                     src="/images/bike_tyres_card.jpg"
-                    alt="Bike Tyres"
+                    alt="Bike Tyres - Commuter, Sports & Cruiser Two-Wheeler Tyres | Hind Tyres"
                     className="w-100 h-100"
                     style={{ objectFit: 'cover' }}
+                    loading="lazy"
+                    decoding="async"
+                    width="300"
+                    height="175"
                   />
                 </div>
                 <div className="p-3 d-flex align-items-center justify-content-between">
@@ -602,9 +663,13 @@ export default function Landing() {
                 <div style={{ height: '175px', overflow: 'hidden', backgroundColor: '#e2e8f0' }}>
                   <img
                     src="/images/suv_tyres_card.jpg"
-                    alt="SUV Tyres"
+                    alt="SUV Tyres - All-Terrain & Highway Radial Tyres | Hind Tyres"
                     className="w-100 h-100"
                     style={{ objectFit: 'cover' }}
+                    loading="lazy"
+                    decoding="async"
+                    width="300"
+                    height="175"
                   />
                 </div>
                 <div className="p-3 d-flex align-items-center justify-content-between">
@@ -631,9 +696,13 @@ export default function Landing() {
                 <div style={{ height: '175px', overflow: 'hidden', backgroundColor: '#e2e8f0' }}>
                   <img
                     src="/images/commercial_tyres_card.jpg"
-                    alt="Commercial Tyres"
+                    alt="Commercial Tyres - Heavy Duty Truck, Tractor & Fleet Tyres | Hind Tyres"
                     className="w-100 h-100"
                     style={{ objectFit: 'cover' }}
+                    loading="lazy"
+                    decoding="async"
+                    width="300"
+                    height="175"
                   />
                 </div>
                 <div className="p-3 d-flex align-items-center justify-content-between">
@@ -675,9 +744,13 @@ export default function Landing() {
                 <div style={{ height: '160px', overflow: 'hidden' }}>
                   <img
                     src="/images/service_tyre_fitting.jpg"
-                    alt="Tyre Fitting"
+                    alt="Pneumatic Tyre Fitting & Scratchless Wheel Installation | Hind Tyres"
                     className="w-100 h-100"
                     style={{ objectFit: 'cover' }}
+                    loading="lazy"
+                    decoding="async"
+                    width="300"
+                    height="160"
                   />
                 </div>
                 <div className="p-3 d-flex align-items-center gap-2.5">
@@ -704,9 +777,13 @@ export default function Landing() {
                 <div style={{ height: '160px', overflow: 'hidden' }}>
                   <img
                     src="/images/service_wheel_balancing.jpg"
-                    alt="Wheel Balancing"
+                    alt="Dynamic Wheel Balancing & Vibration Control Service | Hind Tyres"
                     className="w-100 h-100"
                     style={{ objectFit: 'cover' }}
+                    loading="lazy"
+                    decoding="async"
+                    width="300"
+                    height="160"
                   />
                 </div>
                 <div className="p-3 d-flex align-items-center gap-2.5">
@@ -733,9 +810,13 @@ export default function Landing() {
                 <div style={{ height: '160px', overflow: 'hidden' }}>
                   <img
                     src="/images/service_wheel_alignment.jpg"
-                    alt="Wheel Alignment"
+                    alt="3D Laser Computerized Wheel Alignment in Ramgarh Cantt, Jharkhand | Hind Tyres"
                     className="w-100 h-100"
                     style={{ objectFit: 'cover' }}
+                    loading="lazy"
+                    decoding="async"
+                    width="300"
+                    height="160"
                   />
                 </div>
                 <div className="p-3 d-flex align-items-center gap-2.5">
@@ -762,9 +843,13 @@ export default function Landing() {
                 <div style={{ height: '160px', overflow: 'hidden' }}>
                   <img
                     src="/images/service_puncture_repair.jpg"
-                    alt="Puncture Repair"
+                    alt="Tubeless Tyre Puncture Repair & Nitrogen Gas Inflation | Hind Tyres"
                     className="w-100 h-100"
                     style={{ objectFit: 'cover' }}
+                    loading="lazy"
+                    decoding="async"
+                    width="300"
+                    height="160"
                   />
                 </div>
                 <div className="p-3 d-flex align-items-center gap-2.5">
@@ -886,6 +971,66 @@ export default function Landing() {
       </section>
 
       {/* ========================================================== */}
+      {/* 6.5 FREQUENTLY ASKED QUESTIONS (FAQ Section) */}
+      {/* ========================================================== */}
+      <section id="faq" className="py-5" style={{ backgroundColor: 'var(--bg-light)', borderTop: '1px solid var(--border-light)' }}>
+        <div className="container" style={{ maxWidth: '860px' }}>
+          <div className="text-center mb-4">
+            <div className="d-inline-flex align-items-center gap-1.5 px-3 py-1 rounded-pill mb-2" style={{ backgroundColor: 'rgba(255, 193, 7, 0.15)', color: '#b45309', fontSize: '0.8rem', fontWeight: 600 }}>
+              <HelpCircle size={15} />
+              <span>Got Questions? We Have Answers</span>
+            </div>
+            <h2 className="fw-black text-dark mb-1" style={{ letterSpacing: '-0.01em' }}>
+              Frequently Asked Questions
+            </h2>
+            <p className="text-muted mb-0">
+              Everything you need to know about purchasing tyres, warranties, and vehicle maintenance
+            </p>
+          </div>
+
+          <div className="d-flex flex-column gap-2.5">
+            {FAQS.map((item, idx) => {
+              const isOpen = openFaq === idx;
+              return (
+                <div
+                  key={idx}
+                  className="card-clean border overflow-hidden transition-all"
+                  style={{
+                    backgroundColor: '#FFFFFF',
+                    borderColor: isOpen ? 'var(--accent)' : 'var(--border-light)',
+                    borderRadius: 'var(--radius-md)'
+                  }}
+                >
+                  <button
+                    type="button"
+                    className="w-100 p-3.5 text-start bg-transparent border-0 d-flex align-items-center justify-content-between gap-3 text-dark fw-bold"
+                    onClick={() => setOpenFaq(isOpen ? null : idx)}
+                    aria-expanded={isOpen}
+                    style={{ fontSize: '0.96rem' }}
+                  >
+                    <span>{item.q}</span>
+                    <ChevronDown
+                      size={18}
+                      className="text-secondary flex-shrink-0"
+                      style={{
+                        transform: isOpen ? 'rotate(180deg)' : 'none',
+                        transition: 'transform 0.2s ease',
+                      }}
+                    />
+                  </button>
+                  {isOpen && (
+                    <div className="px-3.5 pb-3.5 pt-0 text-secondary small border-top pt-3" style={{ lineHeight: '1.65', borderColor: 'var(--border-light)' }}>
+                      {item.a}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================== */}
       {/* 7. DARK FOOTER */}
       {/* ========================================================== */}
       <footer id="contact" className="py-5" style={{ backgroundColor: 'var(--bg-black)', color: 'var(--text-on-dark-muted)' }}>
@@ -964,6 +1109,7 @@ export default function Landing() {
                 <li><a href="#services" className="text-secondary text-decoration-none hover-white">Services</a></li>
                 <li><a href="#brands" className="text-secondary text-decoration-none hover-white">Brands</a></li>
                 <li><a href="#about" className="text-secondary text-decoration-none hover-white">About Us</a></li>
+                <li><a href="#faq" className="text-secondary text-decoration-none hover-white">FAQs</a></li>
                 <li><a href="#contact" className="text-secondary text-decoration-none hover-white">Contact</a></li>
               </ul>
             </div>
@@ -991,18 +1137,18 @@ export default function Landing() {
               <ul className="list-unstyled d-flex flex-column gap-2.5 small">
                 <li className="d-flex align-items-start gap-2">
                   <MapPin size={16} style={{ color: 'var(--accent)' }} className="flex-shrink-0 mt-0.5" />
-                  <span className="text-light">{shopSettings?.address || 'Shop No. 12-14, GT Road Bypass, Transport Nagar, Kanpur, UP - 208001'}</span>
+                  <span className="text-light">{shopSettings?.address || 'Cantonment Market Shop No:03 Near Football Ground Bus Stand Ramgarh Cantt ,Jharkhand 829122'}</span>
                 </li>
                 <li className="d-flex align-items-center gap-2">
                   <Phone size={16} style={{ color: 'var(--accent)' }} className="flex-shrink-0" />
-                  <a href={`tel:${(shopSettings?.phone || '+919693734121').replace(/[^0-9+]/g, '')}`} className="text-secondary text-decoration-none hover-white">
-                    {shopSettings?.phone || '+91 9693734121'}
+                  <a href={`tel:${(shopSettings?.phone || '+917991189048').replace(/[^0-9+]/g, '')}`} className="text-secondary text-decoration-none hover-white">
+                    {shopSettings?.phone || '+91 79911 89048'}
                   </a>
                 </li>
                 <li className="d-flex align-items-center gap-2">
                   <Mail size={16} style={{ color: 'var(--accent)' }} className="flex-shrink-0" />
-                  <a href={`mailto:${shopSettings?.email || 'contact@hindtyres.com'}`} className="text-secondary text-decoration-none hover-white">
-                    {shopSettings?.email || 'contact@hindtyres.com'}
+                  <a href={`mailto:${shopSettings?.email || 'hindtyre01@gmail.com'}`} className="text-secondary text-decoration-none hover-white">
+                    {shopSettings?.email || 'hindtyre01@gmail.com'}
                   </a>
                 </li>
                 <li className="d-flex align-items-start gap-2">

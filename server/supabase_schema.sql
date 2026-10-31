@@ -143,7 +143,7 @@ CREATE TABLE IF NOT EXISTS stock_movements (
 CREATE TABLE IF NOT EXISTS shop_settings (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     shop_name VARCHAR(150) NOT NULL DEFAULT 'HIND TYRES AND ACCESSORIES',
-    address TEXT NOT NULL DEFAULT 'Plot 12, GT Road, Near Transport Nagar, Kanpur, UP - 208001',
+    address TEXT NOT NULL DEFAULT 'Cantonment Market Shop No:03 Near Football Ground Bus Stand Ramgarh Cantt ,Jharkhand 829122',
     phone VARCHAR(50) NOT NULL DEFAULT '+91 98765 43210',
     email VARCHAR(255) NOT NULL DEFAULT 'contact@hindtyres.com',
     gstin VARCHAR(40) NOT NULL DEFAULT '09AAACH7409R1ZZ',

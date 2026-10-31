@@ -10,6 +10,7 @@ import CounterLayout from './components/layout/CounterLayout';
 
 // Public & Landing Page
 import Landing from './pages/public/Landing';
+import NotFound from './pages/public/NotFound';
 
 // Auth Pages
 import Login from './pages/auth/Login';
@@ -133,7 +134,7 @@ export default function App() {
         </Route>
 
         {/* Catch-all 404 */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );

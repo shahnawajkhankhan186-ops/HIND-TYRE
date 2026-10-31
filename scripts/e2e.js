@@ -93,7 +93,7 @@ async function runE2E() {
           name: 'Vikram Malhotra',
           phone: '9876543210',
           email: 'vikram@example.com',
-          address: 'Plot 45, Mall Road, Kanpur',
+          address: 'Main Road, Ramgarh Cantt, Jharkhand',
           vehicleNumber: 'UP-78-BK-1001',
           vehicleModel: 'Honda City',
         },

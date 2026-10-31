@@ -6,6 +6,7 @@ import { formatRupees, paiseToRupees } from '../../lib/currency';
 import { formatIST } from '../../lib/ist-date';
 import { TableSkeleton } from '../../components/common/LoadingSkeleton';
 import { useAuth } from '../../context/AuthContext';
+import BackButton from '../../components/common/BackButton';
 
 const REPORT_TABS = [
   { id: 'sales', label: 'Sales Report', icon: TrendingUp },
@@ -79,6 +80,9 @@ export default function Reports() {
     <div className="page-container">
       {/* Header */}
       <div className="page-header-card">
+        <div className="back-nav-container">
+          <BackButton fallback="/admin/dashboard" desktopLabel="Back to Dashboard" label="Back" />
+        </div>
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <div>
             <h1 className="page-title">Business Reports & Data Exports</h1>
