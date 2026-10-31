@@ -38,7 +38,12 @@ export default function ForgotPassword() {
       setLoading(true);
       const res = await api.post('/auth/forgot-password', { email });
       if (res.data.success) {
-        toast.success(res.data.message || '6-digit OTP has been dispatched to your email.');
+        if (res.data.devOtp) {
+          toast.success(`[DEV OTP: ${res.data.devOtp}] Generated for local testing`);
+          setOtp(res.data.devOtp);
+        } else {
+          toast.success(res.data.message || '6-digit OTP has been dispatched to your email.');
+        }
         setStep(2);
         setCooldown(60);
       }

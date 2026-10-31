@@ -171,7 +171,23 @@ async function forgotPassword(req, res, next) {
       { upsert: true, new: true }
     );
 
-    await sendPasswordResetOtpEmail({ email: normalizedEmail, otp });
+    const mailResult = await sendPasswordResetOtpEmail({ email: normalizedEmail, otp });
+
+    if (!mailResult?.success) {
+      if (config.NODE_ENV === 'production') {
+        return res.status(502).json({
+          success: false,
+          error:
+            mailResult?.error ||
+            'Failed to dispatch verification email. Please verify that BREVO_API_KEY is configured in your Render dashboard.',
+        });
+      }
+      return res.json({
+        success: true,
+        message: `[DEV] Verification code generated: ${otp}`,
+        devOtp: otp,
+      });
+    }
 
     res.json({
       success: true,

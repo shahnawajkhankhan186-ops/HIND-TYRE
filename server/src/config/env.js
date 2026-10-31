@@ -17,13 +17,18 @@ const config = {
     process.env.GOOGLE_CLIENT_ID ||
     '523066431360-mfe1183b1ftu79t5etfhcojot59cck28.apps.googleusercontent.com',
   CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:5173',
+  BREVO: {
+    API_KEY: process.env.BREVO_API_KEY || '',
+    SENDER_NAME: process.env.BREVO_SENDER_NAME || 'HIND TYRES & ACCESSORIES',
+    SENDER_EMAIL: process.env.BREVO_SENDER_EMAIL || process.env.SMTP_USER || 'hindtyre01@gmail.com',
+  },
   SMTP: {
-    HOST: process.env.SMTP_HOST || 'smtp.gmail.com',
+    HOST: process.env.SMTP_HOST || 'smtp-relay.brevo.com',
     PORT: parseInt(process.env.SMTP_PORT || '587', 10),
     SECURE: process.env.SMTP_SECURE === 'true',
     USER: process.env.SMTP_USER || '',
     PASS: process.env.SMTP_PASS || '',
-    FROM: process.env.SMTP_FROM || '"HIND TYRES & ACCESSORIES" <billing@hindtyres.com>',
+    FROM: process.env.SMTP_FROM || '"HIND TYRES & ACCESSORIES" <hindtyre01@gmail.com>',
   },
   ADMIN_RECEIPT_EMAIL: process.env.ADMIN_RECEIPT_EMAIL || 'admin@hindtyres.com',
   SUPABASE: {
