@@ -22,7 +22,7 @@ async function initializeClientStore() {
     const adminName = getArg('name') || 'Shop Owner (Admin)';
     const shopName = getArg('shop') || 'HIND TYRES AND ACCESSORIES';
     const phone = getArg('phone') || '+91 98765 43210';
-    const address = getArg('address') || 'Shop No. 12-14, GT Road Bypass, Transport Nagar, Kanpur';
+    const address = getArg('address') || 'Cantonment Market Shop No:03 Near Football Ground Bus Stand Ramgarh Cantt ,Jharkhand 829122';
     const gstin = getArg('gstin') || '';
 
     console.log('\n====================================================');

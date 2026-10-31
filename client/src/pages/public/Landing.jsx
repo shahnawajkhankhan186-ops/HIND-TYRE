@@ -41,7 +41,7 @@ import SEO from '../../components/common/SEO';
 
 const FAQS = [
   {
-    q: 'Which tyre brands are available at Hind Tyres in Kanpur?',
+    q: 'Which tyre brands are available at Hind Tyres in Ramgarh Cantt, Jharkhand?',
     a: 'Hind Tyres is an authorized multi-brand retailer offering 100% genuine tyres from MRF, Apollo, Bridgestone, Michelin, Goodyear, CEAT, JK Tyre, and TVS Eurogrip with official manufacturer warranty and computerized GST invoicing.'
   },
   {
@@ -147,7 +147,7 @@ export default function Landing() {
       {/* Dynamic SEO Meta & Schema Manager */}
       <SEO
         title="HIND TYRES AND ACCESSORIES – Top Brands | Best Prices | Expert Fitting"
-        description="Authorized dealer for MRF, Apollo, Bridgestone, Michelin, Goodyear, CEAT & JK Tyre in Kanpur. 100% genuine tyres, 5-year warranty, 3D laser wheel alignment & express fitting."
+        description="Authorized dealer for MRF, Apollo, Bridgestone, Michelin, Goodyear, CEAT & JK Tyre in Ramgarh Cantt, Jharkhand. 100% genuine tyres, 5-year warranty, 3D laser wheel alignment & express fitting."
         canonicalUrl="https://hind-tyre.vercel.app/"
         structuredData={faqSchema}
       />
@@ -810,7 +810,7 @@ export default function Landing() {
                 <div style={{ height: '160px', overflow: 'hidden' }}>
                   <img
                     src="/images/service_wheel_alignment.jpg"
-                    alt="3D Laser Computerized Wheel Alignment in Kanpur | Hind Tyres"
+                    alt="3D Laser Computerized Wheel Alignment in Ramgarh Cantt, Jharkhand | Hind Tyres"
                     className="w-100 h-100"
                     style={{ objectFit: 'cover' }}
                     loading="lazy"
@@ -1137,18 +1137,18 @@ export default function Landing() {
               <ul className="list-unstyled d-flex flex-column gap-2.5 small">
                 <li className="d-flex align-items-start gap-2">
                   <MapPin size={16} style={{ color: 'var(--accent)' }} className="flex-shrink-0 mt-0.5" />
-                  <span className="text-light">{shopSettings?.address || 'Shop No. 12-14, GT Road Bypass, Transport Nagar, Kanpur, UP - 208001'}</span>
+                  <span className="text-light">{shopSettings?.address || 'Cantonment Market Shop No:03 Near Football Ground Bus Stand Ramgarh Cantt ,Jharkhand 829122'}</span>
                 </li>
                 <li className="d-flex align-items-center gap-2">
                   <Phone size={16} style={{ color: 'var(--accent)' }} className="flex-shrink-0" />
-                  <a href={`tel:${(shopSettings?.phone || '+919693734121').replace(/[^0-9+]/g, '')}`} className="text-secondary text-decoration-none hover-white">
-                    {shopSettings?.phone || '+91 9693734121'}
+                  <a href={`tel:${(shopSettings?.phone || '+917991189048').replace(/[^0-9+]/g, '')}`} className="text-secondary text-decoration-none hover-white">
+                    {shopSettings?.phone || '+91 79911 89048'}
                   </a>
                 </li>
                 <li className="d-flex align-items-center gap-2">
                   <Mail size={16} style={{ color: 'var(--accent)' }} className="flex-shrink-0" />
-                  <a href={`mailto:${shopSettings?.email || 'contact@hindtyres.com'}`} className="text-secondary text-decoration-none hover-white">
-                    {shopSettings?.email || 'contact@hindtyres.com'}
+                  <a href={`mailto:${shopSettings?.email || 'hindtyre01@gmail.com'}`} className="text-secondary text-decoration-none hover-white">
+                    {shopSettings?.email || 'hindtyre01@gmail.com'}
                   </a>
                 </li>
                 <li className="d-flex align-items-start gap-2">

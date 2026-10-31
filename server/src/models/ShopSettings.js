@@ -9,17 +9,17 @@ const shopSettingsSchema = new mongoose.Schema(
     },
     address: {
       type: String,
-      default: 'Shop No. 12-14, GT Road Bypass, Transport Nagar, Kanpur, UP - 208001',
+      default: 'Cantonment Market Shop No:03 Near Football Ground Bus Stand Ramgarh Cantt ,Jharkhand 829122',
       required: true,
     },
     phone: {
       type: String,
-      default: '+91 98765 43210',
+      default: '+91 79911 89048',
       required: true,
     },
     email: {
       type: String,
-      default: 'contact@hindtyres.com',
+      default: 'hindtyre01@gmail.com',
     },
     gstin: {
       type: String,

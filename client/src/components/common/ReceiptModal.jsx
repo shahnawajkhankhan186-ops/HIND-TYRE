@@ -76,10 +76,10 @@ export default function ReceiptModal({ isOpen, onClose, sale, shopSettings }) {
                     {shopSettings?.shopName || 'HIND TYRES & ACCESSORIES'}
                   </h3>
                   <p className="text-secondary small m-0 mt-1" style={{ color: '#A9AEB8' }}>
-                    {shopSettings?.address || 'Shop No. 12-14, GT Road Bypass, Transport Nagar, Kanpur'}
+                    {shopSettings?.address || 'Cantonment Market Shop No:03 Near Football Ground Bus Stand Ramgarh Cantt ,Jharkhand 829122'}
                   </p>
                   <p className="text-secondary small m-0" style={{ color: '#A9AEB8' }}>
-                    Phone: <span className="text-white">{shopSettings?.phone || '+91 98765 43210'}</span> | Email: <span className="text-white">{shopSettings?.email || 'contact@hindtyres.com'}</span>
+                    Phone: <span className="text-white">{shopSettings?.phone || '+91 79911 89048'}</span> | Email: <span className="text-white">{shopSettings?.email || 'hindtyre01@gmail.com'}</span>
                   </p>
                 </div>
                 <div className="text-end">

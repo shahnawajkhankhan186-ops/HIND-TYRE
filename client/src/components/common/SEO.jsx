@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 const DEFAULT_TITLE = 'HIND TYRES AND ACCESSORIES – Top Brands | Best Prices | Expert Fitting';
-const DEFAULT_DESCRIPTION = 'Authorized dealer for MRF, Apollo, Bridgestone, Michelin, Goodyear, CEAT & JK Tyre in Kanpur. 100% genuine tyres, 5-year warranty, 3D laser wheel alignment & express fitting.';
+const DEFAULT_DESCRIPTION = 'Authorized dealer for MRF, Apollo, Bridgestone, Michelin, Goodyear, CEAT & JK Tyre in Ramgarh Cantt, Jharkhand. 100% genuine tyres, 5-year warranty, 3D laser wheel alignment & express fitting.';
 const BASE_URL = 'https://hind-tyre.vercel.app';
 const DEFAULT_IMAGE = `${BASE_URL}/images/hero_tyre_workshop.jpg`;
 
