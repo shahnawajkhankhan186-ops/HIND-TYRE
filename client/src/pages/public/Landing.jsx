@@ -37,6 +37,7 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
+import { getApiBaseUrl } from '../../lib/api';
 import SEO from '../../components/common/SEO';
 
 const FAQS = [
@@ -79,12 +80,15 @@ const TOP_BRANDS = [
 ];
 
 export default function Landing() {
-  const { user, isAdmin, isCounter, shopSettings, logout, refreshSettings } = useAuth();
+  const { user, isAdmin, isCounter, shopSettings, logout } = useAuth();
   const navigate = useNavigate();
 
-  // Freshly fetch settings whenever Landing page mounts
+  // Silently wake up backend in background without blocking UI
   useEffect(() => {
-    refreshSettings();
+    try {
+      const apiUrl = getApiBaseUrl();
+      fetch(`${apiUrl}/health`, { method: 'GET', keepalive: true }).catch(() => {});
+    } catch (_) {}
   }, []);
 
   // Navigation & Mobile drawer state
