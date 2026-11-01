@@ -13,7 +13,12 @@ export function AuthProvider({ children }) {
     const saved = localStorage.getItem('shopSettings');
     return saved ? JSON.parse(saved) : null;
   });
-  const [loading, setLoading] = useState(true);
+  // Optimistic authentication: If cached user exists or no token exists, never block initial render
+  const [loading, setLoading] = useState(() => {
+    const hasToken = !!localStorage.getItem('token');
+    const hasUser = !!localStorage.getItem('user');
+    return hasToken && !hasUser;
+  });
 
   const setShopSettings = (settings) => {
     if (settings) {

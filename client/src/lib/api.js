@@ -20,6 +20,7 @@ export const getReceiptPdfUrl = (saleId) => {
 const api = axios.create({
   baseURL: resolvedBaseUrl,
   withCredentials: true,
+  timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
   },
