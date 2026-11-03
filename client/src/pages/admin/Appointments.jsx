@@ -167,185 +167,233 @@ export default function Appointments() {
     switch (status) {
       case 'PENDING':
         return (
-          <span className="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 px-2.5 py-1">
-            <Clock size={12} className="me-1 inline" /> Pending
+          <span className="badge-pill-warning">
+            <Clock size={12} /> Pending
           </span>
         );
       case 'CONFIRMED':
         return (
-          <span className="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 px-2.5 py-1">
-            <CheckCircle2 size={12} className="me-1 inline" /> Confirmed
+          <span className="badge-pill-info">
+            <CheckCircle2 size={12} /> Confirmed
           </span>
         );
       case 'OUT_FOR_DELIVERY':
         return (
-          <span className="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-2.5 py-1">
-            <Truck size={12} className="me-1 inline" /> Out for Delivery
+          <span className="badge-pill-yellow">
+            <Truck size={12} /> Out for Delivery
           </span>
         );
       case 'COMPLETED':
         return (
-          <span className="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2.5 py-1">
-            <CheckCircle2 size={12} className="me-1 inline" /> Completed
+          <span className="badge-pill-success">
+            <CheckCircle2 size={12} /> Completed
           </span>
         );
       case 'CANCELLED':
         return (
-          <span className="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-2.5 py-1">
-            <XCircle size={12} className="me-1 inline" /> Cancelled
+          <span className="badge-pill-danger">
+            <XCircle size={12} /> Cancelled
           </span>
         );
       default:
-        return <span className="badge bg-secondary">{status}</span>;
+        return <span className="badge-pill-neutral">{status}</span>;
     }
   };
 
   return (
-    <div className="container-fluid px-3 px-md-4 py-3">
-      {/* Top Header */}
-      <div className="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
-        <div className="d-flex align-items-center gap-3">
-          <BackButton />
+    <div className="page-container" style={{ padding: '10px' }}>
+      {/* Header Card */}
+      <div className="page-header-card" style={{ padding: '10px 14px', marginBottom: '10px' }}>
+        <div className="back-nav-container mb-2">
+          <BackButton fallback="/admin/dashboard" desktopLabel="Back to Dashboard" label="Back" />
+        </div>
+        <div className="d-flex flex-wrap justify-content-between align-items-center gap-2">
           <div>
-            <h1 className="h3 fw-bold text-white mb-1 d-flex align-items-center gap-2">
-              <CalendarClock className="text-warning" size={28} />
+            <h1
+              className="page-title d-flex align-items-center gap-2"
+              style={{ color: '#0f172a', fontWeight: '800', fontSize: '1.4rem' }}
+            >
+              <CalendarClock className="text-warning" size={26} />
               Appointments & Doorstep Delivery
             </h1>
-            <p className="text-secondary small mb-0">
+            <p className="page-subtitle mb-0" style={{ color: '#64748b', fontSize: '0.84rem' }}>
               Manage customer tyre home deliveries & workshop fitting bookings in real-time.
             </p>
           </div>
-        </div>
 
-        <button
-          onClick={fetchAppointments}
-          className="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1.5"
-          disabled={loading}
-        >
-          <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
-          Refresh
-        </button>
+          <button
+            onClick={fetchAppointments}
+            className="btn btn-sm btn-outline-dark-custom d-flex align-items-center gap-1.5"
+            disabled={loading}
+            style={{ padding: '6px 12px', fontSize: '0.82rem' }}
+          >
+            <RefreshCw size={13} className={loading ? 'animate-spin' : ''} />
+            Refresh
+          </button>
+        </div>
       </div>
 
-      {/* KPI Stat Cards */}
-      <div className="row g-3 mb-4">
+      {/* KPI Stat Cards (10px spacing) */}
+      <div className="row g-2" style={{ marginBottom: '10px' }}>
         <div className="col-6 col-md-4 col-xl-2">
           <div
-            className={`card-clean p-3 cursor-pointer ${
-              activeStatus === 'all' ? 'border-warning shadow-sm' : ''
-            }`}
+            className="card bg-white shadow-sm cursor-pointer h-100"
+            style={{
+              padding: '10px 12px',
+              borderRadius: '8px',
+              border: activeStatus === 'all' ? '2px solid #f59e0b' : '1px solid #e2e8f0',
+              transition: 'all 0.15s ease',
+            }}
             onClick={() => {
               setActiveStatus('all');
               setPage(1);
             }}
           >
-            <div className="text-secondary extra-small text-uppercase fw-bold">Total Bookings</div>
-            <div className="h4 fw-bold text-white mb-0 mt-1">{stats.all}</div>
+            <div className="text-secondary extra-small text-uppercase fw-bold" style={{ fontSize: '0.67rem', letterSpacing: '0.04em' }}>
+              TOTAL BOOKINGS
+            </div>
+            <div className="h4 fw-bold text-dark mb-0 mt-1" style={{ fontWeight: '800' }}>
+              {stats.all}
+            </div>
           </div>
         </div>
 
         <div className="col-6 col-md-4 col-xl-2">
           <div
-            className={`card-clean p-3 cursor-pointer ${
-              activeStatus === 'PENDING' ? 'border-warning shadow-sm' : ''
-            }`}
+            className="card bg-white shadow-sm cursor-pointer h-100"
+            style={{
+              padding: '10px 12px',
+              borderRadius: '8px',
+              border: activeStatus === 'PENDING' ? '2px solid #f59e0b' : '1px solid #e2e8f0',
+              transition: 'all 0.15s ease',
+            }}
             onClick={() => {
               setActiveStatus('PENDING');
               setPage(1);
             }}
           >
-            <div className="text-warning extra-small text-uppercase fw-bold d-flex align-items-center gap-1">
-              <Clock size={12} /> Pending Confirmation
+            <div className="text-warning extra-small text-uppercase fw-bold d-flex align-items-center gap-1" style={{ fontSize: '0.67rem', letterSpacing: '0.04em' }}>
+              <Clock size={11} /> PENDING
             </div>
-            <div className="h4 fw-bold text-warning mb-0 mt-1">{stats.PENDING}</div>
+            <div className="h4 fw-bold text-warning mb-0 mt-1" style={{ fontWeight: '800' }}>
+              {stats.PENDING}
+            </div>
           </div>
         </div>
 
         <div className="col-6 col-md-4 col-xl-2">
           <div
-            className={`card-clean p-3 cursor-pointer ${
-              activeStatus === 'CONFIRMED' ? 'border-info shadow-sm' : ''
-            }`}
+            className="card bg-white shadow-sm cursor-pointer h-100"
+            style={{
+              padding: '10px 12px',
+              borderRadius: '8px',
+              border: activeStatus === 'CONFIRMED' ? '2px solid #0284c7' : '1px solid #e2e8f0',
+              transition: 'all 0.15s ease',
+            }}
             onClick={() => {
               setActiveStatus('CONFIRMED');
               setPage(1);
             }}
           >
-            <div className="text-info extra-small text-uppercase fw-bold d-flex align-items-center gap-1">
-              <CheckCircle2 size={12} /> Confirmed
+            <div className="text-info extra-small text-uppercase fw-bold d-flex align-items-center gap-1" style={{ fontSize: '0.67rem', letterSpacing: '0.04em' }}>
+              <CheckCircle2 size={11} /> CONFIRMED
             </div>
-            <div className="h4 fw-bold text-info mb-0 mt-1">{stats.CONFIRMED}</div>
+            <div className="h4 fw-bold text-info mb-0 mt-1" style={{ fontWeight: '800' }}>
+              {stats.CONFIRMED}
+            </div>
           </div>
         </div>
 
         <div className="col-6 col-md-4 col-xl-2">
           <div
-            className={`card-clean p-3 cursor-pointer ${
-              activeStatus === 'OUT_FOR_DELIVERY' ? 'border-primary shadow-sm' : ''
-            }`}
+            className="card bg-white shadow-sm cursor-pointer h-100"
+            style={{
+              padding: '10px 12px',
+              borderRadius: '8px',
+              border: activeStatus === 'OUT_FOR_DELIVERY' ? '2px solid #854d0e' : '1px solid #e2e8f0',
+              transition: 'all 0.15s ease',
+            }}
             onClick={() => {
               setActiveStatus('OUT_FOR_DELIVERY');
               setPage(1);
             }}
           >
-            <div className="text-primary extra-small text-uppercase fw-bold d-flex align-items-center gap-1">
-              <Truck size={12} /> Out for Delivery
+            <div className="text-warning extra-small text-uppercase fw-bold d-flex align-items-center gap-1" style={{ fontSize: '0.67rem', letterSpacing: '0.04em' }}>
+              <Truck size={11} /> OUT FOR DELIVERY
             </div>
-            <div className="h4 fw-bold text-primary mb-0 mt-1">{stats.OUT_FOR_DELIVERY}</div>
+            <div className="h4 fw-bold text-dark mb-0 mt-1" style={{ fontWeight: '800' }}>
+              {stats.OUT_FOR_DELIVERY}
+            </div>
           </div>
         </div>
 
         <div className="col-6 col-md-4 col-xl-2">
           <div
-            className={`card-clean p-3 cursor-pointer ${
-              activeStatus === 'COMPLETED' ? 'border-success shadow-sm' : ''
-            }`}
+            className="card bg-white shadow-sm cursor-pointer h-100"
+            style={{
+              padding: '10px 12px',
+              borderRadius: '8px',
+              border: activeStatus === 'COMPLETED' ? '2px solid #16a34a' : '1px solid #e2e8f0',
+              transition: 'all 0.15s ease',
+            }}
             onClick={() => {
               setActiveStatus('COMPLETED');
               setPage(1);
             }}
           >
-            <div className="text-success extra-small text-uppercase fw-bold d-flex align-items-center gap-1">
-              <CheckCircle2 size={12} /> Completed
+            <div className="text-success extra-small text-uppercase fw-bold d-flex align-items-center gap-1" style={{ fontSize: '0.67rem', letterSpacing: '0.04em' }}>
+              <CheckCircle2 size={11} /> COMPLETED
             </div>
-            <div className="h4 fw-bold text-success mb-0 mt-1">{stats.COMPLETED}</div>
+            <div className="h4 fw-bold text-success mb-0 mt-1" style={{ fontWeight: '800' }}>
+              {stats.COMPLETED}
+            </div>
           </div>
         </div>
 
         <div className="col-6 col-md-4 col-xl-2">
           <div
-            className={`card-clean p-3 cursor-pointer ${
-              activeStatus === 'CANCELLED' ? 'border-danger shadow-sm' : ''
-            }`}
+            className="card bg-white shadow-sm cursor-pointer h-100"
+            style={{
+              padding: '10px 12px',
+              borderRadius: '8px',
+              border: activeStatus === 'CANCELLED' ? '2px solid #dc2626' : '1px solid #e2e8f0',
+              transition: 'all 0.15s ease',
+            }}
             onClick={() => {
               setActiveStatus('CANCELLED');
               setPage(1);
             }}
           >
-            <div className="text-danger extra-small text-uppercase fw-bold d-flex align-items-center gap-1">
-              <XCircle size={12} /> Cancelled
+            <div className="text-danger extra-small text-uppercase fw-bold d-flex align-items-center gap-1" style={{ fontSize: '0.67rem', letterSpacing: '0.04em' }}>
+              <XCircle size={11} /> CANCELLED
             </div>
-            <div className="h4 fw-bold text-danger mb-0 mt-1">{stats.CANCELLED}</div>
+            <div className="h4 fw-bold text-danger mb-0 mt-1" style={{ fontWeight: '800' }}>
+              {stats.CANCELLED}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Filter and Search Bar */}
-      <div className="card-clean p-3 mb-4">
+      {/* Filter and Search Bar (10px padding & margin) */}
+      <div
+        className="card bg-white shadow-sm mb-2"
+        style={{ padding: '10px 12px', borderRadius: '8px', border: '1px solid #e2e8f0', marginBottom: '10px' }}
+      >
         <form onSubmit={handleSearchSubmit} className="row g-2 align-items-center">
           <div className="col-12 col-md-5">
             <div className="input-group input-group-sm">
-              <span className="input-group-text bg-dark border-secondary text-secondary">
+              <span className="input-group-text bg-light border-end-0 text-secondary">
                 <Search size={14} />
               </span>
               <input
                 type="text"
-                className="form-control bg-dark border-secondary text-white"
-                placeholder="Search booking #, customer name, phone, address, tyre size..."
+                className="form-control border-start-0"
+                placeholder="Search booking #, customer, phone, address, tyre size..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                style={{ fontSize: '0.84rem' }}
               />
-              <button type="submit" className="btn btn-warning px-3">
+              <button type="submit" className="btn btn-warning fw-bold px-3">
                 Search
               </button>
             </div>
@@ -353,12 +401,13 @@ export default function Appointments() {
 
           <div className="col-6 col-md-3">
             <select
-              className="form-select form-select-sm bg-dark border-secondary text-white"
+              className="form-select form-select-sm"
               value={serviceTypeFilter}
               onChange={(e) => {
                 setServiceTypeFilter(e.target.value);
                 setPage(1);
               }}
+              style={{ fontSize: '0.84rem' }}
             >
               <option value="">All Service Modes</option>
               <option value="HOME_DELIVERY">🚚 Doorstep Home Delivery</option>
@@ -366,58 +415,59 @@ export default function Appointments() {
             </select>
           </div>
 
-          <div className="col-6 col-md-4 d-flex justify-content-end gap-2">
+          <div className="col-6 col-md-4 d-flex justify-content-end align-items-center gap-2">
             {search && (
               <button
                 type="button"
-                className="btn btn-sm btn-outline-secondary"
+                className="btn btn-sm btn-outline-secondary py-1 px-2"
                 onClick={() => {
                   setSearch('');
                   setPage(1);
                   fetchAppointments();
                 }}
+                style={{ fontSize: '0.8rem' }}
               >
                 Clear Search
               </button>
             )}
-            <span className="text-secondary small d-flex align-items-center">
-              Total Found: <strong className="text-white ms-1">{totalCount}</strong>
+            <span className="text-secondary small">
+              Total: <strong className="text-dark">{totalCount}</strong>
             </span>
           </div>
         </form>
       </div>
 
       {/* Appointments List / Table */}
-      <div className="card-clean overflow-hidden">
+      <div className="table-container-card" style={{ borderRadius: '8px', border: '1px solid #e2e8f0', marginBottom: '10px' }}>
         {loading ? (
-          <div className="p-4">
-            <TableSkeleton rows={6} cols={6} />
+          <div className="p-3">
+            <TableSkeleton rows={6} cols={7} />
           </div>
         ) : appointments.length === 0 ? (
           <div className="text-center py-5">
-            <CalendarClock size={48} className="text-secondary mb-3 opacity-50" />
-            <h5 className="text-white">No Appointments Found</h5>
-            <p className="text-secondary small">
+            <CalendarClock size={40} className="text-secondary mb-2 opacity-50" />
+            <h5 className="text-dark fw-bold mb-1">No Appointments Found</h5>
+            <p className="text-secondary small mb-0">
               {search || activeStatus !== 'all' || serviceTypeFilter
-                ? 'Try clearing your filters to see more results.'
-                : 'Customer appointment requests from the website will appear here in real-time.'}
+                ? 'Try clearing your search or filters.'
+                : 'Customer tyre appointment requests from the website will appear here in real-time.'}
             </p>
           </div>
         ) : (
           <div className="table-responsive">
-            <table className="table table-dark table-hover align-middle mb-0">
-              <thead className="border-bottom border-secondary border-opacity-20 text-secondary extra-small text-uppercase">
+            <table className="table table-custom mb-0">
+              <thead>
                 <tr>
-                  <th scope="col" className="ps-3 py-3">Booking # / Date</th>
-                  <th scope="col">Customer Contact</th>
-                  <th scope="col">Delivery / Service</th>
-                  <th scope="col">Tyre Ordered</th>
-                  <th scope="col">Price & Charges</th>
-                  <th scope="col">Status</th>
-                  <th scope="col" className="text-end pe-3">Action</th>
+                  <th scope="col" style={{ padding: '10px 12px' }}>Booking # / Date</th>
+                  <th scope="col" style={{ padding: '10px 12px' }}>Customer Contact</th>
+                  <th scope="col" style={{ padding: '10px 12px' }}>Delivery / Service</th>
+                  <th scope="col" style={{ padding: '10px 12px' }}>Tyre Ordered</th>
+                  <th scope="col" style={{ padding: '10px 12px' }}>Price & Charges</th>
+                  <th scope="col" style={{ padding: '10px 12px' }}>Status</th>
+                  <th scope="col" className="text-end" style={{ padding: '10px 12px' }}>Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-secondary divide-opacity-10">
+              <tbody>
                 {appointments.map((apt) => {
                   const rawPhone = apt.customerPhone.replace(/[^0-9]/g, '');
                   const formattedPhone = rawPhone.length === 10 ? `+91 ${rawPhone}` : apt.customerPhone;
@@ -429,78 +479,80 @@ export default function Appointments() {
                   return (
                     <tr key={apt._id}>
                       {/* Booking # & Date */}
-                      <td className="ps-3 py-3">
-                        <div className="font-monospace fw-bold text-warning small">
+                      <td style={{ padding: '10px 12px' }}>
+                        <div className="font-monospace fw-bold text-dark small">
                           {apt.bookingNumber}
                         </div>
-                        <div className="text-white small d-flex align-items-center gap-1 mt-0.5">
-                          <Calendar size={12} className="text-secondary" />
+                        <div className="text-secondary extra-small d-flex align-items-center gap-1 mt-0.5">
+                          <Calendar size={11} className="text-muted" />
                           {new Date(apt.appointmentDate).toLocaleDateString('en-IN', {
                             day: 'numeric',
                             month: 'short',
                             year: 'numeric',
                           })}
                         </div>
-                        <div className="text-secondary extra-small">
+                        <div className="text-muted extra-small">
                           {apt.timeSlot.split(' ')[0]}
                         </div>
                       </td>
 
                       {/* Customer Info */}
-                      <td>
-                        <div className="fw-semibold text-white">{apt.customerName}</div>
-                        <div className="d-flex align-items-center gap-2 mt-1">
+                      <td style={{ padding: '10px 12px' }}>
+                        <div className="fw-bold text-dark small">{apt.customerName}</div>
+                        <div className="d-flex align-items-center gap-1.5 mt-1">
                           <a
                             href={`tel:${apt.customerPhone}`}
-                            className="btn btn-xs btn-outline-secondary py-0.5 px-1.5 text-info d-flex align-items-center gap-1 text-decoration-none"
+                            className="btn btn-xs btn-outline-secondary py-0.5 px-1.5 d-inline-flex align-items-center gap-1 text-decoration-none"
+                            style={{ fontSize: '0.72rem' }}
                             title="Call customer"
                           >
-                            <Phone size={11} />
+                            <Phone size={10} />
                             {formattedPhone}
                           </a>
                           <a
                             href={`https://wa.me/${waNumber}?text=${waMessage}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="btn btn-xs btn-outline-success py-0.5 px-1.5 d-flex align-items-center gap-1 text-decoration-none"
+                            className="btn btn-xs btn-success py-0.5 px-1.5 d-inline-flex align-items-center gap-1 text-decoration-none text-white"
+                            style={{ fontSize: '0.72rem' }}
                             title="Message on WhatsApp"
                           >
-                            <MessageSquare size={11} />
+                            <MessageSquare size={10} />
                             WhatsApp
                           </a>
                         </div>
                         {apt.vehicleModel && (
                           <div className="text-secondary extra-small mt-0.5">
-                            Vehicle: <span className="text-light">{apt.vehicleModel}</span>
+                            Vehicle: <strong className="text-dark">{apt.vehicleModel}</strong>
                           </div>
                         )}
                       </td>
 
                       {/* Delivery Mode & Address */}
-                      <td style={{ maxWidth: '240px' }}>
+                      <td style={{ padding: '10px 12px', maxWidth: '230px' }}>
                         {apt.serviceType === 'HOME_DELIVERY' ? (
                           <>
-                            <span className="badge bg-primary bg-opacity-20 text-primary border border-primary border-opacity-30 extra-small mb-1 d-inline-flex align-items-center gap-1">
-                              <Truck size={11} /> Doorstep Delivery
+                            <span className="badge-pill-warning extra-small mb-1" style={{ fontSize: '0.68rem', padding: '2px 8px' }}>
+                              <Truck size={10} /> Doorstep Delivery
                             </span>
-                            <div className="small text-white text-truncate" title={apt.deliveryAddress}>
+                            <div className="small text-dark text-truncate fw-semibold" title={apt.deliveryAddress}>
                               {apt.deliveryAddress}
                             </div>
                             {apt.landmark && (
-                              <div className="text-secondary extra-small">
+                              <div className="text-muted extra-small">
                                 Near: {apt.landmark}
                               </div>
                             )}
-                            <div className="text-secondary extra-small">
+                            <div className="text-muted extra-small">
                               {apt.city} - {apt.pincode}
                             </div>
                           </>
                         ) : (
                           <>
-                            <span className="badge bg-secondary bg-opacity-30 text-light border border-secondary border-opacity-30 extra-small mb-1 d-inline-flex align-items-center gap-1">
-                              <Building size={11} /> Workshop Visit
+                            <span className="badge-pill-neutral extra-small mb-1" style={{ fontSize: '0.68rem', padding: '2px 8px' }}>
+                              <Building size={10} /> Workshop Visit
                             </span>
-                            <div className="text-secondary extra-small">
+                            <div className="text-muted extra-small">
                               Cantonment Market Shop #03, Ramgarh Cantt
                             </div>
                           </>
@@ -508,61 +560,52 @@ export default function Appointments() {
                       </td>
 
                       {/* Tyre Ordered */}
-                      <td>
-                        <div className="d-flex align-items-center gap-2">
-                          <div
-                            className="p-1 rounded bg-secondary bg-opacity-20 text-warning"
-                            style={{ width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                          >
-                            <Disc3 size={16} />
-                          </div>
-                          <div>
-                            <div className="fw-bold text-white small">
-                              {apt.tyreDetails?.brandName} {apt.tyreDetails?.modelName}
-                            </div>
-                            <div className="text-secondary extra-small">
-                              Size: <strong className="text-light">{apt.tyreDetails?.size}</strong> ({apt.tyreDetails?.vehicleType})
-                            </div>
-                            <div className="badge bg-dark border border-secondary text-light extra-small mt-0.5">
-                              Qty: {apt.quantity} {apt.quantity > 1 ? 'Tyres' : 'Tyre'}
-                            </div>
-                          </div>
+                      <td style={{ padding: '10px 12px' }}>
+                        <div className="fw-bold text-dark small">
+                          {apt.tyreDetails?.brandName} {apt.tyreDetails?.modelName}
+                        </div>
+                        <div className="text-muted extra-small">
+                          Size: <strong className="text-dark">{apt.tyreDetails?.size}</strong> ({apt.tyreDetails?.vehicleType})
+                        </div>
+                        <div className="badge bg-light text-dark border extra-small mt-0.5" style={{ fontSize: '0.7rem' }}>
+                          Qty: {apt.quantity} {apt.quantity > 1 ? 'Tyres' : 'Tyre'}
                         </div>
                       </td>
 
                       {/* Price & Delivery Charge */}
-                      <td>
-                        <div className="text-white small fw-semibold">
+                      <td style={{ padding: '10px 12px' }}>
+                        <div className="text-dark small fw-bold">
                           {formatRupees(apt.totalAmountPaise)}
                         </div>
-                        <div className="text-secondary extra-small">
+                        <div className="text-muted extra-small">
                           Tyres: {formatRupees(apt.tyreTotalPaise)}
                         </div>
                         <div className="text-info extra-small">
                           Delivery: {apt.estimatedDeliveryChargePaise > 0 ? formatRupees(apt.estimatedDeliveryChargePaise) : 'Free / Distance TBD'}
                         </div>
-                        <div className="text-success extra-small fw-semibold">
+                        <div className="text-success extra-small fw-bold">
                           Fitting: FREE (₹0)
                         </div>
                       </td>
 
                       {/* Status */}
-                      <td>{renderStatusBadge(apt.status)}</td>
+                      <td style={{ padding: '10px 12px' }}>{renderStatusBadge(apt.status)}</td>
 
                       {/* Actions */}
-                      <td className="text-end pe-3">
+                      <td className="text-end" style={{ padding: '10px 12px' }}>
                         <div className="btn-group btn-group-sm">
                           <button
                             type="button"
-                            className="btn btn-outline-warning btn-sm d-flex align-items-center gap-1"
+                            className="btn btn-outline-dark-custom btn-sm py-1 px-2 d-inline-flex align-items-center gap-1"
                             onClick={() => openStatusModal(apt)}
+                            style={{ fontSize: '0.78rem' }}
                           >
-                            <Edit size={13} />
+                            <Edit size={12} />
                             Manage
                           </button>
                           <button
                             type="button"
-                            className="btn btn-outline-danger btn-sm"
+                            className="btn btn-outline-danger btn-sm py-1 px-2"
                             onClick={() =>
                               setDeleteConfirm({
                                 isOpen: true,
@@ -571,8 +614,9 @@ export default function Appointments() {
                               })
                             }
                             title="Delete booking"
+                            style={{ fontSize: '0.78rem' }}
                           >
-                            <Trash2 size={13} />
+                            <Trash2 size={12} />
                           </button>
                         </div>
                       </td>
@@ -586,7 +630,10 @@ export default function Appointments() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="p-3 border-top border-secondary border-opacity-10 d-flex justify-content-between align-items-center">
+          <div
+            className="pagination-container d-flex justify-content-between align-items-center"
+            style={{ padding: '10px 14px' }}
+          >
             <span className="text-secondary small">
               Page {page} of {totalPages} ({totalCount} total)
             </span>
@@ -617,45 +664,48 @@ export default function Appointments() {
         <div
           className="modal d-block"
           tabIndex="-1"
-          style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)', backdropFilter: 'blur(4px)', zIndex: 1060 }}
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.65)', backdropFilter: 'blur(3px)', zIndex: 1060 }}
           onClick={() => setShowStatusModal(false)}
         >
           <div
             className="modal-dialog modal-dialog-centered"
-            style={{ maxWidth: '520px' }}
+            style={{ maxWidth: '500px' }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="modal-content bg-dark border border-secondary border-opacity-30 text-white shadow-2xl">
-              <div className="modal-header border-secondary border-opacity-20">
-                <h5 className="modal-title fw-bold text-white d-flex align-items-center gap-2">
-                  <CalendarClock className="text-warning" size={20} />
+            <div className="modal-content border-0 shadow-2xl" style={{ borderRadius: '10px', backgroundColor: '#FFFFFF', color: '#0F172A' }}>
+              <div className="modal-header border-bottom py-2.5 px-3">
+                <h5 className="modal-title fw-bold text-dark d-flex align-items-center gap-2" style={{ fontSize: '1.05rem' }}>
+                  <CalendarClock className="text-warning" size={18} />
                   Manage Booking: {selectedAppointment.bookingNumber}
                 </h5>
                 <button
                   type="button"
-                  className="btn-close btn-close-white"
+                  className="btn-close"
                   onClick={() => setShowStatusModal(false)}
                 />
               </div>
 
               <form onSubmit={handleStatusSubmit}>
-                <div className="modal-body p-4">
+                <div className="modal-body p-3">
                   {/* Customer Quick Summary */}
-                  <div className="p-3 rounded-3 bg-secondary bg-opacity-10 border border-secondary border-opacity-20 mb-3">
+                  <div
+                    className="p-2.5 rounded-2 bg-light border mb-2.5"
+                    style={{ fontSize: '0.84rem' }}
+                  >
                     <div className="d-flex justify-content-between">
                       <div>
-                        <strong className="text-white">{selectedAppointment.customerName}</strong>
-                        <div className="text-info small">{selectedAppointment.customerPhone}</div>
+                        <strong className="text-dark">{selectedAppointment.customerName}</strong>
+                        <div className="text-muted small">{selectedAppointment.customerPhone}</div>
                       </div>
                       <div className="text-end">
-                        <span className="text-secondary extra-small">Tyre:</span>
-                        <div className="text-warning small fw-bold">
+                        <span className="text-muted extra-small">Tyre:</span>
+                        <div className="text-dark small fw-bold">
                           {selectedAppointment.quantity}x {selectedAppointment.tyreDetails?.brandName} {selectedAppointment.tyreDetails?.size}
                         </div>
                       </div>
                     </div>
                     {selectedAppointment.serviceType === 'HOME_DELIVERY' && (
-                      <div className="text-secondary extra-small mt-2 pt-2 border-top border-secondary border-opacity-10">
+                      <div className="text-muted extra-small mt-2 pt-1.5 border-top">
                         <MapPin size={11} className="inline me-1 text-primary" />
                         {selectedAppointment.deliveryAddress}, {selectedAppointment.city}
                       </div>
@@ -663,12 +713,12 @@ export default function Appointments() {
                   </div>
 
                   {/* Status Selector */}
-                  <div className="mb-3">
-                    <label className="form-label extra-small text-secondary fw-semibold">
+                  <div className="mb-2.5">
+                    <label className="form-label extra-small text-muted fw-bold text-uppercase mb-1">
                       Appointment Status *
                     </label>
                     <select
-                      className="form-select bg-dark border-secondary text-white"
+                      className="form-select form-select-sm"
                       value={statusFormData.status}
                       onChange={(e) =>
                         setStatusFormData({ ...statusFormData, status: e.target.value })
@@ -684,19 +734,17 @@ export default function Appointments() {
                   </div>
 
                   {/* Distance-based Delivery Charge */}
-                  <div className="mb-3">
-                    <label className="form-label extra-small text-secondary fw-semibold">
+                  <div className="mb-2.5">
+                    <label className="form-label extra-small text-muted fw-bold text-uppercase mb-1">
                       Distance-Based Delivery Charge (₹)
                     </label>
-                    <div className="input-group">
-                      <span className="input-group-text bg-secondary bg-opacity-20 border-secondary text-secondary">
-                        ₹
-                      </span>
+                    <div className="input-group input-group-sm">
+                      <span className="input-group-text bg-light text-muted">₹</span>
                       <input
                         type="number"
                         min="0"
                         step="10"
-                        className="form-control bg-dark border-secondary text-white"
+                        className="form-control"
                         placeholder="0 (Free in Ramgarh Cantt)"
                         value={statusFormData.deliveryChargeRupees}
                         onChange={(e) =>
@@ -707,19 +755,19 @@ export default function Appointments() {
                         }
                       />
                     </div>
-                    <span className="extra-small text-secondary">
+                    <span className="extra-small text-muted">
                       Distance ke hisab se delivery charge set karein (Tyre fitting hamesha Free rahegi).
                     </span>
                   </div>
 
                   {/* Assigned Technician / Staff */}
-                  <div className="mb-3">
-                    <label className="form-label extra-small text-secondary fw-semibold">
+                  <div className="mb-2.5">
+                    <label className="form-label extra-small text-muted fw-bold text-uppercase mb-1">
                       Assigned Delivery Technician / Staff
                     </label>
                     <input
                       type="text"
-                      className="form-control bg-dark border-secondary text-white"
+                      className="form-control form-control-sm"
                       placeholder="e.g. Istiyak / Suresh (Driver)"
                       value={statusFormData.assignedStaff}
                       onChange={(e) =>
@@ -729,13 +777,13 @@ export default function Appointments() {
                   </div>
 
                   {/* Admin Notes */}
-                  <div className="mb-3">
-                    <label className="form-label extra-small text-secondary fw-semibold">
+                  <div className="mb-2.5">
+                    <label className="form-label extra-small text-muted fw-bold text-uppercase mb-1">
                       Internal Admin Notes
                     </label>
                     <textarea
                       rows="2"
-                      className="form-control bg-dark border-secondary text-white"
+                      className="form-control form-control-sm"
                       placeholder="e.g. Customer requested fitting at 11:30 AM, near Old Bus Stand..."
                       value={statusFormData.adminNotes}
                       onChange={(e) =>
@@ -746,13 +794,13 @@ export default function Appointments() {
 
                   {/* Cancelled Reason (only visible if CANCELLED) */}
                   {statusFormData.status === 'CANCELLED' && (
-                    <div className="mb-3">
-                      <label className="form-label extra-small text-danger fw-semibold">
+                    <div className="mb-2.5">
+                      <label className="form-label extra-small text-danger fw-bold text-uppercase mb-1">
                         Cancellation Reason
                       </label>
                       <input
                         type="text"
-                        className="form-control bg-dark border-danger text-white"
+                        className="form-control form-control-sm border-danger"
                         placeholder="e.g. Customer cancelled order / Tyre size changed"
                         value={statusFormData.cancelledReason}
                         onChange={(e) =>
@@ -766,7 +814,7 @@ export default function Appointments() {
                   )}
                 </div>
 
-                <div className="modal-footer border-secondary border-opacity-20">
+                <div className="modal-footer border-top py-2 px-3">
                   <button
                     type="button"
                     className="btn btn-sm btn-outline-secondary"
@@ -776,7 +824,7 @@ export default function Appointments() {
                   </button>
                   <button
                     type="submit"
-                    className="btn btn-sm btn-warning px-4"
+                    className="btn btn-sm btn-warning fw-bold px-3"
                     disabled={updating}
                   >
                     {updating ? 'Saving...' : 'Save Changes'}

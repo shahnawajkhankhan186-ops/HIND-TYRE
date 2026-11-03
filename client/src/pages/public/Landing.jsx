@@ -1263,32 +1263,35 @@ export default function Landing() {
         <div
           className="modal d-block"
           tabIndex="-1"
-          style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)', backdropFilter: 'blur(5px)', zIndex: 1060 }}
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.72)', backdropFilter: 'blur(4px)', zIndex: 1060 }}
           onClick={() => setShowBookingModal(false)}
         >
           <div
             className="modal-dialog modal-dialog-centered modal-dialog-scrollable mx-2 mx-sm-auto"
-            style={{ maxWidth: '620px' }}
+            style={{ maxWidth: '600px' }}
             onClick={(e) => e.stopPropagation()}
           >
             <div
               className="modal-content border-0 shadow-2xl"
-              style={{ borderRadius: 'var(--radius-md)', backgroundColor: '#FFFFFF', color: 'var(--text-on-light)' }}
+              style={{ borderRadius: '10px', backgroundColor: '#FFFFFF', color: '#0F172A', overflow: 'hidden' }}
             >
-              {/* Modal Header */}
-              <div className="modal-header border-bottom py-3 px-4 bg-light">
+              {/* Modal Header (10px padding) */}
+              <div
+                className="modal-header border-bottom"
+                style={{ padding: '10px 14px', backgroundColor: '#F8FAFC' }}
+              >
                 <div className="d-flex align-items-center gap-2">
                   <div
-                    className="p-2 rounded-circle bg-warning bg-opacity-20 text-warning d-flex align-items-center justify-content-center"
-                    style={{ width: '36px', height: '36px' }}
+                    className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                    style={{ width: '32px', height: '32px', backgroundColor: '#FEF3C7', color: '#B45309' }}
                   >
-                    <Truck size={20} className="text-dark" />
+                    <Truck size={17} />
                   </div>
                   <div>
-                    <h5 className="modal-title fw-bold text-dark mb-0 fs-6">
+                    <h5 className="modal-title fw-bold text-dark mb-0" style={{ fontSize: '0.98rem', lineHeight: '1.2' }}>
                       Book Tyre Appointment & Doorstep Delivery
                     </h5>
-                    <div className="text-muted extra-small">
+                    <div className="text-muted extra-small" style={{ fontSize: '0.73rem' }}>
                       Genuine tyres delivered to your door with 100% FREE professional fitting!
                     </div>
                   </div>
@@ -1298,21 +1301,28 @@ export default function Landing() {
 
               {/* SUCCESS CONFIRMATION VIEW */}
               {bookingSuccessData ? (
-                <div className="modal-body p-4 text-center">
+                <div className="modal-body text-center" style={{ padding: '14px' }}>
                   <div
-                    className="mx-auto mb-3 rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center"
-                    style={{ width: '64px', height: '64px' }}
+                    className="mx-auto mb-2 rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center"
+                    style={{ width: '56px', height: '56px' }}
                   >
-                    <CheckCircle2 size={36} />
+                    <CheckCircle2 size={32} />
                   </div>
-                  <h4 className="fw-bold text-dark mb-1">Appointment Booked Successfully!</h4>
-                  <p className="text-muted small mb-3">
+                  <h4 className="fw-bold text-dark mb-1" style={{ fontSize: '1.25rem' }}>
+                    Appointment Booked Successfully!
+                  </h4>
+                  <p className="text-muted small mb-2.5" style={{ fontSize: '0.82rem' }}>
                     Your appointment request has been scheduled with Hind Tyres Ramgarh Cantt.
                   </p>
 
-                  <div className="card-clean p-3 bg-light text-start border mb-4">
+                  <div
+                    className="card-clean text-start border mb-3"
+                    style={{ padding: '10px', backgroundColor: '#F8FAFC', borderRadius: '8px' }}
+                  >
                     <div className="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
-                      <span className="text-muted extra-small text-uppercase fw-bold">Booking Number</span>
+                      <span className="text-muted extra-small text-uppercase fw-bold" style={{ fontSize: '0.7rem' }}>
+                        Booking Number
+                      </span>
                       <span className="font-monospace fw-bold text-warning bg-dark px-2 py-0.5 rounded small">
                         {bookingSuccessData.bookingNumber}
                       </span>
@@ -1369,23 +1379,26 @@ export default function Landing() {
                       )}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="btn btn-success d-inline-flex align-items-center justify-content-center gap-1.5 py-2 px-3 fw-semibold text-decoration-none"
+                      className="btn btn-success d-inline-flex align-items-center justify-content-center gap-1.5 py-1.5 px-3 fw-semibold text-decoration-none"
+                      style={{ fontSize: '0.85rem' }}
                     >
-                      <MessageSquare size={16} />
+                      <MessageSquare size={15} />
                       Confirm on WhatsApp
                     </a>
 
                     <a
                       href="tel:+917991189048"
-                      className="btn btn-outline-dark d-inline-flex align-items-center justify-content-center gap-1.5 py-2 px-3 fw-semibold text-decoration-none"
+                      className="btn btn-outline-dark d-inline-flex align-items-center justify-content-center gap-1.5 py-1.5 px-3 fw-semibold text-decoration-none"
+                      style={{ fontSize: '0.85rem' }}
                     >
-                      <PhoneCall size={16} />
+                      <PhoneCall size={15} />
                       Call Store (+91 79911 89048)
                     </a>
 
                     <button
                       type="button"
-                      className="btn btn-secondary py-2 px-3"
+                      className="btn btn-secondary py-1.5 px-3"
+                      style={{ fontSize: '0.85rem' }}
                       onClick={() => setShowBookingModal(false)}
                     >
                       Close
@@ -1393,30 +1406,42 @@ export default function Landing() {
                   </div>
                 </div>
               ) : (
-                /* MAIN BOOKING FORM */
+                /* MAIN BOOKING FORM (10px padding & margins) */
                 <form onSubmit={handleBookingSubmit}>
-                  <div className="modal-body px-4 py-3" style={{ maxHeight: 'calc(85vh - 120px)', overflowY: 'auto' }}>
+                  <div
+                    className="modal-body"
+                    style={{ padding: '10px 14px', maxHeight: 'calc(85vh - 110px)', overflowY: 'auto' }}
+                  >
                     
                     {/* 1. Service Type Selector */}
-                    <div className="mb-3">
-                      <label className="form-label extra-small text-muted fw-bold text-uppercase" style={{ letterSpacing: '0.05em' }}>
+                    <div style={{ marginBottom: '10px' }}>
+                      <label
+                        className="form-label text-muted fw-bold text-uppercase d-block"
+                        style={{ fontSize: '0.72rem', letterSpacing: '0.04em', marginBottom: '6px' }}
+                      >
                         1. Select Service Option *
                       </label>
                       <div className="row g-2">
                         <div className="col-6">
                           <div
-                            className={`p-2.5 rounded-3 border cursor-pointer h-100 transition-all ${
+                            className={`border cursor-pointer h-100 transition-all ${
                               bookingForm.serviceType === 'HOME_DELIVERY'
-                                ? 'border-warning bg-warning bg-opacity-10 text-dark fw-bold shadow-sm'
-                                : 'bg-light text-muted'
+                                ? 'border-warning shadow-sm'
+                                : 'border-light-subtle'
                             }`}
+                            style={{
+                              padding: '8px 10px',
+                              borderRadius: '8px',
+                              backgroundColor: bookingForm.serviceType === 'HOME_DELIVERY' ? '#FEF3C7' : '#F8FAFC',
+                              borderWidth: bookingForm.serviceType === 'HOME_DELIVERY' ? '2px' : '1px',
+                            }}
                             onClick={() => setBookingForm({ ...bookingForm, serviceType: 'HOME_DELIVERY' })}
                           >
-                            <div className="d-flex align-items-center gap-2 mb-1">
-                              <Truck size={17} className={bookingForm.serviceType === 'HOME_DELIVERY' ? 'text-warning' : ''} />
-                              <span className="small">Home Delivery</span>
+                            <div className="d-flex align-items-center gap-1.5 mb-1 text-dark fw-bold" style={{ fontSize: '0.84rem' }}>
+                              <Truck size={15} className="text-warning" />
+                              <span>Home Delivery</span>
                             </div>
-                            <div className="extra-small text-muted fw-normal" style={{ fontSize: '0.72rem', lineHeight: '1.2' }}>
+                            <div className="text-muted" style={{ fontSize: '0.7rem', lineHeight: '1.2' }}>
                               Doorstep delivery + FREE Fitting (Distance delivery charge applies)
                             </div>
                           </div>
@@ -1424,18 +1449,24 @@ export default function Landing() {
 
                         <div className="col-6">
                           <div
-                            className={`p-2.5 rounded-3 border cursor-pointer h-100 transition-all ${
+                            className={`border cursor-pointer h-100 transition-all ${
                               bookingForm.serviceType === 'WORKSHOP_VISIT'
-                                ? 'border-warning bg-warning bg-opacity-10 text-dark fw-bold shadow-sm'
-                                : 'bg-light text-muted'
+                                ? 'border-warning shadow-sm'
+                                : 'border-light-subtle'
                             }`}
+                            style={{
+                              padding: '8px 10px',
+                              borderRadius: '8px',
+                              backgroundColor: bookingForm.serviceType === 'WORKSHOP_VISIT' ? '#FEF3C7' : '#F8FAFC',
+                              borderWidth: bookingForm.serviceType === 'WORKSHOP_VISIT' ? '2px' : '1px',
+                            }}
                             onClick={() => setBookingForm({ ...bookingForm, serviceType: 'WORKSHOP_VISIT' })}
                           >
-                            <div className="d-flex align-items-center gap-2 mb-1">
-                              <Building size={17} className={bookingForm.serviceType === 'WORKSHOP_VISIT' ? 'text-warning' : ''} />
-                              <span className="small">Workshop Visit</span>
+                            <div className="d-flex align-items-center gap-1.5 mb-1 text-dark fw-bold" style={{ fontSize: '0.84rem' }}>
+                              <Building size={15} className="text-warning" />
+                              <span>Workshop Visit</span>
                             </div>
-                            <div className="extra-small text-muted fw-normal" style={{ fontSize: '0.72rem', lineHeight: '1.2' }}>
+                            <div className="text-muted" style={{ fontSize: '0.7rem', lineHeight: '1.2' }}>
                               Visit shop in Ramgarh Cantt for instant FREE fitting & alignment
                             </div>
                           </div>
@@ -1443,32 +1474,42 @@ export default function Landing() {
                       </div>
                     </div>
 
-                    {/* 2. Brand & Tyre Selection (STRICTLY IN-STOCK ONLY) */}
-                    <div className="mb-3 p-3 rounded-3 bg-light border">
-                      <div className="d-flex justify-content-between align-items-center mb-2">
-                        <label className="form-label extra-small text-muted fw-bold text-uppercase mb-0" style={{ letterSpacing: '0.05em' }}>
-                          2. Select Tyre Model (Live In-Stock Inventory) *
-                        </label>
-                        <span className="badge bg-success bg-opacity-10 text-success extra-small">
-                          ⚡ Strictly In-Stock Only
-                        </span>
-                      </div>
+                    {/* 2. Brand & Tyre Selection (STRICT IN-STOCK INVENTORY) */}
+                    <div
+                      style={{
+                        padding: '10px',
+                        borderRadius: '8px',
+                        backgroundColor: '#F8FAFC',
+                        border: '1px solid #E2E8F0',
+                        marginBottom: '10px',
+                      }}
+                    >
+                      <label
+                        className="form-label text-muted fw-bold text-uppercase d-block"
+                        style={{ fontSize: '0.72rem', letterSpacing: '0.04em', marginBottom: '6px' }}
+                      >
+                        2. Select Tyre Model *
+                      </label>
 
                       {loadingAvailableTyres ? (
-                        <div className="text-center py-3">
+                        <div className="text-center py-2.5">
                           <div className="spinner-border spinner-border-sm text-warning me-2" role="status" />
-                          <span className="small text-muted">Checking available tyre inventory...</span>
+                          <span className="small text-muted" style={{ fontSize: '0.8rem' }}>
+                            Loading available tyre inventory...
+                          </span>
                         </div>
                       ) : availableTyres.length === 0 ? (
-                        <div className="text-center py-3 text-muted small">
+                        <div className="text-center py-2 text-muted small" style={{ fontSize: '0.8rem' }}>
                           All tyres are currently booked. Please call our store at +91 79911 89048 for instant inquiries.
                         </div>
                       ) : (
                         <>
-                          {/* Company / Brand Filter */}
+                          {/* Company / Brand Filter & Qty */}
                           <div className="row g-2 mb-2">
                             <div className="col-12 col-sm-6">
-                              <label className="form-label extra-small text-muted mb-1">Tyre Brand / Company</label>
+                              <label className="form-label extra-small text-muted mb-1" style={{ fontSize: '0.72rem' }}>
+                                Tyre Brand / Company
+                              </label>
                               <select
                                 className="form-select form-select-sm"
                                 value={bookingForm.companyId}
@@ -1481,6 +1522,7 @@ export default function Landing() {
                                     tyreId: filtered[0]?._id || '',
                                   });
                                 }}
+                                style={{ fontSize: '0.82rem' }}
                               >
                                 <option value="">All Available Brands ({availableCompanies.length})</option>
                                 {availableCompanies.map((c) => (
@@ -1492,13 +1534,16 @@ export default function Landing() {
                             </div>
 
                             <div className="col-12 col-sm-6">
-                              <label className="form-label extra-small text-muted mb-1">Quantity</label>
+                              <label className="form-label extra-small text-muted mb-1" style={{ fontSize: '0.72rem' }}>
+                                Quantity
+                              </label>
                               <select
                                 className="form-select form-select-sm"
                                 value={bookingForm.quantity}
                                 onChange={(e) =>
                                   setBookingForm({ ...bookingForm, quantity: parseInt(e.target.value, 10) || 1 })
                                 }
+                                style={{ fontSize: '0.82rem' }}
                               >
                                 {[1, 2, 3, 4, 5, 6, 8].map((q) => (
                                   <option key={q} value={q}>
@@ -1510,8 +1555,8 @@ export default function Landing() {
                           </div>
 
                           {/* Specific Tyre Selection */}
-                          <div className="mb-2">
-                            <label className="form-label extra-small text-muted mb-1">
+                          <div style={{ marginBottom: '6px' }}>
+                            <label className="form-label extra-small text-muted mb-1" style={{ fontSize: '0.72rem' }}>
                               Tyre Model & Size *
                             </label>
                             <select
@@ -1519,6 +1564,7 @@ export default function Landing() {
                               value={bookingForm.tyreId}
                               onChange={(e) => setBookingForm({ ...bookingForm, tyreId: e.target.value })}
                               required
+                              style={{ fontSize: '0.82rem' }}
                             >
                               {(bookingForm.companyId
                                 ? availableTyres.filter((t) => t.companyId?._id === bookingForm.companyId)
@@ -1538,29 +1584,40 @@ export default function Landing() {
                             const tyreTotal = selected.sellingPricePaise * bookingForm.quantity;
 
                             return (
-                              <div className="p-2.5 rounded-2 bg-white border mt-2">
+                              <div
+                                style={{
+                                  padding: '8px 10px',
+                                  borderRadius: '6px',
+                                  backgroundColor: '#FFFFFF',
+                                  border: '1px solid #E2E8F0',
+                                  marginTop: '8px',
+                                }}
+                              >
                                 <div className="d-flex justify-content-between align-items-center">
                                   <div>
-                                    <strong className="text-dark small d-block">
+                                    <strong className="text-dark small d-block" style={{ fontSize: '0.84rem' }}>
                                       {selected.companyId?.name} {selected.modelName} ({selected.size})
                                     </strong>
-                                    <span className="text-muted extra-small">
+                                    <span className="text-muted extra-small" style={{ fontSize: '0.72rem' }}>
                                       {selected.vehicleType} • {selected.tubeType || 'Tubeless'}
                                     </span>
                                   </div>
                                   <div className="text-end">
-                                    <div className="fw-bold text-dark fs-6">
+                                    <div className="fw-bold text-dark" style={{ fontSize: '0.95rem' }}>
                                       {formatRupees(tyreTotal)}
                                     </div>
-                                    <div className="extra-small text-muted">
+                                    <div className="extra-small text-muted" style={{ fontSize: '0.7rem' }}>
                                       ({formatRupees(selected.sellingPricePaise)} × {bookingForm.quantity})
                                     </div>
                                   </div>
                                 </div>
 
-                                <div className="d-flex justify-content-between align-items-center border-top pt-2 mt-2 extra-small">
+                                <div
+                                  className="d-flex justify-content-between align-items-center border-top pt-1.5 mt-1.5"
+                                  style={{ fontSize: '0.74rem' }}
+                                >
                                   <span className="text-success fw-bold d-flex align-items-center gap-1">
-                                    <CheckCircle2 size={13} /> Tyre Fitting: 100% FREE
+                                    <CheckCircle2 size={12} /> Tyre Fitting: 100% FREE
                                   </span>
                                   <span className="text-muted">
                                     {bookingForm.serviceType === 'HOME_DELIVERY'
@@ -1576,13 +1633,18 @@ export default function Landing() {
                     </div>
 
                     {/* 3. Customer Contact Details */}
-                    <div className="mb-3">
-                      <label className="form-label extra-small text-muted fw-bold text-uppercase" style={{ letterSpacing: '0.05em' }}>
+                    <div style={{ marginBottom: '10px' }}>
+                      <label
+                        className="form-label text-muted fw-bold text-uppercase d-block"
+                        style={{ fontSize: '0.72rem', letterSpacing: '0.04em', marginBottom: '6px' }}
+                      >
                         3. Customer & Contact Details *
                       </label>
                       <div className="row g-2 mb-2">
                         <div className="col-12 col-sm-6">
-                          <label className="form-label extra-small text-muted mb-0.5">Full Name *</label>
+                          <label className="form-label extra-small text-muted mb-0.5" style={{ fontSize: '0.72rem' }}>
+                            Full Name *
+                          </label>
                           <input
                             type="text"
                             className="form-control form-control-sm"
@@ -1590,11 +1652,14 @@ export default function Landing() {
                             placeholder="e.g. Rahul Sharma"
                             value={bookingForm.customerName}
                             onChange={(e) => setBookingForm({ ...bookingForm, customerName: e.target.value })}
+                            style={{ fontSize: '0.82rem' }}
                           />
                         </div>
 
                         <div className="col-12 col-sm-6">
-                          <label className="form-label extra-small text-muted mb-0.5">Mobile Number *</label>
+                          <label className="form-label extra-small text-muted mb-0.5" style={{ fontSize: '0.72rem' }}>
+                            Mobile Number *
+                          </label>
                           <input
                             type="tel"
                             className="form-control form-control-sm"
@@ -1602,29 +1667,36 @@ export default function Landing() {
                             placeholder="10-digit number"
                             value={bookingForm.customerPhone}
                             onChange={(e) => setBookingForm({ ...bookingForm, customerPhone: e.target.value })}
+                            style={{ fontSize: '0.82rem' }}
                           />
                         </div>
                       </div>
 
-                      <div className="row g-2 mb-2">
+                      <div className="row g-2">
                         <div className="col-12 col-sm-6">
-                          <label className="form-label extra-small text-muted mb-0.5">Vehicle Model (Optional)</label>
+                          <label className="form-label extra-small text-muted mb-0.5" style={{ fontSize: '0.72rem' }}>
+                            Vehicle Model (Optional)
+                          </label>
                           <input
                             type="text"
                             className="form-control form-control-sm"
                             placeholder="e.g. Swift / Creta / Pulsar"
                             value={bookingForm.vehicleModel}
                             onChange={(e) => setBookingForm({ ...bookingForm, vehicleModel: e.target.value })}
+                            style={{ fontSize: '0.82rem' }}
                           />
                         </div>
                         <div className="col-12 col-sm-6">
-                          <label className="form-label extra-small text-muted mb-0.5">Email (Optional)</label>
+                          <label className="form-label extra-small text-muted mb-0.5" style={{ fontSize: '0.72rem' }}>
+                            Email (Optional)
+                          </label>
                           <input
                             type="email"
                             className="form-control form-control-sm"
                             placeholder="name@example.com"
                             value={bookingForm.customerEmail}
                             onChange={(e) => setBookingForm({ ...bookingForm, customerEmail: e.target.value })}
+                            style={{ fontSize: '0.82rem' }}
                           />
                         </div>
                       </div>
@@ -1632,16 +1704,29 @@ export default function Landing() {
 
                     {/* 4. Delivery Address (if Home Delivery) */}
                     {bookingForm.serviceType === 'HOME_DELIVERY' && (
-                      <div className="mb-3 p-3 rounded-3 bg-light border border-warning border-opacity-50">
-                        <div className="d-flex align-items-center gap-1.5 mb-2">
-                          <MapPin size={16} className="text-warning" />
-                          <label className="form-label extra-small text-dark fw-bold text-uppercase mb-0" style={{ letterSpacing: '0.05em' }}>
+                      <div
+                        style={{
+                          padding: '10px',
+                          borderRadius: '8px',
+                          backgroundColor: '#F8FAFC',
+                          border: '1px solid #FDE68A',
+                          marginBottom: '10px',
+                        }}
+                      >
+                        <div className="d-flex align-items-center gap-1 mb-1.5">
+                          <MapPin size={14} className="text-warning" />
+                          <label
+                            className="form-label text-dark fw-bold text-uppercase mb-0"
+                            style={{ fontSize: '0.72rem', letterSpacing: '0.04em' }}
+                          >
                             4. Home Delivery Address & Location *
                           </label>
                         </div>
 
                         <div className="mb-2">
-                          <label className="form-label extra-small text-muted mb-0.5">Complete Street Address / Village *</label>
+                          <label className="form-label extra-small text-muted mb-0.5" style={{ fontSize: '0.72rem' }}>
+                            Complete Street Address / Village *
+                          </label>
                           <textarea
                             rows="2"
                             className="form-control form-control-sm"
@@ -1649,28 +1734,35 @@ export default function Landing() {
                             placeholder="House / Flat No., Road, Mohalla, Near landmark..."
                             value={bookingForm.deliveryAddress}
                             onChange={(e) => setBookingForm({ ...bookingForm, deliveryAddress: e.target.value })}
+                            style={{ fontSize: '0.82rem' }}
                           />
                         </div>
 
                         <div className="row g-2">
                           <div className="col-6">
-                            <label className="form-label extra-small text-muted mb-0.5">City / Town</label>
+                            <label className="form-label extra-small text-muted mb-0.5" style={{ fontSize: '0.72rem' }}>
+                              City / Town
+                            </label>
                             <input
                               type="text"
                               className="form-control form-control-sm"
                               placeholder="Ramgarh Cantt"
                               value={bookingForm.city}
                               onChange={(e) => setBookingForm({ ...bookingForm, city: e.target.value })}
+                              style={{ fontSize: '0.82rem' }}
                             />
                           </div>
                           <div className="col-6">
-                            <label className="form-label extra-small text-muted mb-0.5">Pincode</label>
+                            <label className="form-label extra-small text-muted mb-0.5" style={{ fontSize: '0.72rem' }}>
+                              Pincode
+                            </label>
                             <input
                               type="text"
                               className="form-control form-control-sm"
                               placeholder="829122"
                               value={bookingForm.pincode}
                               onChange={(e) => setBookingForm({ ...bookingForm, pincode: e.target.value })}
+                              style={{ fontSize: '0.82rem' }}
                             />
                           </div>
                         </div>
@@ -1678,8 +1770,11 @@ export default function Landing() {
                     )}
 
                     {/* 5. Date & Time Slot */}
-                    <div className="mb-3">
-                      <label className="form-label extra-small text-muted fw-bold text-uppercase" style={{ letterSpacing: '0.05em' }}>
+                    <div style={{ marginBottom: '10px' }}>
+                      <label
+                        className="form-label text-muted fw-bold text-uppercase d-block"
+                        style={{ fontSize: '0.72rem', letterSpacing: '0.04em', marginBottom: '6px' }}
+                      >
                         {bookingForm.serviceType === 'HOME_DELIVERY' ? '5. Preferred Delivery Date & Slot *' : '4. Preferred Appointment Date & Slot *'}
                       </label>
                       <div className="row g-2">
@@ -1691,6 +1786,7 @@ export default function Landing() {
                             required
                             value={bookingForm.appointmentDate}
                             onChange={(e) => setBookingForm({ ...bookingForm, appointmentDate: e.target.value })}
+                            style={{ fontSize: '0.82rem' }}
                           />
                         </div>
 
@@ -1699,6 +1795,7 @@ export default function Landing() {
                             className="form-select form-select-sm"
                             value={bookingForm.timeSlot}
                             onChange={(e) => setBookingForm({ ...bookingForm, timeSlot: e.target.value })}
+                            style={{ fontSize: '0.82rem' }}
                           >
                             <option value="Morning (09:00 AM - 01:00 PM)">Morning (09:00 AM - 01:00 PM)</option>
                             <option value="Afternoon (01:00 PM - 05:00 PM)">Afternoon (01:00 PM - 05:00 PM)</option>
@@ -1709,27 +1806,41 @@ export default function Landing() {
                     </div>
 
                     {/* Trust Policy Badge */}
-                    <div className="p-2.5 rounded-3 bg-light border small text-muted d-flex align-items-center gap-2">
-                      <ShieldCheck size={20} className="text-warning flex-shrink-0" />
-                      <div className="extra-small">
-                        <strong>Zero Advance Required:</strong> Pay only after tyre delivery & fitting. Fitting is 100% Free! Distance delivery charge is verified before dispatch.
+                    <div
+                      className="d-flex align-items-center gap-2"
+                      style={{
+                        padding: '8px 10px',
+                        borderRadius: '6px',
+                        backgroundColor: '#F8FAFC',
+                        border: '1px solid #E2E8F0',
+                        marginBottom: '10px',
+                      }}
+                    >
+                      <ShieldCheck size={18} className="text-warning flex-shrink-0" />
+                      <div className="extra-small text-muted" style={{ fontSize: '0.72rem', lineHeight: '1.3' }}>
+                        <strong className="text-dark">Zero Advance Required:</strong> Pay only after tyre delivery & fitting. Fitting is 100% Free! Distance delivery charge is verified before dispatch.
                       </div>
                     </div>
                   </div>
 
-                  {/* Modal Footer */}
-                  <div className="modal-footer border-top py-2.5 px-4 bg-light">
+                  {/* Modal Footer (10px padding) */}
+                  <div
+                    className="modal-footer border-top"
+                    style={{ padding: '10px 14px', backgroundColor: '#F8FAFC' }}
+                  >
                     <button
                       type="button"
                       className="btn btn-sm btn-outline-secondary"
                       onClick={() => setShowBookingModal(false)}
+                      style={{ fontSize: '0.82rem', padding: '6px 14px' }}
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
-                      className="btn-accent px-4 py-1.5 fw-bold d-inline-flex align-items-center gap-1.5"
+                      className="btn-accent fw-bold d-inline-flex align-items-center gap-1.5"
                       disabled={submittingBooking || availableTyres.length === 0}
+                      style={{ fontSize: '0.84rem', padding: '6px 18px' }}
                     >
                       {submittingBooking ? 'Scheduling...' : 'Confirm Appointment & Delivery'}
                     </button>

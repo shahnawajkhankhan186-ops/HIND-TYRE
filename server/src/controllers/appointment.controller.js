@@ -410,3 +410,4 @@ module.exports = {
   updateAdminAppointmentStatus,
   deleteAdminAppointment,
 };
+
