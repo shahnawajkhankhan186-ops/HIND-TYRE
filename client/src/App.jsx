@@ -23,6 +23,7 @@ const StockAvailability = lazy(() => import('./pages/counter/StockAvailability')
 
 // Admin Portal Pages (Lazy)
 const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
+const Appointments = lazy(() => import('./pages/admin/Appointments'));
 const Companies = lazy(() => import('./pages/admin/Companies'));
 const Tyres = lazy(() => import('./pages/admin/Tyres'));
 const Accessories = lazy(() => import('./pages/admin/Accessories'));
@@ -120,6 +121,7 @@ export default function App() {
           >
             <Route index element={<Navigate to="/admin/dashboard" replace />} />
             <Route path="dashboard" element={<Dashboard />} />
+            <Route path="appointments" element={<Appointments />} />
             <Route path="companies" element={<Companies />} />
             <Route path="tyres" element={<Tyres />} />
             <Route path="accessories" element={<Accessories />} />

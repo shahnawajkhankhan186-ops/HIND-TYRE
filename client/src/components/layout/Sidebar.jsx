@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard,
+  CalendarClock,
   Building2,
   Disc3,
   Layers,
@@ -23,6 +24,7 @@ import { useAuth } from '../../context/AuthContext';
 
 const navItems = [
   { to: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+  { to: '/admin/appointments', icon: CalendarClock, label: 'Appointments' },
   { to: '/admin/companies', icon: Building2, label: 'Tyre Companies' },
   { to: '/admin/tyres', icon: Disc3, label: 'Tyres Catalog' },
   { to: '/admin/accessories', icon: Layers, label: 'Accessories' },

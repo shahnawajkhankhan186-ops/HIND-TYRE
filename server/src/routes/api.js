@@ -14,6 +14,7 @@ const userController = require('../controllers/user.controller');
 const settingsController = require('../controllers/settings.controller');
 const auditController = require('../controllers/audit.controller');
 const financeController = require('../controllers/finance.controller');
+const appointmentController = require('../controllers/appointment.controller');
 
 const { authenticate, requireAdmin, requireCounterOrAdmin } = require('../middleware/auth.middleware');
 
@@ -36,6 +37,8 @@ router.post('/auth/reset-password', authController.resetPassword);
 router.get('/portal/tyres', tyreController.getTyres);
 router.get('/portal/companies', companyController.getCompanies);
 router.get('/portal/settings', settingsController.getSettings);
+router.get('/portal/available-tyres', appointmentController.getAvailableTyresForBooking);
+router.post('/portal/appointments', appointmentController.createAppointment);
 
 // --- Counter / Sales Portal Routes (COUNTER + ADMIN) ---
 router.get('/counter/catalog', authenticate, requireCounterOrAdmin, tyreController.getTyres);
@@ -110,6 +113,12 @@ router.delete('/admin/users/:id', authenticate, requireAdmin, userController.del
 // Shop Settings
 router.get('/admin/settings', authenticate, requireAdmin, settingsController.getSettings);
 router.put('/admin/settings', authenticate, requireAdmin, settingsController.updateSettings);
+
+// Appointments Management (Doorstep Delivery & Workshop Bookings)
+router.get('/admin/appointments', authenticate, requireAdmin, appointmentController.getAdminAppointments);
+router.get('/admin/appointments/:id', authenticate, requireAdmin, appointmentController.getAdminAppointmentById);
+router.patch('/admin/appointments/:id/status', authenticate, requireAdmin, appointmentController.updateAdminAppointmentStatus);
+router.delete('/admin/appointments/:id', authenticate, requireAdmin, appointmentController.deleteAdminAppointment);
 
 // Audit Logs
 router.get('/admin/audit-logs', authenticate, requireAdmin, auditController.getAuditLogs);
