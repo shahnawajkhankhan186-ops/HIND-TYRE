@@ -116,21 +116,22 @@ export default function ForgotPassword() {
       />
       {/* Left Workshop Hero */}
       <div
-        className="col-12 col-lg-6 d-flex flex-column justify-content-between p-4 p-md-5 text-white position-relative"
+        className="col-12 col-lg-6 d-flex flex-column justify-content-between text-white position-relative"
         style={{
           backgroundImage: `linear-gradient(to right, rgba(10, 10, 12, 0.94) 0%, rgba(10, 10, 12, 0.85) 60%, rgba(10, 10, 12, 0.70) 100%), url('/images/hero_tyre_workshop.jpg')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          minHeight: '320px',
+          padding: '10px 14px',
+          minHeight: '260px',
         }}
       >
         <div>
           <Link to="/" className="d-flex align-items-center gap-2 text-decoration-none">
             <div
               className="d-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
-              style={{ width: '40px', height: '40px', backgroundColor: 'var(--bg-card-dark)', color: 'var(--accent)' }}
+              style={{ width: '36px', height: '36px', backgroundColor: 'var(--bg-card-dark)', color: 'var(--accent)' }}
             >
-              <Disc3 size={24} className="animate-spin-slow" />
+              <Disc3 size={22} className="animate-spin-slow" />
             </div>
             <div>
               <div className="fw-black text-white fs-5 lh-1 font-monospace" style={{ letterSpacing: '0.03em' }}>
@@ -143,23 +144,23 @@ export default function ForgotPassword() {
           </Link>
         </div>
 
-        <div className="my-4 my-lg-auto py-3">
-          <div className="hero-eyebrow text-light mb-2 opacity-90">
+        <div style={{ margin: '10px 0' }}>
+          <div className="hero-eyebrow text-light mb-1 opacity-90" style={{ fontSize: '0.72rem' }}>
             ACCOUNT RECOVERY
           </div>
-          <h1 className="hero-headline display-4 text-white mb-3">
+          <h1 className="hero-headline display-4 text-white mb-2" style={{ fontSize: 'clamp(1.6rem, 4vw, 2.4rem)', lineHeight: '1.15' }}>
             SECURE<br />
             <span style={{ color: 'var(--accent)' }}>PASSWORD</span><br />
             RESET
           </h1>
-          <p className="fs-6 text-light opacity-80 mb-0" style={{ maxWidth: '420px' }}>
+          <p className="small text-light opacity-80 mb-0" style={{ maxWidth: '420px', fontSize: '0.82rem' }}>
             Verify your account with a secure one-time passcode sent directly to your registered email.
           </p>
         </div>
 
-        <div className="pt-3 border-top" style={{ borderColor: 'var(--border-dark)' }}>
-          <Link to="/login" className="text-light d-flex align-items-center gap-1.5 small text-decoration-none">
-            <ArrowLeft size={16} style={{ color: 'var(--accent)' }} />
+        <div className="border-top" style={{ borderColor: 'var(--border-dark)', paddingTop: '10px' }}>
+          <Link to="/login" className="text-light d-flex align-items-center gap-1.5 extra-small text-decoration-none" style={{ fontSize: '0.78rem' }}>
+            <ArrowLeft size={14} style={{ color: 'var(--accent)' }} />
             <span>Back to Sign In</span>
           </Link>
         </div>
@@ -167,25 +168,48 @@ export default function ForgotPassword() {
 
       {/* Right Form Container */}
       <div
-        className="col-12 col-lg-6 d-flex align-items-center justify-content-center p-3 p-sm-4 p-md-5"
-        style={{ backgroundColor: 'var(--bg-light)' }}
+        className="col-12 col-lg-6 d-flex align-items-center justify-content-center"
+        style={{
+          backgroundColor: 'var(--bg-light)',
+          padding: '10px',
+          minHeight: 'auto',
+        }}
       >
         <div className="w-100" style={{ maxWidth: '440px' }}>
-          <div className="card-clean p-3.5 p-sm-5 bg-white shadow-md">
-            <h3 className="fw-black text-dark mb-1">Reset Password</h3>
-            <p className="text-muted small mb-4">Follow the 3-step verification to restore access</p>
+          <div
+            className="card-clean bg-white shadow-sm"
+            style={{
+              border: '1px solid var(--border-light)',
+              borderRadius: '10px',
+              padding: '10px 14px',
+            }}
+          >
+            <h3 className="fw-black text-dark mb-0.5" style={{ fontSize: '1.2rem', letterSpacing: '-0.02em' }}>
+              Reset Password
+            </h3>
+            <p className="text-muted extra-small mb-2.5" style={{ fontSize: '0.78rem' }}>
+              Follow the 3-step verification to restore access
+            </p>
 
             {/* Stepper Indicator */}
-            <div className="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom">
-              <div className={`d-flex align-items-center gap-1.5 small fw-bold ${step >= 1 ? 'text-dark' : 'text-muted'}`}>
+            <div
+              className="d-flex align-items-center justify-content-between border-bottom"
+              style={{
+                borderColor: 'var(--border-light)',
+                paddingBottom: '10px',
+                marginBottom: '10px',
+              }}
+            >
+              <div className={`d-flex align-items-center gap-1.5 extra-small fw-bold ${step >= 1 ? 'text-dark' : 'text-muted'}`} style={{ fontSize: '0.75rem' }}>
                 <span
                   className="rounded-circle d-flex align-items-center justify-content-center"
                   style={{
-                    width: '24px',
-                    height: '24px',
+                    width: '22px',
+                    height: '22px',
                     backgroundColor: step >= 1 ? 'var(--accent)' : '#e2e8f0',
                     color: '#0A0A0C',
-                    fontSize: '0.75rem',
+                    fontSize: '0.72rem',
+                    fontWeight: 'bold',
                   }}
                 >
                   1
@@ -193,15 +217,16 @@ export default function ForgotPassword() {
                 <span>Email</span>
               </div>
               <div className="border-top flex-grow-1 mx-2" style={{ borderColor: 'var(--border-light)' }}></div>
-              <div className={`d-flex align-items-center gap-1.5 small fw-bold ${step >= 2 ? 'text-dark' : 'text-muted'}`}>
+              <div className={`d-flex align-items-center gap-1.5 extra-small fw-bold ${step >= 2 ? 'text-dark' : 'text-muted'}`} style={{ fontSize: '0.75rem' }}>
                 <span
                   className="rounded-circle d-flex align-items-center justify-content-center"
                   style={{
-                    width: '24px',
-                    height: '24px',
+                    width: '22px',
+                    height: '22px',
                     backgroundColor: step >= 2 ? 'var(--accent)' : '#e2e8f0',
                     color: '#0A0A0C',
-                    fontSize: '0.75rem',
+                    fontSize: '0.72rem',
+                    fontWeight: 'bold',
                   }}
                 >
                   2
@@ -209,15 +234,16 @@ export default function ForgotPassword() {
                 <span>OTP</span>
               </div>
               <div className="border-top flex-grow-1 mx-2" style={{ borderColor: 'var(--border-light)' }}></div>
-              <div className={`d-flex align-items-center gap-1.5 small fw-bold ${step >= 3 ? 'text-dark' : 'text-muted'}`}>
+              <div className={`d-flex align-items-center gap-1.5 extra-small fw-bold ${step >= 3 ? 'text-dark' : 'text-muted'}`} style={{ fontSize: '0.75rem' }}>
                 <span
                   className="rounded-circle d-flex align-items-center justify-content-center"
                   style={{
-                    width: '24px',
-                    height: '24px',
+                    width: '22px',
+                    height: '22px',
                     backgroundColor: step >= 3 ? 'var(--accent)' : '#e2e8f0',
                     color: '#0A0A0C',
-                    fontSize: '0.75rem',
+                    fontSize: '0.72rem',
+                    fontWeight: 'bold',
                   }}
                 >
                   3
@@ -229,13 +255,15 @@ export default function ForgotPassword() {
             {/* Step 1: Request OTP */}
             {step === 1 && (
               <form onSubmit={handleRequestOtp}>
-                <p className="text-muted small mb-3">
+                <p className="text-muted extra-small" style={{ fontSize: '0.78rem', marginBottom: '10px' }}>
                   Enter your email address. We will dispatch a 6-digit one-time code.
                 </p>
-                <div className="mb-4">
-                  <label className="form-label text-dark small fw-semibold">Email Address</label>
-                  <div className="input-group">
-                    <span className="input-group-text bg-white text-muted"><Mail size={16} /></span>
+                <div style={{ marginBottom: '10px' }}>
+                  <label className="form-label text-dark small fw-semibold" style={{ fontSize: '0.78rem', marginBottom: '4px' }}>
+                    Email Address
+                  </label>
+                  <div className="input-group input-group-sm">
+                    <span className="input-group-text bg-white text-muted"><Mail size={15} /></span>
                     <input
                       type="email"
                       className="form-control"
@@ -244,16 +272,18 @@ export default function ForgotPassword() {
                       onChange={(e) => setEmail(e.target.value)}
                       required
                       autoFocus
+                      style={{ height: '38px', fontSize: '0.84rem' }}
                     />
                   </div>
                 </div>
 
                 <button
                   type="submit"
-                  className="btn-accent w-100 py-2.5 d-flex align-items-center justify-content-center gap-2 rounded-3 text-dark fw-bold"
+                  className="btn-accent w-100 rounded-3 text-dark fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm"
+                  style={{ height: '40px', fontSize: '0.9rem', marginBottom: '10px' }}
                   disabled={loading}
                 >
-                  {loading ? 'Sending OTP...' : <>Send Verification Code <ArrowRight size={16} /></>}
+                  {loading ? 'Sending OTP...' : <>Send Verification Code <ArrowRight size={15} /></>}
                 </button>
               </form>
             )}
@@ -261,47 +291,52 @@ export default function ForgotPassword() {
             {/* Step 2: Verify OTP */}
             {step === 2 && (
               <form onSubmit={handleVerifyOtp}>
-                <p className="text-muted small mb-3">
+                <p className="text-muted extra-small" style={{ fontSize: '0.78rem', marginBottom: '10px' }}>
                   Enter the 6-digit code sent to <strong className="text-dark">{email}</strong>.
                 </p>
-                <div className="mb-4">
-                  <label className="form-label text-dark small fw-semibold">6-Digit OTP</label>
+                <div style={{ marginBottom: '10px' }}>
+                  <label className="form-label text-dark small fw-semibold" style={{ fontSize: '0.78rem', marginBottom: '4px' }}>
+                    6-Digit OTP
+                  </label>
                   <input
                     type="text"
                     maxLength="6"
-                    className="form-control text-center fs-3 font-monospace fw-bold"
-                    style={{ letterSpacing: '8px', color: '#0A0A0C' }}
+                    className="form-control text-center font-monospace fw-bold"
+                    style={{ letterSpacing: '6px', color: '#0A0A0C', height: '44px', fontSize: '1.4rem' }}
                     placeholder="000000"
                     value={otp}
                     onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
                     required
                     autoFocus
                   />
-                  <div className="d-flex justify-content-between align-items-center mt-2">
-                    <span className="text-muted extra-small">Didn't receive code?</span>
+                  <div className="d-flex justify-content-between align-items-center mt-1.5">
+                    <span className="text-muted extra-small" style={{ fontSize: '0.72rem' }}>Didn't receive code?</span>
                     <button
                       type="button"
                       className="btn btn-link extra-small text-link-blue p-0"
                       onClick={handleRequestOtp}
                       disabled={cooldown > 0 || loading}
+                      style={{ fontSize: '0.74rem' }}
                     >
                       {cooldown > 0 ? `Resend in ${cooldown}s` : 'Resend OTP'}
                     </button>
                   </div>
                 </div>
 
-                <div className="d-flex gap-2">
+                <div className="d-flex gap-2" style={{ marginBottom: '10px' }}>
                   <button
                     type="button"
-                    className="btn btn-outline-secondary flex-grow-1"
+                    className="btn btn-sm btn-outline-secondary flex-grow-1"
                     onClick={() => setStep(1)}
+                    style={{ height: '38px', fontSize: '0.84rem' }}
                   >
                     Back
                   </button>
                   <button
                     type="submit"
-                    className="btn-accent flex-grow-1 py-2 text-dark fw-bold"
+                    className="btn-accent flex-grow-1 text-dark fw-bold rounded-3"
                     disabled={loading || otp.length !== 6}
+                    style={{ height: '38px', fontSize: '0.84rem' }}
                   >
                     {loading ? 'Verifying...' : 'Verify OTP'}
                   </button>
@@ -312,14 +347,16 @@ export default function ForgotPassword() {
             {/* Step 3: New Password */}
             {step === 3 && (
               <form onSubmit={handleResetPassword}>
-                <div className="d-flex align-items-center gap-2 text-success small mb-3">
-                  <CheckCircle2 size={16} /> OTP Verified! Enter your new password below.
+                <div className="d-flex align-items-center gap-2 text-success extra-small" style={{ marginBottom: '10px', fontSize: '0.78rem' }}>
+                  <CheckCircle2 size={15} /> OTP Verified! Enter your new password below.
                 </div>
 
-                <div className="mb-3">
-                  <label className="form-label text-dark small fw-semibold">New Password</label>
-                  <div className="input-group">
-                    <span className="input-group-text bg-white text-muted"><Lock size={16} /></span>
+                <div style={{ marginBottom: '10px' }}>
+                  <label className="form-label text-dark small fw-semibold" style={{ fontSize: '0.78rem', marginBottom: '4px' }}>
+                    New Password
+                  </label>
+                  <div className="input-group input-group-sm">
+                    <span className="input-group-text bg-white text-muted"><Lock size={15} /></span>
                     <input
                       type="password"
                       className="form-control"
@@ -327,14 +364,17 @@ export default function ForgotPassword() {
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       required
+                      style={{ height: '38px', fontSize: '0.84rem' }}
                     />
                   </div>
                 </div>
 
-                <div className="mb-4">
-                  <label className="form-label text-dark small fw-semibold">Confirm Password</label>
-                  <div className="input-group">
-                    <span className="input-group-text bg-white text-muted"><Lock size={16} /></span>
+                <div style={{ marginBottom: '10px' }}>
+                  <label className="form-label text-dark small fw-semibold" style={{ fontSize: '0.78rem', marginBottom: '4px' }}>
+                    Confirm Password
+                  </label>
+                  <div className="input-group input-group-sm">
+                    <span className="input-group-text bg-white text-muted"><Lock size={15} /></span>
                     <input
                       type="password"
                       className="form-control"
@@ -342,21 +382,31 @@ export default function ForgotPassword() {
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       required
+                      style={{ height: '38px', fontSize: '0.84rem' }}
                     />
                   </div>
                 </div>
 
                 <button
                   type="submit"
-                  className="btn-accent w-100 py-2.5 rounded-3 text-dark fw-bold"
+                  className="btn-accent w-100 rounded-3 text-dark fw-bold shadow-sm"
                   disabled={loading}
+                  style={{ height: '40px', fontSize: '0.9rem', marginBottom: '10px' }}
                 >
                   {loading ? 'Updating Password...' : 'Save & Sign In'}
                 </button>
               </form>
             )}
 
-            <div className="text-center mt-3 pt-2 border-top extra-small text-muted">
+            <div
+              className="text-center border-top extra-small text-muted"
+              style={{
+                borderColor: 'var(--border-light)',
+                marginTop: '10px',
+                paddingTop: '10px',
+                fontSize: '0.75rem',
+              }}
+            >
               Remember your password?{' '}
               <Link to="/login" className="text-link-blue fw-bold">
                 Sign In →

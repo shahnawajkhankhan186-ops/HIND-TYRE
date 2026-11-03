@@ -72,12 +72,13 @@ export default function Login() {
       {/* LEFT SIDE: Black/Charcoal with Tyre Workshop & Headline */}
       {/* ========================================================== */}
       <div
-        className="col-12 col-lg-6 d-flex flex-column justify-content-between p-4 p-md-5 text-white position-relative"
+        className="col-12 col-lg-6 d-flex flex-column justify-content-between text-white position-relative"
         style={{
           backgroundImage: `linear-gradient(to right, rgba(10, 10, 12, 0.94) 0%, rgba(10, 10, 12, 0.85) 60%, rgba(10, 10, 12, 0.70) 100%), url('/images/hero_tyre_workshop.jpg')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          minHeight: '340px',
+          padding: '10px 14px',
+          minHeight: '260px',
         }}
       >
         {/* Top Logo */}
@@ -85,9 +86,9 @@ export default function Login() {
           <Link to="/" className="d-flex align-items-center gap-2 text-decoration-none">
             <div
               className="d-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
-              style={{ width: '40px', height: '40px', backgroundColor: 'var(--bg-card-dark)', color: 'var(--accent)' }}
+              style={{ width: '36px', height: '36px', backgroundColor: 'var(--bg-card-dark)', color: 'var(--accent)' }}
             >
-              <Disc3 size={24} className="animate-spin-slow" />
+              <Disc3 size={22} className="animate-spin-slow" />
             </div>
             <div>
               <div className="fw-black text-white fs-5 lh-1 font-monospace" style={{ letterSpacing: '0.03em' }}>
@@ -101,32 +102,32 @@ export default function Login() {
         </div>
 
         {/* Center Headline */}
-        <div className="my-4 my-lg-auto py-3">
-          <div className="hero-eyebrow text-light mb-2 opacity-90">
+        <div style={{ margin: '10px 0' }}>
+          <div className="hero-eyebrow text-light mb-1 opacity-90" style={{ fontSize: '0.72rem' }}>
             PREMIUM TYRES FOR A
           </div>
-          <h1 className="hero-headline display-4 text-white mb-3">
+          <h1 className="hero-headline display-4 text-white mb-2" style={{ fontSize: 'clamp(1.6rem, 4vw, 2.4rem)', lineHeight: '1.15' }}>
             SAFER<br />
             <span style={{ color: 'var(--accent)' }}>SMOOTHER</span><br />
             JOURNEY
           </h1>
-          <p className="fs-6 text-light opacity-80 mb-0" style={{ maxWidth: '420px' }}>
+          <p className="small text-light opacity-80 mb-0" style={{ maxWidth: '420px', fontSize: '0.82rem' }}>
             Multi-brand stock inventory, instant counter billing, and genuine customer tyre durability warranty hub.
           </p>
         </div>
 
         {/* Bottom Trust Feature */}
-        <div className="d-flex flex-wrap align-items-center gap-3 pt-3 border-top" style={{ borderColor: 'var(--border-dark)' }}>
-          <div className="d-flex align-items-center gap-1.5 small text-light">
-            <CheckCircle2 size={16} style={{ color: 'var(--accent)' }} />
+        <div className="d-flex flex-wrap align-items-center border-top" style={{ borderColor: 'var(--border-dark)', paddingTop: '10px', gap: '10px' }}>
+          <div className="d-flex align-items-center gap-1.5 extra-small text-light" style={{ fontSize: '0.75rem' }}>
+            <CheckCircle2 size={14} style={{ color: 'var(--accent)' }} />
             <span>100% Genuine Tyres</span>
           </div>
-          <div className="d-flex align-items-center gap-1.5 small text-light">
-            <CheckCircle2 size={16} style={{ color: 'var(--accent)' }} />
+          <div className="d-flex align-items-center gap-1.5 extra-small text-light" style={{ fontSize: '0.75rem' }}>
+            <CheckCircle2 size={14} style={{ color: 'var(--accent)' }} />
             <span>Certified 5-Year Warranty</span>
           </div>
-          <div className="d-flex align-items-center gap-1.5 small text-light">
-            <CheckCircle2 size={16} style={{ color: 'var(--accent)' }} />
+          <div className="d-flex align-items-center gap-1.5 extra-small text-light" style={{ fontSize: '0.75rem' }}>
+            <CheckCircle2 size={14} style={{ color: 'var(--accent)' }} />
             <span>3D Laser Alignment</span>
           </div>
         </div>
@@ -136,28 +137,43 @@ export default function Login() {
       {/* RIGHT SIDE: White Clean Form Card with Yellow Primary Sign In */}
       {/* ========================================================== */}
       <div
-        className="col-12 col-lg-6 d-flex align-items-center justify-content-center p-3 p-sm-4 p-md-5"
-        style={{ backgroundColor: 'var(--bg-light)', minHeight: '100vh' }}
+        className="col-12 col-lg-6 d-flex align-items-center justify-content-center"
+        style={{
+          backgroundColor: 'var(--bg-light)',
+          padding: '10px',
+          minHeight: 'auto',
+        }}
       >
         <div className="w-100" style={{ maxWidth: '440px' }}>
           <div
-            className="card-clean p-3.5 p-sm-4 bg-white shadow-lg rounded-4"
-            style={{ border: '1px solid var(--border-light)' }}
+            className="card-clean bg-white shadow-sm"
+            style={{
+              border: '1px solid var(--border-light)',
+              borderRadius: '10px',
+              padding: '10px 14px',
+            }}
           >
             {/* Header */}
             <div
-              className="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom"
-              style={{ borderColor: 'var(--border-light)' }}
+              className="d-flex align-items-center justify-content-between border-bottom"
+              style={{
+                borderColor: 'var(--border-light)',
+                paddingBottom: '10px',
+                marginBottom: '10px',
+              }}
             >
               <div>
-                <h3 className="fw-black text-dark mb-0.5" style={{ letterSpacing: '-0.02em' }}>
+                <h3 className="fw-black text-dark mb-0.5" style={{ letterSpacing: '-0.02em', fontSize: '1.2rem' }}>
                   Sign In
                 </h3>
-                <p className="text-muted small mb-0">Staff & Administrator Access Portal</p>
+                <p className="text-muted extra-small mb-0" style={{ fontSize: '0.78rem' }}>
+                  Staff & Administrator Access Portal
+                </p>
               </div>
               <Link
                 to="/"
-                className="btn btn-sm btn-outline-secondary rounded-pill extra-small px-3 hover-lift"
+                className="btn btn-sm btn-outline-secondary rounded-pill extra-small hover-lift"
+                style={{ fontSize: '0.78rem', padding: '4px 12px' }}
               >
                 Home
               </Link>
@@ -165,13 +181,13 @@ export default function Login() {
 
             {/* Email & Password Form */}
             <form onSubmit={handleSubmit}>
-              <div className="mb-3">
-                <label className="form-label text-dark small fw-semibold mb-1.5">
+              <div style={{ marginBottom: '10px' }}>
+                <label className="form-label text-dark small fw-semibold" style={{ fontSize: '0.78rem', marginBottom: '4px' }}>
                   Email Address
                 </label>
-                <div className="input-group">
+                <div className="input-group input-group-sm">
                   <span className="input-group-text bg-white text-muted">
-                    <Mail size={16} />
+                    <Mail size={15} />
                   </span>
                   <input
                     type="email"
@@ -180,24 +196,27 @@ export default function Login() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    style={{ height: '44px' }}
+                    style={{ height: '38px', fontSize: '0.84rem' }}
                   />
                 </div>
               </div>
 
-              <div className="mb-3.5">
-                <div className="d-flex justify-content-between align-items-center mb-1.5">
-                  <label className="form-label text-dark small fw-semibold m-0">Password</label>
+              <div style={{ marginBottom: '10px' }}>
+                <div className="d-flex justify-content-between align-items-center" style={{ marginBottom: '4px' }}>
+                  <label className="form-label text-dark small fw-semibold m-0" style={{ fontSize: '0.78rem' }}>
+                    Password
+                  </label>
                   <Link
                     to="/forgot-password"
                     className="text-link-blue extra-small text-decoration-none"
+                    style={{ fontSize: '0.74rem' }}
                   >
                     Forgot password?
                   </Link>
                 </div>
-                <div className="input-group">
+                <div className="input-group input-group-sm">
                   <span className="input-group-text bg-white text-muted">
-                    <Lock size={16} />
+                    <Lock size={15} />
                   </span>
                   <input
                     type={showPassword ? 'text' : 'password'}
@@ -206,7 +225,7 @@ export default function Login() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    style={{ height: '44px' }}
+                    style={{ height: '38px', fontSize: '0.84rem' }}
                   />
                   <button
                     type="button"
@@ -214,15 +233,15 @@ export default function Login() {
                     onClick={() => setShowPassword(!showPassword)}
                     tabIndex={-1}
                   >
-                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
               </div>
 
               <button
                 type="submit"
-                className="btn-accent w-100 py-2.5 rounded-3 text-dark fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm"
-                style={{ height: '44px', fontSize: '0.95rem' }}
+                className="btn-accent w-100 rounded-3 text-dark fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm"
+                style={{ height: '40px', fontSize: '0.9rem', marginBottom: '10px' }}
                 disabled={loading}
               >
                 {loading ? (
@@ -232,7 +251,7 @@ export default function Login() {
                   </>
                 ) : (
                   <>
-                    <LogIn size={18} />
+                    <LogIn size={16} />
                     <span>Sign In</span>
                   </>
                 )}
@@ -240,11 +259,11 @@ export default function Login() {
             </form>
 
             {/* Clean Flex Divider */}
-            <div className="d-flex align-items-center my-3.5 py-1">
+            <div className="d-flex align-items-center" style={{ margin: '10px 0' }}>
               <div className="flex-grow-1 border-top" style={{ borderColor: 'var(--border-light)' }} />
               <span
-                className="px-3 text-muted extra-small fw-semibold text-uppercase"
-                style={{ letterSpacing: '0.06em', fontSize: '0.7rem' }}
+                className="px-2.5 text-muted extra-small fw-semibold text-uppercase"
+                style={{ letterSpacing: '0.06em', fontSize: '0.68rem' }}
               >
                 OR CONTINUE WITH
               </span>
@@ -252,8 +271,8 @@ export default function Login() {
             </div>
 
             {/* Google Sign-In */}
-            <div className="text-center">
-              <div className="d-flex justify-content-center w-100 mb-2">
+            <div className="text-center" style={{ marginBottom: '10px' }}>
+              <div className="d-flex justify-content-center w-100" style={{ marginBottom: '6px' }}>
                 <GoogleLogin
                   onSuccess={handleGoogleSuccess}
                   onError={() => toast.error('Google Sign-In failed')}
@@ -264,15 +283,20 @@ export default function Login() {
                   width="100%"
                 />
               </div>
-              <div className="extra-small text-muted text-center" style={{ fontSize: '0.74rem', lineHeight: 1.45 }}>
+              <div className="extra-small text-muted text-center" style={{ fontSize: '0.72rem', lineHeight: 1.35 }}>
                 ⚡ Only staff and administrator Gmail accounts authorized by the Shop Owner can sign in.
               </div>
             </div>
 
             {/* Bottom Security Note */}
             <div
-              className="text-center mt-4 pt-3 border-top extra-small text-muted"
-              style={{ borderColor: 'var(--border-light)', fontSize: '0.78rem' }}
+              className="text-center border-top extra-small text-muted"
+              style={{
+                borderColor: 'var(--border-light)',
+                fontSize: '0.75rem',
+                marginTop: '10px',
+                paddingTop: '10px',
+              }}
             >
               🔒 Authorized store staff portal. Need account access? Contact the shop owner.
             </div>
