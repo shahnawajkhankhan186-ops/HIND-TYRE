@@ -1268,7 +1268,7 @@ export default function Landing() {
         >
           <div
             className="modal-dialog modal-dialog-centered modal-dialog-scrollable mx-2 mx-sm-auto"
-            style={{ maxWidth: '600px' }}
+            style={{ maxWidth: '600px', width: 'calc(100% - 16px)' }}
             onClick={(e) => e.stopPropagation()}
           >
             <div
@@ -1280,7 +1280,7 @@ export default function Landing() {
                 className="modal-header border-bottom"
                 style={{ padding: '10px 14px', backgroundColor: '#F8FAFC' }}
               >
-                <div className="d-flex align-items-center gap-2">
+                <div className="d-flex align-items-center gap-2 me-2">
                   <div
                     className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
                     style={{ width: '32px', height: '32px', backgroundColor: '#FEF3C7', color: '#B45309' }}
@@ -1288,15 +1288,15 @@ export default function Landing() {
                     <Truck size={17} />
                   </div>
                   <div>
-                    <h5 className="modal-title fw-bold text-dark mb-0" style={{ fontSize: '0.98rem', lineHeight: '1.2' }}>
+                    <h5 className="modal-title fw-bold text-dark mb-0" style={{ fontSize: 'clamp(0.92rem, 3.2vw, 1.05rem)', lineHeight: '1.2' }}>
                       Book Tyre Appointment & Doorstep Delivery
                     </h5>
-                    <div className="text-muted extra-small" style={{ fontSize: '0.73rem' }}>
+                    <div className="text-muted extra-small" style={{ fontSize: 'clamp(0.68rem, 2.5vw, 0.74rem)' }}>
                       Genuine tyres delivered to your door with 100% FREE professional fitting!
                     </div>
                   </div>
                 </div>
-                <button type="button" className="btn-close" onClick={() => setShowBookingModal(false)} />
+                <button type="button" className="btn-close flex-shrink-0" onClick={() => setShowBookingModal(false)} />
               </div>
 
               {/* SUCCESS CONFIRMATION VIEW */}
@@ -1422,7 +1422,7 @@ export default function Landing() {
                         1. Select Service Option *
                       </label>
                       <div className="row g-2">
-                        <div className="col-6">
+                        <div className="col-12 col-sm-6">
                           <div
                             className={`border cursor-pointer h-100 transition-all ${
                               bookingForm.serviceType === 'HOME_DELIVERY'
@@ -1441,13 +1441,13 @@ export default function Landing() {
                               <Truck size={15} className="text-warning" />
                               <span>Home Delivery</span>
                             </div>
-                            <div className="text-muted" style={{ fontSize: '0.7rem', lineHeight: '1.2' }}>
+                            <div className="text-muted" style={{ fontSize: '0.72rem', lineHeight: '1.25' }}>
                               Doorstep delivery + FREE Fitting (Distance delivery charge applies)
                             </div>
                           </div>
                         </div>
 
-                        <div className="col-6">
+                        <div className="col-12 col-sm-6">
                           <div
                             className={`border cursor-pointer h-100 transition-all ${
                               bookingForm.serviceType === 'WORKSHOP_VISIT'
@@ -1466,7 +1466,7 @@ export default function Landing() {
                               <Building size={15} className="text-warning" />
                               <span>Workshop Visit</span>
                             </div>
-                            <div className="text-muted" style={{ fontSize: '0.7rem', lineHeight: '1.2' }}>
+                            <div className="text-muted" style={{ fontSize: '0.72rem', lineHeight: '1.25' }}>
                               Visit shop in Ramgarh Cantt for instant FREE fitting & alignment
                             </div>
                           </div>
@@ -1593,9 +1593,9 @@ export default function Landing() {
                                   marginTop: '8px',
                                 }}
                               >
-                                <div className="d-flex justify-content-between align-items-center">
-                                  <div>
-                                    <strong className="text-dark small d-block" style={{ fontSize: '0.84rem' }}>
+                                <div className="d-flex flex-wrap justify-content-between align-items-center gap-1">
+                                  <div style={{ maxWidth: '68%' }}>
+                                    <strong className="text-dark small d-block" style={{ fontSize: '0.84rem', wordBreak: 'break-word' }}>
                                       {selected.companyId?.name} {selected.modelName} ({selected.size})
                                     </strong>
                                     <span className="text-muted extra-small" style={{ fontSize: '0.72rem' }}>
@@ -1613,7 +1613,7 @@ export default function Landing() {
                                 </div>
 
                                 <div
-                                  className="d-flex justify-content-between align-items-center border-top pt-1.5 mt-1.5"
+                                  className="d-flex flex-wrap justify-content-between align-items-center gap-1 border-top pt-1.5 mt-1.5"
                                   style={{ fontSize: '0.74rem' }}
                                 >
                                   <span className="text-success fw-bold d-flex align-items-center gap-1">
@@ -1823,24 +1823,24 @@ export default function Landing() {
                     </div>
                   </div>
 
-                  {/* Modal Footer (10px padding) */}
+                  {/* Modal Footer (10px padding & mobile responsive buttons) */}
                   <div
-                    className="modal-footer border-top"
+                    className="modal-footer border-top d-flex flex-column-reverse flex-sm-row justify-content-end gap-2"
                     style={{ padding: '10px 14px', backgroundColor: '#F8FAFC' }}
                   >
                     <button
                       type="button"
-                      className="btn btn-sm btn-outline-secondary"
+                      className="btn btn-sm btn-outline-secondary w-100 w-sm-auto"
                       onClick={() => setShowBookingModal(false)}
-                      style={{ fontSize: '0.82rem', padding: '6px 14px' }}
+                      style={{ fontSize: '0.82rem', padding: '7px 14px' }}
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
-                      className="btn-accent fw-bold d-inline-flex align-items-center gap-1.5"
+                      className="btn-accent fw-bold d-inline-flex align-items-center justify-content-center gap-1.5 w-100 w-sm-auto"
                       disabled={submittingBooking || availableTyres.length === 0}
-                      style={{ fontSize: '0.84rem', padding: '6px 18px' }}
+                      style={{ fontSize: '0.84rem', padding: '7px 18px' }}
                     >
                       {submittingBooking ? 'Scheduling...' : 'Confirm Appointment & Delivery'}
                     </button>

@@ -204,19 +204,19 @@ export default function Appointments() {
     <div className="page-container" style={{ padding: '10px' }}>
       {/* Header Card */}
       <div className="page-header-card" style={{ padding: '10px 14px', marginBottom: '10px' }}>
-        <div className="back-nav-container mb-2">
+        <div className="back-nav-container mb-1.5">
           <BackButton fallback="/admin/dashboard" desktopLabel="Back to Dashboard" label="Back" />
         </div>
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-2">
           <div>
             <h1
-              className="page-title d-flex align-items-center gap-2"
-              style={{ color: '#0f172a', fontWeight: '800', fontSize: '1.4rem' }}
+              className="page-title d-flex align-items-center gap-2 mb-0.5"
+              style={{ color: '#0f172a', fontWeight: '800', fontSize: 'clamp(1.1rem, 4vw, 1.35rem)' }}
             >
-              <CalendarClock className="text-warning" size={26} />
-              Appointments & Doorstep Delivery
+              <CalendarClock className="text-warning flex-shrink-0" size={24} />
+              <span>Appointments & Doorstep Delivery</span>
             </h1>
-            <p className="page-subtitle mb-0" style={{ color: '#64748b', fontSize: '0.84rem' }}>
+            <p className="page-subtitle mb-0" style={{ color: '#64748b', fontSize: '0.82rem' }}>
               Manage customer tyre home deliveries & workshop fitting bookings in real-time.
             </p>
           </div>
@@ -228,7 +228,7 @@ export default function Appointments() {
             style={{ padding: '6px 12px', fontSize: '0.82rem' }}
           >
             <RefreshCw size={13} className={loading ? 'animate-spin' : ''} />
-            Refresh
+            <span>Refresh</span>
           </button>
         </div>
       </div>
@@ -376,7 +376,7 @@ export default function Appointments() {
 
       {/* Filter and Search Bar (10px padding & margin) */}
       <div
-        className="card bg-white shadow-sm mb-2"
+        className="card bg-white shadow-sm"
         style={{ padding: '10px 12px', borderRadius: '8px', border: '1px solid #e2e8f0', marginBottom: '10px' }}
       >
         <form onSubmit={handleSearchSubmit} className="row g-2 align-items-center">
@@ -388,7 +388,7 @@ export default function Appointments() {
               <input
                 type="text"
                 className="form-control border-start-0"
-                placeholder="Search booking #, customer, phone, address, tyre size..."
+                placeholder="Search booking #, customer, phone, address..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 style={{ fontSize: '0.84rem' }}
@@ -399,7 +399,7 @@ export default function Appointments() {
             </div>
           </div>
 
-          <div className="col-6 col-md-3">
+          <div className="col-12 col-sm-6 col-md-4">
             <select
               className="form-select form-select-sm"
               value={serviceTypeFilter}
@@ -415,7 +415,7 @@ export default function Appointments() {
             </select>
           </div>
 
-          <div className="col-6 col-md-4 d-flex justify-content-end align-items-center gap-2">
+          <div className="col-12 col-sm-6 col-md-3 d-flex justify-content-between justify-content-sm-end align-items-center gap-2">
             {search && (
               <button
                 type="button"
@@ -454,178 +454,352 @@ export default function Appointments() {
             </p>
           </div>
         ) : (
-          <div className="table-responsive">
-            <table className="table table-custom mb-0">
-              <thead>
-                <tr>
-                  <th scope="col" style={{ padding: '10px 12px' }}>Booking # / Date</th>
-                  <th scope="col" style={{ padding: '10px 12px' }}>Customer Contact</th>
-                  <th scope="col" style={{ padding: '10px 12px' }}>Delivery / Service</th>
-                  <th scope="col" style={{ padding: '10px 12px' }}>Tyre Ordered</th>
-                  <th scope="col" style={{ padding: '10px 12px' }}>Price & Charges</th>
-                  <th scope="col" style={{ padding: '10px 12px' }}>Status</th>
-                  <th scope="col" className="text-end" style={{ padding: '10px 12px' }}>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {appointments.map((apt) => {
-                  const rawPhone = apt.customerPhone.replace(/[^0-9]/g, '');
-                  const formattedPhone = rawPhone.length === 10 ? `+91 ${rawPhone}` : apt.customerPhone;
-                  const waNumber = rawPhone.length === 10 ? `91${rawPhone}` : rawPhone;
-                  const waMessage = encodeURIComponent(
-                    `Hello ${apt.customerName},\nThis is Hind Tyres & Accessories Ramgarh Cantt regarding your Booking #${apt.bookingNumber} for ${apt.quantity}x ${apt.tyreDetails?.brandName} ${apt.tyreDetails?.modelName} (${apt.tyreDetails?.size}).\nWe are reaching out to confirm your doorstep delivery appointment.`
-                  );
+          <>
+            {/* Desktop / Tablet Table View (>= 768px) */}
+            <div className="table-responsive d-none d-md-block">
+              <table className="table table-custom mb-0">
+                <thead>
+                  <tr>
+                    <th scope="col" style={{ padding: '10px 12px' }}>Booking # / Date</th>
+                    <th scope="col" style={{ padding: '10px 12px' }}>Customer Contact</th>
+                    <th scope="col" style={{ padding: '10px 12px' }}>Delivery / Service</th>
+                    <th scope="col" style={{ padding: '10px 12px' }}>Tyre Ordered</th>
+                    <th scope="col" style={{ padding: '10px 12px' }}>Price & Charges</th>
+                    <th scope="col" style={{ padding: '10px 12px' }}>Status</th>
+                    <th scope="col" className="text-end" style={{ padding: '10px 12px' }}>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {appointments.map((apt) => {
+                    const rawPhone = apt.customerPhone.replace(/[^0-9]/g, '');
+                    const formattedPhone = rawPhone.length === 10 ? `+91 ${rawPhone}` : apt.customerPhone;
+                    const waNumber = rawPhone.length === 10 ? `91${rawPhone}` : rawPhone;
+                    const waMessage = encodeURIComponent(
+                      `Hello ${apt.customerName},\nThis is Hind Tyres & Accessories Ramgarh Cantt regarding your Booking #${apt.bookingNumber} for ${apt.quantity}x ${apt.tyreDetails?.brandName} ${apt.tyreDetails?.modelName} (${apt.tyreDetails?.size}).\nWe are reaching out to confirm your doorstep delivery appointment.`
+                    );
 
-                  return (
-                    <tr key={apt._id}>
-                      {/* Booking # & Date */}
-                      <td style={{ padding: '10px 12px' }}>
+                    return (
+                      <tr key={apt._id}>
+                        {/* Booking # & Date */}
+                        <td style={{ padding: '10px 12px' }}>
+                          <div className="font-monospace fw-bold text-dark small">
+                            {apt.bookingNumber}
+                          </div>
+                          <div className="text-secondary extra-small d-flex align-items-center gap-1 mt-0.5">
+                            <Calendar size={11} className="text-muted" />
+                            {new Date(apt.appointmentDate).toLocaleDateString('en-IN', {
+                              day: 'numeric',
+                              month: 'short',
+                              year: 'numeric',
+                            })}
+                          </div>
+                          <div className="text-muted extra-small">
+                            {apt.timeSlot.split(' ')[0]}
+                          </div>
+                        </td>
+
+                        {/* Customer Info */}
+                        <td style={{ padding: '10px 12px' }}>
+                          <div className="fw-bold text-dark small">{apt.customerName}</div>
+                          <div className="d-flex align-items-center gap-1.5 mt-1">
+                            <a
+                              href={`tel:${apt.customerPhone}`}
+                              className="btn btn-xs btn-outline-secondary py-0.5 px-1.5 d-inline-flex align-items-center gap-1 text-decoration-none"
+                              style={{ fontSize: '0.72rem' }}
+                              title="Call customer"
+                            >
+                              <Phone size={10} />
+                              {formattedPhone}
+                            </a>
+                            <a
+                              href={`https://wa.me/${waNumber}?text=${waMessage}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="btn btn-xs btn-success py-0.5 px-1.5 d-inline-flex align-items-center gap-1 text-decoration-none text-white"
+                              style={{ fontSize: '0.72rem' }}
+                              title="Message on WhatsApp"
+                            >
+                              <MessageSquare size={10} />
+                              WhatsApp
+                            </a>
+                          </div>
+                          {apt.vehicleModel && (
+                            <div className="text-secondary extra-small mt-0.5">
+                              Vehicle: <strong className="text-dark">{apt.vehicleModel}</strong>
+                            </div>
+                          )}
+                        </td>
+
+                        {/* Delivery Mode & Address */}
+                        <td style={{ padding: '10px 12px', maxWidth: '230px' }}>
+                          {apt.serviceType === 'HOME_DELIVERY' ? (
+                            <>
+                              <span className="badge-pill-warning extra-small mb-1" style={{ fontSize: '0.68rem', padding: '2px 8px' }}>
+                                <Truck size={10} /> Doorstep Delivery
+                              </span>
+                              <div className="small text-dark text-truncate fw-semibold" title={apt.deliveryAddress}>
+                                {apt.deliveryAddress}
+                              </div>
+                              {apt.landmark && (
+                                <div className="text-muted extra-small">
+                                  Near: {apt.landmark}
+                                </div>
+                              )}
+                              <div className="text-muted extra-small">
+                                {apt.city} - {apt.pincode}
+                              </div>
+                            </>
+                          ) : (
+                            <>
+                              <span className="badge-pill-neutral extra-small mb-1" style={{ fontSize: '0.68rem', padding: '2px 8px' }}>
+                                <Building size={10} /> Workshop Visit
+                              </span>
+                              <div className="text-muted extra-small">
+                                Cantonment Market Shop #03, Ramgarh Cantt
+                              </div>
+                            </>
+                          )}
+                        </td>
+
+                        {/* Tyre Ordered */}
+                        <td style={{ padding: '10px 12px' }}>
+                          <div className="fw-bold text-dark small">
+                            {apt.tyreDetails?.brandName} {apt.tyreDetails?.modelName}
+                          </div>
+                          <div className="text-muted extra-small">
+                            Size: <strong className="text-dark">{apt.tyreDetails?.size}</strong> ({apt.tyreDetails?.vehicleType})
+                          </div>
+                          <div className="badge bg-light text-dark border extra-small mt-0.5" style={{ fontSize: '0.7rem' }}>
+                            Qty: {apt.quantity} {apt.quantity > 1 ? 'Tyres' : 'Tyre'}
+                          </div>
+                        </td>
+
+                        {/* Price & Delivery Charge */}
+                        <td style={{ padding: '10px 12px' }}>
+                          <div className="text-dark small fw-bold">
+                            {formatRupees(apt.totalAmountPaise)}
+                          </div>
+                          <div className="text-muted extra-small">
+                            Tyres: {formatRupees(apt.tyreTotalPaise)}
+                          </div>
+                          <div className="text-info extra-small">
+                            Delivery: {apt.estimatedDeliveryChargePaise > 0 ? formatRupees(apt.estimatedDeliveryChargePaise) : 'Free / Distance TBD'}
+                          </div>
+                          <div className="text-success extra-small fw-bold">
+                            Fitting: FREE (₹0)
+                          </div>
+                        </td>
+
+                        {/* Status */}
+                        <td style={{ padding: '10px 12px' }}>{renderStatusBadge(apt.status)}</td>
+
+                        {/* Actions */}
+                        <td className="text-end" style={{ padding: '10px 12px' }}>
+                          <div className="btn-group btn-group-sm">
+                            <button
+                              type="button"
+                              className="btn btn-outline-dark-custom btn-sm py-1 px-2 d-inline-flex align-items-center gap-1"
+                              onClick={() => openStatusModal(apt)}
+                              style={{ fontSize: '0.78rem' }}
+                            >
+                              <Edit size={12} />
+                              Manage
+                            </button>
+                            <button
+                              type="button"
+                              className="btn btn-outline-danger btn-sm py-1 px-2"
+                              onClick={() =>
+                                setDeleteConfirm({
+                                  isOpen: true,
+                                  id: apt._id,
+                                  bookingNumber: apt.bookingNumber,
+                                })
+                              }
+                              title="Delete booking"
+                              style={{ fontSize: '0.78rem' }}
+                            >
+                              <Trash2 size={12} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Card List View (< 768px) */}
+            <div className="d-flex flex-column gap-2.5 p-2.5 d-md-none">
+              {appointments.map((apt) => {
+                const rawPhone = apt.customerPhone.replace(/[^0-9]/g, '');
+                const formattedPhone = rawPhone.length === 10 ? `+91 ${rawPhone}` : apt.customerPhone;
+                const waNumber = rawPhone.length === 10 ? `91${rawPhone}` : rawPhone;
+                const waMessage = encodeURIComponent(
+                  `Hello ${apt.customerName},\nThis is Hind Tyres & Accessories Ramgarh Cantt regarding your Booking #${apt.bookingNumber} for ${apt.quantity}x ${apt.tyreDetails?.brandName} ${apt.tyreDetails?.modelName} (${apt.tyreDetails?.size}).\nWe are reaching out to confirm your doorstep delivery appointment.`
+                );
+
+                return (
+                  <div
+                    key={apt._id}
+                    className="card bg-white shadow-sm"
+                    style={{
+                      padding: '10px 12px',
+                      borderRadius: '8px',
+                      border: '1px solid #e2e8f0',
+                    }}
+                  >
+                    {/* Card Top: Booking #, Date & Status */}
+                    <div className="d-flex justify-content-between align-items-center mb-2 pb-1.5 border-bottom">
+                      <div>
                         <div className="font-monospace fw-bold text-dark small">
-                          {apt.bookingNumber}
+                          #{apt.bookingNumber}
                         </div>
                         <div className="text-secondary extra-small d-flex align-items-center gap-1 mt-0.5">
                           <Calendar size={11} className="text-muted" />
-                          {new Date(apt.appointmentDate).toLocaleDateString('en-IN', {
-                            day: 'numeric',
-                            month: 'short',
-                            year: 'numeric',
-                          })}
+                          <span>
+                            {new Date(apt.appointmentDate).toLocaleDateString('en-IN', {
+                              day: 'numeric',
+                              month: 'short',
+                              year: 'numeric',
+                            })}
+                          </span>
+                          <span className="text-muted">• {apt.timeSlot.split(' ')[0]}</span>
                         </div>
-                        <div className="text-muted extra-small">
-                          {apt.timeSlot.split(' ')[0]}
-                        </div>
-                      </td>
+                      </div>
+                      <div>{renderStatusBadge(apt.status)}</div>
+                    </div>
 
-                      {/* Customer Info */}
-                      <td style={{ padding: '10px 12px' }}>
-                        <div className="fw-bold text-dark small">{apt.customerName}</div>
-                        <div className="d-flex align-items-center gap-1.5 mt-1">
-                          <a
-                            href={`tel:${apt.customerPhone}`}
-                            className="btn btn-xs btn-outline-secondary py-0.5 px-1.5 d-inline-flex align-items-center gap-1 text-decoration-none"
-                            style={{ fontSize: '0.72rem' }}
-                            title="Call customer"
-                          >
-                            <Phone size={10} />
-                            {formattedPhone}
-                          </a>
-                          <a
-                            href={`https://wa.me/${waNumber}?text=${waMessage}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn btn-xs btn-success py-0.5 px-1.5 d-inline-flex align-items-center gap-1 text-decoration-none text-white"
-                            style={{ fontSize: '0.72rem' }}
-                            title="Message on WhatsApp"
-                          >
-                            <MessageSquare size={10} />
-                            WhatsApp
-                          </a>
+                    {/* Customer Info & Direct Contacts */}
+                    <div className="mb-2">
+                      <div className="d-flex justify-content-between align-items-center">
+                        <div className="fw-bold text-dark small d-flex align-items-center gap-1">
+                          <User size={13} className="text-muted" />
+                          <span>{apt.customerName}</span>
                         </div>
                         {apt.vehicleModel && (
-                          <div className="text-secondary extra-small mt-0.5">
-                            Vehicle: <strong className="text-dark">{apt.vehicleModel}</strong>
+                          <span className="badge bg-light text-secondary border extra-small" style={{ fontSize: '0.68rem' }}>
+                            {apt.vehicleModel}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* 1-Tap Call & WhatsApp Buttons */}
+                      <div className="d-flex align-items-center gap-2 mt-1.5">
+                        <a
+                          href={`tel:${apt.customerPhone}`}
+                          className="btn btn-sm btn-outline-secondary py-1 px-2 d-inline-flex align-items-center justify-content-center gap-1 flex-grow-1 text-decoration-none"
+                          style={{ fontSize: '0.74rem' }}
+                        >
+                          <Phone size={11} />
+                          <span>{formattedPhone}</span>
+                        </a>
+                        <a
+                          href={`https://wa.me/${waNumber}?text=${waMessage}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-sm btn-success py-1 px-2.5 d-inline-flex align-items-center justify-content-center gap-1 flex-grow-1 text-decoration-none text-white fw-semibold"
+                          style={{ fontSize: '0.74rem' }}
+                        >
+                          <MessageSquare size={11} />
+                          <span>WhatsApp</span>
+                        </a>
+                      </div>
+                    </div>
+
+                    {/* Service Mode & Address */}
+                    <div
+                      className="p-2 rounded mb-2"
+                      style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', fontSize: '0.76rem' }}
+                    >
+                      {apt.serviceType === 'HOME_DELIVERY' ? (
+                        <>
+                          <div className="d-flex align-items-center gap-1 text-warning fw-bold mb-0.5">
+                            <Truck size={12} />
+                            <span>Doorstep Delivery</span>
                           </div>
-                        )}
-                      </td>
+                          <div className="text-dark fw-semibold" style={{ lineHeight: '1.3' }}>
+                            {apt.deliveryAddress}
+                          </div>
+                          {apt.landmark && (
+                            <div className="text-muted extra-small">Near: {apt.landmark}</div>
+                          )}
+                          <div className="text-muted extra-small">
+                            {apt.city} - {apt.pincode}
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="d-flex align-items-center gap-1 text-secondary fw-bold mb-0.5">
+                            <Building size={12} />
+                            <span>Workshop Visit</span>
+                          </div>
+                          <div className="text-muted extra-small">
+                            Cantonment Market Shop #03, Ramgarh Cantt
+                          </div>
+                        </>
+                      )}
+                    </div>
 
-                      {/* Delivery Mode & Address */}
-                      <td style={{ padding: '10px 12px', maxWidth: '230px' }}>
-                        {apt.serviceType === 'HOME_DELIVERY' ? (
-                          <>
-                            <span className="badge-pill-warning extra-small mb-1" style={{ fontSize: '0.68rem', padding: '2px 8px' }}>
-                              <Truck size={10} /> Doorstep Delivery
-                            </span>
-                            <div className="small text-dark text-truncate fw-semibold" title={apt.deliveryAddress}>
-                              {apt.deliveryAddress}
-                            </div>
-                            {apt.landmark && (
-                              <div className="text-muted extra-small">
-                                Near: {apt.landmark}
-                              </div>
-                            )}
-                            <div className="text-muted extra-small">
-                              {apt.city} - {apt.pincode}
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            <span className="badge-pill-neutral extra-small mb-1" style={{ fontSize: '0.68rem', padding: '2px 8px' }}>
-                              <Building size={10} /> Workshop Visit
-                            </span>
-                            <div className="text-muted extra-small">
-                              Cantonment Market Shop #03, Ramgarh Cantt
-                            </div>
-                          </>
-                        )}
-                      </td>
-
-                      {/* Tyre Ordered */}
-                      <td style={{ padding: '10px 12px' }}>
-                        <div className="fw-bold text-dark small">
-                          {apt.tyreDetails?.brandName} {apt.tyreDetails?.modelName}
+                    {/* Tyre Ordered & Price */}
+                    <div className="d-flex justify-content-between align-items-start mb-2 pt-1 border-top">
+                      <div>
+                        <span className="text-muted extra-small d-block">Tyre Ordered:</span>
+                        <div className="fw-bold text-dark small" style={{ lineHeight: '1.2' }}>
+                          {apt.quantity}x {apt.tyreDetails?.brandName} {apt.tyreDetails?.modelName}
                         </div>
                         <div className="text-muted extra-small">
                           Size: <strong className="text-dark">{apt.tyreDetails?.size}</strong> ({apt.tyreDetails?.vehicleType})
                         </div>
-                        <div className="badge bg-light text-dark border extra-small mt-0.5" style={{ fontSize: '0.7rem' }}>
-                          Qty: {apt.quantity} {apt.quantity > 1 ? 'Tyres' : 'Tyre'}
-                        </div>
-                      </td>
-
-                      {/* Price & Delivery Charge */}
-                      <td style={{ padding: '10px 12px' }}>
-                        <div className="text-dark small fw-bold">
+                      </div>
+                      <div className="text-end">
+                        <span className="text-muted extra-small d-block">Total Amount:</span>
+                        <div className="fw-bold text-dark fs-6" style={{ lineHeight: '1.2' }}>
                           {formatRupees(apt.totalAmountPaise)}
                         </div>
-                        <div className="text-muted extra-small">
-                          Tyres: {formatRupees(apt.tyreTotalPaise)}
+                        <div className="text-info extra-small" style={{ fontSize: '0.68rem' }}>
+                          {apt.estimatedDeliveryChargePaise > 0
+                            ? `Delivery: ${formatRupees(apt.estimatedDeliveryChargePaise)}`
+                            : 'Delivery: Free / TBD'}
                         </div>
-                        <div className="text-info extra-small">
-                          Delivery: {apt.estimatedDeliveryChargePaise > 0 ? formatRupees(apt.estimatedDeliveryChargePaise) : 'Free / Distance TBD'}
+                        <div className="text-success extra-small fw-bold" style={{ fontSize: '0.68rem' }}>
+                          Fitting: FREE
                         </div>
-                        <div className="text-success extra-small fw-bold">
-                          Fitting: FREE (₹0)
-                        </div>
-                      </td>
+                      </div>
+                    </div>
 
-                      {/* Status */}
-                      <td style={{ padding: '10px 12px' }}>{renderStatusBadge(apt.status)}</td>
-
-                      {/* Actions */}
-                      <td className="text-end" style={{ padding: '10px 12px' }}>
-                        <div className="btn-group btn-group-sm">
-                          <button
-                            type="button"
-                            className="btn btn-outline-dark-custom btn-sm py-1 px-2 d-inline-flex align-items-center gap-1"
-                            onClick={() => openStatusModal(apt)}
-                            style={{ fontSize: '0.78rem' }}
-                          >
-                            <Edit size={12} />
-                            Manage
-                          </button>
-                          <button
-                            type="button"
-                            className="btn btn-outline-danger btn-sm py-1 px-2"
-                            onClick={() =>
-                              setDeleteConfirm({
-                                isOpen: true,
-                                id: apt._id,
-                                bookingNumber: apt.bookingNumber,
-                              })
-                            }
-                            title="Delete booking"
-                            style={{ fontSize: '0.78rem' }}
-                          >
-                            <Trash2 size={12} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                    {/* Action Buttons */}
+                    <div className="d-flex justify-content-end align-items-center gap-2 pt-1.5 border-top">
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-outline-danger py-1 px-2.5 d-inline-flex align-items-center gap-1"
+                        onClick={() =>
+                          setDeleteConfirm({
+                            isOpen: true,
+                            id: apt._id,
+                            bookingNumber: apt.bookingNumber,
+                          })
+                        }
+                        style={{ fontSize: '0.78rem' }}
+                      >
+                        <Trash2 size={12} />
+                        <span>Delete</span>
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-warning fw-bold py-1 px-3 d-inline-flex align-items-center gap-1"
+                        onClick={() => openStatusModal(apt)}
+                        style={{ fontSize: '0.78rem' }}
+                      >
+                        <Edit size={12} />
+                        <span>Manage Status</span>
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </>
         )}
 
         {/* Pagination */}
@@ -668,15 +842,25 @@ export default function Appointments() {
           onClick={() => setShowStatusModal(false)}
         >
           <div
-            className="modal-dialog modal-dialog-centered"
-            style={{ maxWidth: '500px' }}
+            className="modal-dialog modal-dialog-centered mx-2 mx-sm-auto"
+            style={{ maxWidth: '500px', width: 'calc(100% - 16px)' }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="modal-content border-0 shadow-2xl" style={{ borderRadius: '10px', backgroundColor: '#FFFFFF', color: '#0F172A' }}>
-              <div className="modal-header border-bottom py-2.5 px-3">
+            <div
+              className="modal-content border-0 shadow-2xl"
+              style={{
+                borderRadius: '10px',
+                backgroundColor: '#FFFFFF',
+                color: '#0F172A',
+                maxHeight: 'calc(92vh - 20px)',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <div className="modal-header border-bottom py-2.5 px-3 flex-shrink-0">
                 <h5 className="modal-title fw-bold text-dark d-flex align-items-center gap-2" style={{ fontSize: '1.05rem' }}>
-                  <CalendarClock className="text-warning" size={18} />
-                  Manage Booking: {selectedAppointment.bookingNumber}
+                  <CalendarClock className="text-warning flex-shrink-0" size={18} />
+                  <span>Manage Booking: {selectedAppointment.bookingNumber}</span>
                 </h5>
                 <button
                   type="button"
@@ -685,8 +869,8 @@ export default function Appointments() {
                 />
               </div>
 
-              <form onSubmit={handleStatusSubmit}>
-                <div className="modal-body p-3">
+              <form onSubmit={handleStatusSubmit} style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                <div className="modal-body p-3" style={{ overflowY: 'auto' }}>
                   {/* Customer Quick Summary */}
                   <div
                     className="p-2.5 rounded-2 bg-light border mb-2.5"
@@ -814,7 +998,7 @@ export default function Appointments() {
                   )}
                 </div>
 
-                <div className="modal-footer border-top py-2 px-3">
+                <div className="modal-footer border-top py-2 px-3 flex-shrink-0 d-flex justify-content-end gap-2">
                   <button
                     type="button"
                     className="btn btn-sm btn-outline-secondary"
