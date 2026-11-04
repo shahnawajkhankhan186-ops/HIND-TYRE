@@ -327,6 +327,7 @@ async function googleLogin(req, res, next) {
       normalizedEmail === 'hindtyre01@gmail.com' ||
       normalizedEmail === 'prolemda@gmail.com' ||
       normalizedEmail === 'shahnawajkhankhan186@gmail.com' ||
+      normalizedEmail === 'shahnawajkhan18627@gmail.com' ||
       normalizedEmail === 'test_admin@hindtyres.com';
 
     // Find user
