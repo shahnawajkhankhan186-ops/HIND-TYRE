@@ -1061,17 +1061,34 @@ export default function Landing() {
       {/* ========================================================== */}
       {/* 6.5 FREQUENTLY ASKED QUESTIONS (FAQ Section) */}
       {/* ========================================================== */}
-      <section id="faq" className="py-5" style={{ backgroundColor: 'var(--bg-light)', borderTop: '1px solid var(--border-light)' }}>
-        <div className="container" style={{ maxWidth: '860px' }}>
-          <div className="text-center mb-4">
-            <div className="d-inline-flex align-items-center gap-1.5 px-3 py-1 rounded-pill mb-2" style={{ backgroundColor: 'rgba(255, 193, 7, 0.15)', color: '#b45309', fontSize: '0.8rem', fontWeight: 600 }}>
-              <HelpCircle size={15} />
+      <section
+        id="faq"
+        style={{
+          padding: '10px 0',
+          backgroundColor: 'var(--bg-light)',
+          borderTop: '1px solid var(--border-light)',
+        }}
+      >
+        <div className="container" style={{ maxWidth: '860px', padding: '0 10px' }}>
+          <div className="text-center" style={{ marginBottom: '10px' }}>
+            <div
+              className="d-inline-flex align-items-center gap-1.5 rounded-pill"
+              style={{
+                backgroundColor: 'rgba(255, 193, 7, 0.15)',
+                color: '#b45309',
+                fontSize: '0.78rem',
+                fontWeight: 600,
+                padding: '4px 10px',
+                marginBottom: '6px',
+              }}
+            >
+              <HelpCircle size={14} />
               <span>Got Questions? We Have Answers</span>
             </div>
-            <h2 className="fw-black text-dark mb-1" style={{ letterSpacing: '-0.01em' }}>
+            <h2 className="fw-black text-dark" style={{ letterSpacing: '-0.01em', fontSize: 'clamp(1.2rem, 3.5vw, 1.5rem)', marginBottom: '4px' }}>
               Frequently Asked Questions
             </h2>
-            <p className="text-muted mb-0">
+            <p className="text-muted small" style={{ fontSize: '0.82rem', marginBottom: '10px' }}>
               Everything you need to know about purchasing tyres, warranties, and vehicle maintenance
             </p>
           </div>
@@ -1082,23 +1099,23 @@ export default function Landing() {
               return (
                 <div
                   key={idx}
-                  className="card-clean border overflow-hidden transition-all"
+                  className="card-clean border overflow-hidden transition-all shadow-sm"
                   style={{
                     backgroundColor: '#FFFFFF',
                     borderColor: isOpen ? 'var(--accent)' : 'var(--border-light)',
-                    borderRadius: 'var(--radius-md)'
+                    borderRadius: '8px',
                   }}
                 >
                   <button
                     type="button"
-                    className="w-100 p-3.5 text-start bg-transparent border-0 d-flex align-items-center justify-content-between gap-3 text-dark fw-bold"
+                    className="w-100 text-start bg-transparent border-0 d-flex align-items-center justify-content-between gap-2.5 text-dark fw-bold"
                     onClick={() => setOpenFaq(isOpen ? null : idx)}
                     aria-expanded={isOpen}
-                    style={{ fontSize: '0.96rem' }}
+                    style={{ fontSize: '0.9rem', padding: '10px 14px' }}
                   >
                     <span>{item.q}</span>
                     <ChevronDown
-                      size={18}
+                      size={16}
                       className="text-secondary flex-shrink-0"
                       style={{
                         transform: isOpen ? 'rotate(180deg)' : 'none',
@@ -1107,7 +1124,15 @@ export default function Landing() {
                     />
                   </button>
                   {isOpen && (
-                    <div className="px-3.5 pb-3.5 pt-0 text-secondary small border-top pt-3" style={{ lineHeight: '1.65', borderColor: 'var(--border-light)' }}>
+                    <div
+                      className="text-secondary small border-top"
+                      style={{
+                        padding: '10px 14px',
+                        lineHeight: '1.5',
+                        borderColor: 'var(--border-light)',
+                        fontSize: '0.82rem',
+                      }}
+                    >
                       {item.a}
                     </div>
                   )}
