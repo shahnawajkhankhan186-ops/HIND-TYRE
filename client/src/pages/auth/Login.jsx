@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Disc3, Lock, Mail, Eye, EyeOff, LogIn, CheckCircle2 } from 'lucide-react';
-import { GoogleLogin } from '@react-oauth/google';
+import { Disc3, Lock, Mail, Eye, EyeOff, LogIn, CheckCircle2, ShieldCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
 import SEO from '../../components/common/SEO';
@@ -12,7 +11,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const { login, googleLogin, shopSettings } = useAuth();
+  const { login, shopSettings } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -36,26 +35,6 @@ export default function Login() {
       }
     } catch (err) {
       toast.error(err.response?.data?.error || err.friendlyMessage || err.message || 'Invalid credentials');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGoogleSuccess = async (credentialResponse) => {
-    try {
-      setLoading(true);
-      const user = await googleLogin(credentialResponse.credential);
-      toast.success(`Signed in with Google! Welcome, ${user.name}`);
-      if (user.role === 'ADMIN') {
-        navigate('/admin/dashboard');
-      } else if (user.role === 'COUNTER') {
-        navigate('/counter/new-sale');
-      } else {
-        toast.error('Access denied. Only registered staff and administrators can access the portal.');
-        navigate('/login');
-      }
-    } catch (err) {
-      toast.error(err.response?.data?.error || err.friendlyMessage || err.message || 'Google Sign-In failed');
     } finally {
       setLoading(false);
     }
@@ -258,36 +237,6 @@ export default function Login() {
               </button>
             </form>
 
-            {/* Clean Flex Divider */}
-            <div className="d-flex align-items-center" style={{ margin: '10px 0' }}>
-              <div className="flex-grow-1 border-top" style={{ borderColor: 'var(--border-light)' }} />
-              <span
-                className="px-2.5 text-muted extra-small fw-semibold text-uppercase"
-                style={{ letterSpacing: '0.06em', fontSize: '0.68rem' }}
-              >
-                OR CONTINUE WITH
-              </span>
-              <div className="flex-grow-1 border-top" style={{ borderColor: 'var(--border-light)' }} />
-            </div>
-
-            {/* Google Sign-In */}
-            <div className="text-center" style={{ marginBottom: '10px' }}>
-              <div className="d-flex justify-content-center w-100" style={{ marginBottom: '6px' }}>
-                <GoogleLogin
-                  onSuccess={handleGoogleSuccess}
-                  onError={() => toast.error('Google Sign-In failed')}
-                  theme="outline"
-                  shape="pill"
-                  size="large"
-                  text="continue_with"
-                  width="100%"
-                />
-              </div>
-              <div className="extra-small text-muted text-center" style={{ fontSize: '0.72rem', lineHeight: 1.35 }}>
-                ⚡ Only staff and administrator Gmail accounts authorized by the Shop Owner can sign in.
-              </div>
-            </div>
-
             {/* Bottom Security Note */}
             <div
               className="text-center border-top extra-small text-muted"
@@ -298,7 +247,7 @@ export default function Login() {
                 paddingTop: '10px',
               }}
             >
-              🔒 Authorized store staff portal. Need account access? Contact the shop owner.
+              🔒 Authorized store staff portal. Accounts can only be created by the Shop Owner.
             </div>
           </div>
         </div>

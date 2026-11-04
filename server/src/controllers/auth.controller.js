@@ -136,11 +136,10 @@ async function forgotPassword(req, res, next) {
     const normalizedEmail = email.toLowerCase();
 
     const user = await User.findOne({ email: normalizedEmail });
-    if (!user) {
-      // Don't leak user existence in response, return success message
-      return res.json({
-        success: true,
-        message: 'If the email is registered, a 6-digit OTP has been sent.',
+    if (!user || !user.isActive || (user.role !== 'ADMIN' && user.role !== 'COUNTER')) {
+      return res.status(403).json({
+        success: false,
+        error: 'Access Denied: This email is not registered in Hind Tyres. Only staff and admin accounts added by the Shop Owner can reset passwords.',
       });
     }
 
@@ -330,59 +329,13 @@ async function googleLogin(req, res, next) {
       normalizedEmail === 'shahnawajkhan18627@gmail.com' ||
       normalizedEmail === 'test_admin@hindtyres.com';
 
-    // Find user
+    // Find user - Must be already created by Shop Owner
     let user = await User.findOne({ email: normalizedEmail });
 
-    if (user) {
-      if (!user.isActive) {
-        return res.status(403).json({
-          success: false,
-          error: 'This account has been disabled. Please contact the administrator.',
-        });
-      }
-
-      // Automatically ensure admin role for prolemda@gmail.com
-      if (isAdminEmail && user.role !== 'ADMIN') {
-        user.role = 'ADMIN';
-        await user.save();
-      }
-
-      // Only ADMIN or COUNTER accounts can log in
-      if (user.role !== 'ADMIN' && user.role !== 'COUNTER') {
-        return res.status(403).json({
-          success: false,
-          error: 'Access denied. Only registered staff and administrators can access the system.',
-        });
-      }
-    } else {
-      // Unregistered Google user: only master owner prolemda@gmail.com is allowed to bootstrap
-      if (!isAdminEmail) {
-        return res.status(403).json({
-          success: false,
-          error: 'Access denied. This Gmail account has not been added by the Administrator. Please contact your shop admin.',
-        });
-      }
-
-      const randomPassword = Math.random().toString(36).slice(-10) + Date.now();
-      const salt = await bcrypt.genSalt(10);
-      const passwordHash = await bcrypt.hash(randomPassword, salt);
-
-      user = new User({
-        name: name || (normalizedEmail === 'hindtyre01@gmail.com' ? 'ISTIYAK' : 'Administrator'),
-        email: normalizedEmail,
-        passwordHash,
-        role: 'ADMIN',
-        isPrimaryAdmin: normalizedEmail === 'hindtyre01@gmail.com',
-        isActive: true,
-      });
-      await user.save();
-
-      await auditService.log({
-        action: 'GOOGLE_REGISTER',
-        entity: 'User',
-        entityId: user._id,
-        req,
-        user,
+    if (!user || !user.isActive || (user.role !== 'ADMIN' && user.role !== 'COUNTER')) {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied. This account has not been added by the Shop Administrator. Please contact the store owner.',
       });
     }
 
