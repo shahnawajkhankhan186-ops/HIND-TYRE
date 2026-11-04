@@ -1,8 +1,17 @@
 import axios from 'axios';
+import { Capacitor } from '@capacitor/core';
 
 // Smart URL resolver supporting both VITE_API_BASE_URL and VITE_API_URL
 const rawEnvUrl = (import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || '/api').trim();
 let resolvedBaseUrl = rawEnvUrl;
+
+// If running inside Capacitor native Android/iOS app and baseUrl is relative (/api),
+// route to production Render backend API directly
+if (Capacitor.isNativePlatform() || window.location.protocol === 'capacitor:') {
+  if (resolvedBaseUrl === '/api' || !resolvedBaseUrl.startsWith('http')) {
+    resolvedBaseUrl = 'https://hind-tyres-backend.onrender.com/api';
+  }
+}
 
 if (resolvedBaseUrl.startsWith('http://') || resolvedBaseUrl.startsWith('https://')) {
   resolvedBaseUrl = resolvedBaseUrl.replace(/\/+$/, '');
