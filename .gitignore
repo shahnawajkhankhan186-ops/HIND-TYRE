@@ -18,6 +18,8 @@ dist/
 dist-ssr/
 build/
 client/dist/
+*.apk
+*.aab
 
 # Logs
 logs/
