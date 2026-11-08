@@ -5,12 +5,15 @@ import { Capacitor } from '@capacitor/core';
 const rawEnvUrl = (import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || '/api').trim();
 let resolvedBaseUrl = rawEnvUrl;
 
-// If running inside Capacitor native Android/iOS app and baseUrl is relative (/api),
-// route to production Render backend API directly
-if (Capacitor.isNativePlatform() || window.location.protocol === 'capacitor:') {
-  if (resolvedBaseUrl === '/api' || !resolvedBaseUrl.startsWith('http')) {
-    resolvedBaseUrl = 'https://hind-tyres-backend.onrender.com/api';
-  }
+// Route directly to Render backend in production web (Vercel) or native Capacitor app
+const isNativePlatform =
+  Capacitor.isNativePlatform() ||
+  (typeof window !== 'undefined' && window.location.protocol === 'capacitor:');
+const isVercelHost =
+  typeof window !== 'undefined' && window.location.hostname.includes('vercel.app');
+
+if ((isNativePlatform || isVercelHost) && (resolvedBaseUrl === '/api' || !resolvedBaseUrl.startsWith('http'))) {
+  resolvedBaseUrl = 'https://hind-tyres-backend.onrender.com/api';
 }
 
 if (resolvedBaseUrl.startsWith('http://') || resolvedBaseUrl.startsWith('https://')) {
@@ -29,7 +32,7 @@ export const getReceiptPdfUrl = (saleId) => {
 const api = axios.create({
   baseURL: resolvedBaseUrl,
   withCredentials: true,
-  timeout: 15000,
+  timeout: 60000, // 60s timeout to allow Render free tier to wake up (~30-50s cold start)
   headers: {
     'Content-Type': 'application/json',
   },
