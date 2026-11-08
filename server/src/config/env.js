@@ -7,10 +7,13 @@ dotenv.config({ path: path.resolve(process.cwd(), 'server/.env') });
 dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 dotenv.config();
 
+const DEFAULT_MONGODB_URI =
+  'mongodb+srv://shahnawaj18627_db_user:Aklishirshad12@cluster0.gfhiwgc.mongodb.net/hind_tyres_dev?retryWrites=true&w=majority';
+
 const config = {
   PORT: process.env.PORT || 5001,
   NODE_ENV: process.env.NODE_ENV || 'development',
-  MONGODB_URI: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/hind_tyres?replicaSet=rs0',
+  MONGODB_URI: process.env.MONGODB_URI || DEFAULT_MONGODB_URI,
   JWT_SECRET: process.env.JWT_SECRET || 'super_secret_hind_tyres_jwt_key_998877665544332211',
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '7d',
   GOOGLE_CLIENT_ID:
